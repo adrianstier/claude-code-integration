@@ -16,21 +16,21 @@ const components = {
   CodeBlock,
   Link,
   // Map MDX code blocks to our CodeBlock component
-  pre: ({ children, ...props }: any) => {
+  pre: ({ children }: { children?: React.ReactNode }) => {
     // Extract code content and language from children
-    const child = children?.props
+    const child = (children as { props?: { children?: string; className?: string } })?.props
     const code = child?.children || ''
     const language = child?.className?.replace('language-', '') || 'bash'
 
     return <CodeBlock code={code} language={language} />
   },
-  code: ({ children, className, ...props }: any) => {
+  code: ({ children, className }: { children?: React.ReactNode; className?: string }) => {
     // Inline code (not in pre blocks)
     if (!className) {
-      return <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-mono text-gray-800" {...props}>{children}</code>
+      return <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-mono text-gray-800">{children}</code>
     }
     // Let pre handle code blocks
-    return <code className={className} {...props}>{children}</code>
+    return <code className={className}>{children}</code>
   },
 }
 
