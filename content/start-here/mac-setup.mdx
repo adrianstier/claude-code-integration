@@ -1,0 +1,424 @@
+---
+title: 'macOS Setup Guide'
+description: 'Complete setup guide for Claude Code, VS Code, and Git/GitHub on macOS'
+order: 2
+platform: 'mac'
+duration: '60 minutes'
+---
+
+This guide will walk you through setting up your Mac for development with Claude Code, VS Code, and Git/GitHub.
+
+## What You'll Install
+
+-  VS Code
+-  Claude Code CLI and Extension
+-  Git
+-  GitHub account and SSH keys
+-  Node.js (for this project and others)
+-  Python or R (for data analysis)
+
+## Prerequisites
+
+- macOS 10.15 (Catalina) or later
+- Administrator access to your Mac
+- Internet connection
+- About 60 minutes
+
+---
+
+## Step 1: Install VS Code
+
+### 1.1 Download VS Code
+
+1. Visit [https://code.visualstudio.com](https://code.visualstudio.com)
+2. Click "Download for Mac"
+3. Open the downloaded `.zip` file
+4. Drag `Visual Studio Code.app` to your Applications folder
+
+### 1.2 Open VS Code from Terminal
+
+To open VS Code from the command line:
+
+1. Open VS Code
+2. Press `Cmd + Shift + P` to open the Command Palette
+3. Type "shell command"
+4. Select "Shell Command: Install 'code' command in PATH"
+
+**Test it:**
+```bash
+code --version
+```
+
+You should see the VS Code version number.
+
+---
+
+## Step 2: Install Homebrew (Package Manager)
+
+Homebrew makes it easy to install development tools on Mac.
+
+### 2.1 Install Homebrew
+
+Open Terminal (Applications � Utilities � Terminal) and run:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Follow the prompts. You may need to enter your password.
+
+### 2.2 Add Homebrew to PATH
+
+After installation, run the commands Homebrew suggests (they'll look like this):
+
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+**Test it:**
+```bash
+brew --version
+```
+
+---
+
+## Step 3: Install Git
+
+Git is the version control system you'll use to track changes and collaborate.
+
+### 3.1 Install Git via Homebrew
+
+```bash
+brew install git
+```
+
+### 3.2 Configure Git
+
+Set your name and email (use the email you'll use for GitHub):
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+Set VS Code as your default editor:
+
+```bash
+git config --global core.editor "code --wait"
+```
+
+Set default branch name to `main`:
+
+```bash
+git config --global init.defaultBranch main
+```
+
+Create useful aliases:
+
+```bash
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+```
+
+**Test it:**
+```bash
+git --version
+git config --list
+```
+
+---
+
+## Step 4: Set Up GitHub
+
+### 4.1 Create GitHub Account
+
+1. Go to [https://github.com](https://github.com)
+2. Click "Sign up"
+3. Follow the prompts to create your account
+
+### 4.2 Generate SSH Key
+
+SSH keys let you connect to GitHub securely without entering your password every time.
+
+**Generate a new SSH key:**
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@example.com"
+```
+
+When prompted:
+- Press `Enter` to accept the default file location
+- Enter a passphrase (optional but recommended)
+- Press `Enter` again to confirm
+
+**Start the SSH agent:**
+
+```bash
+eval "$(ssh-agent -s)"
+```
+
+**Add your key to the agent:**
+
+```bash
+ssh-add ~/.ssh/id_ed25519
+```
+
+### 4.3 Add SSH Key to GitHub
+
+**Copy your public key:**
+
+```bash
+pbcopy < ~/.ssh/id_ed25519.pub
+```
+
+This copies your key to the clipboard.
+
+**Add to GitHub:**
+
+1. Go to [https://github.com/settings/keys](https://github.com/settings/keys)
+2. Click "New SSH key"
+3. Title: "My Mac" (or any descriptive name)
+4. Key type: Authentication Key
+5. Paste your key (Cmd + V)
+6. Click "Add SSH key"
+
+**Test your connection:**
+
+```bash
+ssh -T git@github.com
+```
+
+You should see: "Hi [username]! You've successfully authenticated..."
+
+---
+
+## Step 5: Install Node.js
+
+Node.js is needed for many modern development tools.
+
+```bash
+brew install node
+```
+
+**Test it:**
+```bash
+node --version
+npm --version
+```
+
+---
+
+## Step 6: Install Claude Code
+
+### 6.1 Install Claude Code Extension
+
+1. Open VS Code
+2. Click the Extensions icon (or press `Cmd + Shift + X`)
+3. Search for "Claude Code"
+4. Click "Install" on the official Anthropic extension
+
+### 6.2 Install Claude Code CLI (Optional)
+
+For command-line access:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### 6.3 Sign In to Claude
+
+1. In VS Code, click the Claude icon in the sidebar
+2. Click "Sign in to Claude"
+3. Follow the prompts to authenticate with your Anthropic account
+
+---
+
+## Step 7: Install Python (For Data Analysis)
+
+If you plan to do data analysis with Python:
+
+### 7.1 Install Python via Homebrew
+
+```bash
+brew install python@3.11
+```
+
+### 7.2 Create a Virtual Environment
+
+For your first project:
+
+```bash
+mkdir ~/my-first-project
+cd ~/my-first-project
+python3 -m venv venv
+source venv/bin/activate
+```
+
+You'll see `(venv)` in your prompt when activated.
+
+### 7.3 Install Common Data Science Packages
+
+```bash
+pip install pandas numpy matplotlib jupyter
+```
+
+**Deactivate when done:**
+```bash
+deactivate
+```
+
+---
+
+## Step 8: Install R (Optional - For R Users)
+
+If you prefer R for data analysis:
+
+### 8.1 Install R
+
+```bash
+brew install r
+```
+
+### 8.2 Install RStudio (Optional)
+
+Download from [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+
+### 8.3 Install R Extension for VS Code
+
+1. Open VS Code Extensions
+2. Search for "R"
+3. Install the official R extension
+
+---
+
+## Step 9: Clone Your First Project
+
+Let's clone a starter project with Claude templates.
+
+### 9.1 Create a Projects Folder
+
+```bash
+mkdir ~/projects
+cd ~/projects
+```
+
+### 9.2 Clone This Repository
+
+```bash
+git clone git@github.com:yourusername/claude-code-integration.git
+cd claude-code-integration
+```
+
+### 9.3 Open in VS Code
+
+```bash
+code .
+```
+
+### 9.4 Explore the Templates
+
+Check out these files:
+- `CLAUDE.md` - How to work with Claude in this project
+- `.claudeignore` - What Claude ignores for context
+- `.vscode/settings.json` - VS Code + Claude configuration
+
+---
+
+## Step 10: Verify Your Setup
+
+Run these commands to verify everything is installed:
+
+```bash
+# VS Code
+code --version
+
+# Git
+git --version
+
+# Node.js
+node --version
+npm --version
+
+# Python
+python3 --version
+
+# SSH to GitHub
+ssh -T git@github.com
+```
+
+All should work without errors!
+
+---
+
+## Next Steps
+
+You're all set! Here's what to do next:
+
+1. **Learn Git Basics**: Go to the [Git & GitHub track](/git-github)
+2. **Start a Data Project**: Try the [Data Analysis track](/data-analysis)
+3. **Build an App**: Check out the [App Builder track](/app-builder)
+4. **Automate Tasks**: Explore the [Automation track](/automation)
+
+---
+
+## Troubleshooting
+
+### Command Not Found
+
+If you get "command not found" errors:
+
+1. Close and reopen Terminal
+2. Check your PATH:
+   ```bash
+   echo $PATH
+   ```
+3. Ensure Homebrew is in your PATH (Step 2.2)
+
+### Permission Denied
+
+If you get permission errors with npm:
+
+```bash
+mkdir ~/.npm-global
+npm config set prefix '~/.npm-global'
+echo 'export PATH=~/.npm-global/bin:$PATH' >> ~/.zprofile
+source ~/.zprofile
+```
+
+### Git Push Fails
+
+If `git push` asks for username/password, your SSH key isn't set up correctly. Repeat Step 4.
+
+### VS Code Can't Find Git
+
+Open VS Code settings (Cmd + ,) and search for "git.path". Set it to:
+```
+/opt/homebrew/bin/git
+```
+
+---
+
+## Tips for Mac Users
+
+- Use `Cmd + Shift + P` frequently in VS Code for the Command Palette
+- Terminal shortcuts:
+  - `Cmd + T`: New tab
+  - `Cmd + K`: Clear screen
+  - `Ctrl + C`: Cancel current command
+- Keep your system updated: Check for macOS updates regularly
+- Use Time Machine for backups before major changes
+
+---
+
+## Additional Resources
+
+- [VS Code Tips for Mac](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf)
+- [Oh My Zsh](https://ohmyz.sh/) - Make your terminal better
+- [Homebrew Packages](https://formulae.brew.sh/) - Explore what you can install
+
+---
+
+**Ready to code!** Proceed to the [Git & GitHub Basics](/git-github) to learn version control.

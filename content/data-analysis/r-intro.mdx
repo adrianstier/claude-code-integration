@@ -1,0 +1,439 @@
+---
+title: 'R for Data Analysis - Introduction'
+description: 'Learn R programming for data analysis with hands-on examples and Claude Code assistance'
+order: 3
+duration: '120 minutes'
+prerequisites: ['VS Code setup', 'Git basics']
+---
+
+# R for Data Analysis - Introduction
+
+Learn R programming for data analysis! This hands-on tutorial will teach you R fundamentals through practical examples with Claude Code as your coding partner.
+
+## What You'll Learn
+
+- R programming basics (variables, functions, data structures)
+- Data manipulation with dplyr and tidyverse
+- Data visualization with ggplot2
+- Statistical analysis fundamentals
+- Working with real datasets
+- How to effectively use Claude Code for R development
+
+## Prerequisites
+
+Before starting:
+- Complete [macOS Setup](/start-here/mac-setup) or [Windows Setup](/start-here/windows-setup)
+- R and RStudio installed
+- Basic understanding of programming concepts (helpful but not required)
+
+## Time Required
+
+~2 hours to complete all sections
+
+---
+
+## 1. Setting Up Your R Environment
+
+### Installing R and RStudio
+
+**macOS:**
+```bash
+# Install R
+brew install r
+
+# Install RStudio (download from RStudio.com or use Homebrew)
+brew install --cask rstudio
+```
+
+**Windows:**
+```bash
+# Download and install from:
+# R: https://cran.r-project.org/bin/windows/base/
+# RStudio: https://posit.co/download/rstudio-desktop/
+```
+
+### Installing Essential Packages
+
+Open RStudio and run:
+
+```r
+# Install tidyverse (includes dplyr, ggplot2, and more)
+install.packages("tidyverse")
+
+# Install additional useful packages
+install.packages(c("readr", "lubridate", "stringr"))
+
+# Load tidyverse
+library(tidyverse)
+```
+
+### VS Code Setup for R
+
+Install the R extension in VS Code:
+
+```bash
+# In VS Code, install the R extension
+# Press Cmd+Shift+X (Mac) or Ctrl+Shift+X (Windows)
+# Search for "R" by REditorSupport and install
+```
+
+---
+
+## 2. R Basics
+
+### Variables and Data Types
+
+Create a new R script:
+
+```r
+# Numeric
+age <- 25
+height <- 5.9
+temperature <- 98.6
+
+# Character (strings)
+name <- "Alice"
+city <- "San Francisco"
+
+# Logical (boolean)
+is_student <- TRUE
+has_experience <- FALSE
+
+# Print values
+print(paste("Name:", name))
+print(paste("Age:", age))
+```
+
+**Ask Claude Code:**
+```
+Explain the difference between <- and = in R.
+When should I use each one?
+```
+
+### Vectors
+
+```r
+# Numeric vector
+temperatures <- c(72, 75, 68, 71, 73, 76, 74)
+print(temperatures)
+
+# Character vector
+days <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+print(days)
+
+# Vector operations
+mean_temp <- mean(temperatures)
+max_temp <- max(temperatures)
+
+print(paste("Average temperature:", mean_temp))
+print(paste("Maximum temperature:", max_temp))
+
+# Indexing (R uses 1-based indexing!)
+first_day <- days[1]  # "Mon"
+weekend <- days[6:7]  # "Sat", "Sun"
+```
+
+### Data Frames
+
+```r
+# Create a data frame
+weather_data <- data.frame(
+  day = days,
+  temperature = temperatures,
+  sunny = c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
+)
+
+# View the data
+print(weather_data)
+head(weather_data)  # First 6 rows
+str(weather_data)   # Structure
+
+# Access columns
+weather_data$temperature
+weather_data$day
+
+# Filter rows
+sunny_days <- weather_data[weather_data$sunny == TRUE, ]
+print(sunny_days)
+```
+
+**Ask Claude Code:**
+```
+Create a data frame with student information including:
+- names (5 students)
+- ages
+- test scores
+- pass/fail status
+
+Then calculate the average score and find students who passed.
+```
+
+---
+
+## 3. Data Manipulation with dplyr
+
+### Loading and Exploring Data
+
+```r
+library(tidyverse)
+
+# Create sample dataset
+sales_data <- tibble(
+  date = seq(as.Date("2025-01-01"), as.Date("2025-01-31"), by = "day"),
+  product = sample(c("Laptop", "Phone", "Tablet"), 31, replace = TRUE),
+  quantity = sample(1:10, 31, replace = TRUE),
+  price = sample(c(999, 699, 399), 31, replace = TRUE),
+  region = sample(c("West", "East", "North", "South"), 31, replace = TRUE)
+)
+
+# View the data
+glimpse(sales_data)
+head(sales_data, 10)
+```
+
+### The Pipe Operator
+
+```r
+# Traditional way (hard to read)
+result1 <- filter(sales_data, product == "Laptop")
+result2 <- select(result1, date, quantity, price)
+result3 <- arrange(result2, desc(quantity))
+
+# With pipe operator (easy to read)
+result <- sales_data %>%
+  filter(product == "Laptop") %>%
+  select(date, quantity, price) %>%
+  arrange(desc(quantity))
+```
+
+### Filtering with filter()
+
+```r
+# Filter laptops
+laptops <- sales_data %>%
+  filter(product == "Laptop")
+
+# Multiple conditions
+high_value_sales <- sales_data %>%
+  filter(product == "Laptop", quantity > 5)
+
+# Filter by date range
+january_first_week <- sales_data %>%
+  filter(date <= as.Date("2025-01-07"))
+
+print(high_value_sales)
+```
+
+### Selecting Columns with select()
+
+```r
+# Select specific columns
+sales_summary <- sales_data %>%
+  select(date, product, quantity)
+
+# Select range of columns
+sales_details <- sales_data %>%
+  select(product:price)
+
+# Drop columns
+without_region <- sales_data %>%
+  select(-region)
+
+head(sales_summary)
+```
+
+### Creating New Columns with mutate()
+
+```r
+# Add calculated column
+sales_with_total <- sales_data %>%
+  mutate(total_revenue = quantity * price)
+
+# Multiple new columns
+sales_enhanced <- sales_data %>%
+  mutate(
+    total_revenue = quantity * price,
+    weekday = weekdays(date),
+    month = month(date)
+  )
+
+head(sales_enhanced)
+```
+
+### Grouping and Summarizing
+
+```r
+# Summary statistics by product
+product_summary <- sales_data %>%
+  mutate(revenue = quantity * price) %>%
+  group_by(product) %>%
+  summarize(
+    total_sales = n(),
+    total_quantity = sum(quantity),
+    total_revenue = sum(revenue),
+    avg_quantity = mean(quantity)
+  )
+
+print(product_summary)
+
+# Multiple grouping
+region_product_summary <- sales_data %>%
+  mutate(revenue = quantity * price) %>%
+  group_by(region, product) %>%
+  summarize(
+    total_revenue = sum(revenue),
+    avg_price = mean(price)
+  )
+
+print(region_product_summary)
+```
+
+**Ask Claude Code:**
+```
+Using the sales_data:
+1. Find the total revenue per region
+2. Identify the top 5 highest revenue days
+3. Calculate average quantity sold per product per region
+```
+
+---
+
+## 4. Data Visualization with ggplot2
+
+### Understanding ggplot2 Syntax
+
+```r
+library(ggplot2)
+
+# Basic structure:
+# ggplot(data, aes(x = ..., y = ...)) + geom_*()
+
+# Scatter plot
+ggplot(sales_data, aes(x = date, y = quantity)) +
+  geom_point() +
+  labs(title = "Sales Quantity Over Time",
+       x = "Date",
+       y = "Quantity Sold")
+
+# Add color by product
+ggplot(sales_data, aes(x = date, y = quantity, color = product)) +
+  geom_point(size = 3) +
+  labs(title = "Sales by Product",
+       x = "Date",
+       y = "Quantity")
+```
+
+### Bar Charts
+
+```r
+# Revenue by product
+sales_data %>%
+  mutate(revenue = quantity * price) %>%
+  group_by(product) %>%
+  summarize(total_revenue = sum(revenue)) %>%
+  ggplot(aes(x = product, y = total_revenue, fill = product)) +
+  geom_col() +
+  labs(title = "Total Revenue by Product",
+       x = "Product",
+       y = "Revenue ($)") +
+  theme_minimal()
+```
+
+### Line Charts
+
+```r
+# Daily revenue trend
+sales_data %>%
+  mutate(revenue = quantity * price) %>%
+  group_by(date) %>%
+  summarize(daily_revenue = sum(revenue)) %>%
+  ggplot(aes(x = date, y = daily_revenue)) +
+  geom_line(color = "blue", size = 1) +
+  geom_point(color = "darkblue", size = 2) +
+  labs(title = "Daily Revenue Trend") +
+  theme_minimal()
+```
+
+### Box Plots
+
+```r
+# Quantity by product
+ggplot(sales_data, aes(x = product, y = quantity, fill = product)) +
+  geom_boxplot() +
+  labs(title = "Quantity Distribution by Product") +
+  theme_minimal()
+```
+
+**Ask Claude Code:**
+```
+Create visualizations showing:
+1. A stacked bar chart of revenue by region
+2. A line chart showing cumulative revenue
+3. A faceted plot for each product
+```
+
+---
+
+## 5. Reading and Writing Data
+
+### CSV Files
+
+```r
+# Write to CSV
+write_csv(sales_data, "sales_january_2025.csv")
+
+# Read from CSV
+sales_imported <- read_csv("sales_january_2025.csv")
+```
+
+### Excel Files
+
+```r
+# Install packages if needed
+install.packages("readxl")
+install.packages("writexl")
+
+library(readxl)
+library(writexl)
+
+# Write to Excel
+write_xlsx(sales_data, "sales_january_2025.xlsx")
+
+# Read from Excel
+excel_data <- read_excel("sales_january_2025.xlsx")
+```
+
+---
+
+## 6. Next Steps
+
+### Practice Projects
+
+1. **Customer Analysis** - Segment customers and analyze behavior
+2. **Time Series** - Forecast sales trends
+3. **Statistical Modeling** - Build predictive models
+
+### Advanced Topics
+
+- **Shiny**: Build interactive web apps
+- **tidymodels**: Machine learning in R
+- **RMarkdown**: Automated reporting
+
+### Continue Learning
+
+- [Automation Track](/automation): Automate R reports
+- [App Builder Track](/app-builder): Build Shiny dashboards
+- [Git & GitHub](/git-github): Version control
+
+---
+
+## Resources
+
+- [R for Data Science](https://r4ds.had.co.nz/)
+- [tidyverse Documentation](https://www.tidyverse.org/)
+- [ggplot2 Cookbook](https://r-graphics.org/)
+- [RStudio Community](https://community.rstudio.com/)
+
+---
+
+**Congratulations!** You now have a solid foundation in R for data analysis. Keep practicing and use Claude Code to help you learn!

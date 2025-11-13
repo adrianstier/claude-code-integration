@@ -1,0 +1,537 @@
+---
+title: 'MCPs and Cursor - Advanced AI Coding'
+description: 'Learn to use Model Context Protocol (MCP) servers and Cursor IDE for enhanced AI-powered development'
+order: 6
+duration: '60 minutes'
+---
+
+# MCPs and Cursor - Advanced AI Coding
+
+Take your AI-assisted development to the next level with **Model Context Protocol (MCP) servers** and **Cursor IDE**. These tools supercharge Claude Code and enable powerful integrations.
+
+## What You'll Learn
+
+- 🔌 What MCPs are and why they matter
+- 🛠️ Installing and using MCP servers
+- 💻 Setting up Cursor IDE
+- 🚀 Advanced workflows combining MCPs + Cursor + Claude Code
+- 🔧 Building custom MCP servers
+
+---
+
+## Part 1: Model Context Protocol (MCP)
+
+### What is MCP?
+
+**Model Context Protocol** is Anthropic's open standard that enables Claude to securely connect to external data sources and tools. Think of MCPs as "plugins" for Claude Code.
+
+**Key Benefits:**
+- 📊 Access databases, APIs, and file systems
+- 🔍 Search documentation and codebases
+- 🌐 Fetch real-time web data
+- 🛠️ Execute custom tools and scripts
+- 🔒 Secure, controlled access to resources
+
+### How MCPs Work
+
+```
+┌─────────────┐      ┌──────────┐      ┌─────────────┐
+│ Claude Code │ ←──→ │   MCP    │ ←──→ │  External   │
+│             │      │  Server  │      │  Resource   │
+└─────────────┘      └──────────┘      └─────────────┘
+                          ↓
+                    (Filesystem,
+                     Database,
+                     API, etc.)
+```
+
+### Popular MCP Servers
+
+1. **Filesystem MCP** - Read/write files and directories
+2. **Git MCP** - Git operations and history
+3. **Database MCP** - Query databases (PostgreSQL, MySQL, SQLite)
+4. **Web Search MCP** - Search the web in real-time
+5. **Slack MCP** - Read/send Slack messages
+6. **GitHub MCP** - GitHub API integration
+
+---
+
+## Installing MCP Servers
+
+### Prerequisites
+
+```bash
+# Ensure Claude Code CLI is installed
+claude --version
+
+# Node.js 18+ required for many MCPs
+node --version
+```
+
+### Method 1: Official MCP Servers
+
+**Install Filesystem MCP:**
+
+```bash
+# Using npx (recommended)
+npx @modelcontextprotocol/server-filesystem
+
+# Or install globally
+npm install -g @modelcontextprotocol/server-filesystem
+```
+
+**Configure in Claude Code:**
+
+```bash
+# Edit Claude Code config
+claude config edit
+
+# Add MCP server configuration
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        "/path/to/allowed/directory"
+      ]
+    }
+  }
+}
+```
+
+### Method 2: Community MCP Servers
+
+Browse community MCPs at:
+- https://github.com/modelcontextprotocol/servers
+- https://mcp.so (MCP directory)
+
+**Example: Installing Postgres MCP**
+
+```bash
+npm install -g @modelcontextprotocol/server-postgres
+
+# Configure
+claude config edit
+```
+
+Add to config:
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "mcp-server-postgres",
+      "env": {
+        "DATABASE_URL": "postgresql://user:pass@localhost/dbname"
+      }
+    }
+  }
+}
+```
+
+---
+
+## Using MCPs with Claude Code
+
+### Example: Filesystem MCP
+
+**Ask Claude Code:**
+```
+List all Python files in my project directory
+that were modified in the last 7 days.
+```
+
+With Filesystem MCP enabled, Claude can:
+- Search your entire codebase
+- Read file contents
+- Find patterns across files
+- Understand project structure
+
+### Example: Database MCP
+
+**Ask Claude Code:**
+```
+Connect to my PostgreSQL database and:
+1. Show all tables
+2. Count rows in 'users' table
+3. Find users who signed up this week
+4. Generate a summary report
+```
+
+### Example: Git MCP
+
+**Ask Claude Code:**
+```
+Analyze my git history and:
+1. Show commit frequency by author
+2. Identify files changed most often
+3. Find commits related to authentication
+4. Suggest areas that need refactoring based on churn
+```
+
+---
+
+## Part 2: Cursor IDE
+
+### What is Cursor?
+
+**Cursor** is an AI-first code editor (fork of VS Code) with deep Claude integration. It's designed specifically for AI-assisted development.
+
+**Key Features:**
+- 🤖 Claude AI built-in
+- ⌨️ Cmd+K for inline AI edits
+- 💬 AI chat in sidebar
+- 🔍 Codebase-wide understanding
+- 📝 Multi-file editing
+- 🎯 Context-aware suggestions
+
+### Installing Cursor
+
+**Download:**
+- Visit: https://cursor.sh
+- Available for macOS, Windows, Linux
+
+**Installation:**
+
+```bash
+# macOS (Homebrew)
+brew install --cask cursor
+
+# Or download from website
+# https://cursor.sh/download
+```
+
+**First Launch:**
+1. Open Cursor
+2. Sign in with your Anthropic account
+3. Select Claude as your AI model
+4. Import VS Code settings (optional)
+
+---
+
+## Cursor + Claude Workflows
+
+### Workflow 1: Inline Code Generation
+
+**Cmd+K (Mac) / Ctrl+K (Windows)**
+
+1. Select code or place cursor
+2. Press Cmd+K
+3. Type what you want: "Add error handling"
+4. Claude edits code inline
+5. Accept or refine
+
+**Example:**
+```typescript
+// Before
+function fetchUser(id: string) {
+  return fetch(`/api/users/${id}`)
+}
+
+// Select function, Cmd+K, type: "Add error handling and TypeScript types"
+
+// After
+async function fetchUser(id: string): Promise<User | null> {
+  try {
+    const response = await fetch(`/api/users/${id}`)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    return await response.json()
+  } catch (error) {
+    console.error('Failed to fetch user:', error)
+    return null
+  }
+}
+```
+
+### Workflow 2: Chat-Driven Development
+
+**Cmd+L (Mac) / Ctrl+L (Windows)** - Opens AI chat
+
+**Example Conversation:**
+```
+You: I need to add user authentication to my Next.js app
+
+Claude: I can help you set up authentication. Let's use NextAuth.js.
+I'll guide you through:
+1. Installing dependencies
+2. Creating auth configuration
+3. Adding login/logout pages
+4. Protecting routes
+
+Let's start. First, run:
+npm install next-auth
+
+[Creates files as you go]
+```
+
+### Workflow 3: Multi-File Refactoring
+
+**Cmd+Shift+L (Mac) / Ctrl+Shift+L (Windows)** - Composer mode
+
+**Example:**
+```
+You: Refactor my components to use TypeScript and add proper prop types
+
+Claude: [Analyzes all component files]
+
+I'll update these 12 files:
+- Header.jsx → Header.tsx
+- Button.jsx → Button.tsx
+- ...
+
+[Shows diffs for all files]
+[You can review and apply changes]
+```
+
+### Workflow 4: Codebase Q&A
+
+**Ask Claude about your code:**
+
+```
+You: How does authentication work in this codebase?
+
+Claude: [Analyzes your auth files]
+
+Your app uses JWT-based authentication with these components:
+
+1. /lib/auth.ts - Core auth logic
+2. /middleware.ts - Route protection
+3. /api/login/route.ts - Login endpoint
+
+The flow is:
+1. User submits credentials to /api/login
+2. Server validates and generates JWT
+3. Token stored in HTTP-only cookie
+4. Middleware checks token on protected routes
+
+Would you like me to explain any specific part?
+```
+
+---
+
+## Part 3: MCPs + Cursor + Claude Code
+
+### The Ultimate Workflow
+
+Combine all three for maximum productivity:
+
+1. **Use Claude Code CLI** for quick file operations
+2. **Use MCPs** to give Claude access to databases, APIs
+3. **Use Cursor** for deep coding sessions
+
+### Example: Building a Dashboard with Database
+
+**Step 1: Explore Data (MCP + Claude Code)**
+
+```bash
+# In terminal
+claude
+
+> Connect to my database and show the users table schema
+> What are the most common user types?
+> Generate sample SQL queries for a user dashboard
+```
+
+**Step 2: Generate Code (Cursor)**
+
+Open Cursor, press Cmd+L:
+
+```
+Build a Next.js dashboard showing:
+1. Total users
+2. Users by type (chart)
+3. Recent signups (table)
+4. Active users this week
+
+Use the database schema you just analyzed.
+Create all necessary components with TypeScript and Tailwind.
+```
+
+**Step 3: Refine and Deploy (All Tools)**
+
+- Use Cursor for editing and debugging
+- Use MCP to query real data while building
+- Use Claude Code CLI for git operations and deployment
+
+---
+
+## Building Custom MCP Servers
+
+### Why Build Custom MCPs?
+
+- Connect Claude to your internal tools
+- Access proprietary data sources
+- Automate complex workflows
+- Integrate with legacy systems
+
+### Simple MCP Server Example
+
+**Create a Weather MCP:**
+
+```typescript
+// weather-mcp/src/index.ts
+import { Server } from '@modelcontextprotocol/sdk/server/index.js'
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
+
+const server = new Server({
+  name: 'weather-mcp',
+  version: '1.0.0',
+})
+
+// Define a tool
+server.setRequestHandler('tools/call', async (request) => {
+  if (request.params.name === 'get_weather') {
+    const { city } = request.params.arguments
+
+    // Call weather API
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.API_KEY}`
+    )
+    const data = await response.json()
+
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify(data, null, 2)
+      }]
+    }
+  }
+})
+
+// Start server
+const transport = new StdioServerTransport()
+await server.connect(transport)
+```
+
+**Install and Use:**
+
+```bash
+# Build
+cd weather-mcp
+npm install
+npm run build
+
+# Configure in Claude Code
+claude config edit
+```
+
+```json
+{
+  "mcpServers": {
+    "weather": {
+      "command": "node",
+      "args": ["/path/to/weather-mcp/build/index.js"],
+      "env": {
+        "API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+**Use it:**
+```
+Claude, what's the weather in San Francisco?
+```
+
+---
+
+## Best Practices
+
+### Security
+
+1. **Limit MCP Access**
+   - Only grant necessary permissions
+   - Use environment variables for secrets
+   - Review MCP code before installing
+
+2. **Audit MCP Activity**
+   - Check logs regularly
+   - Monitor data access patterns
+   - Disable unused MCPs
+
+### Performance
+
+1. **Cache Results**
+   - MCPs should cache expensive operations
+   - Use appropriate TTLs
+
+2. **Limit Scope**
+   - Don't give MCPs access to entire system
+   - Restrict to specific directories/databases
+
+### Development
+
+1. **Test MCPs Thoroughly**
+   - Write unit tests
+   - Test error scenarios
+   - Validate all inputs
+
+2. **Document MCPs**
+   - Clear README
+   - Usage examples
+   - Configuration guide
+
+---
+
+## Troubleshooting
+
+### MCP Not Connecting
+
+```bash
+# Check MCP status
+claude mcp list
+
+# View logs
+claude mcp logs <server-name>
+
+# Restart MCP
+claude mcp restart <server-name>
+```
+
+### Cursor Not Responding
+
+1. Restart Cursor
+2. Check Claude API key in settings
+3. Clear cache: `Cmd+Shift+P` → "Clear Cache"
+4. Check network connection
+
+### Permission Errors
+
+```bash
+# Fix file permissions
+chmod +x /path/to/mcp/server
+
+# Check environment variables
+echo $DATABASE_URL
+```
+
+---
+
+## Next Steps
+
+### Learn More
+
+- [MCP Documentation](https://modelcontextprotocol.io/introduction)
+- [Cursor Documentation](https://docs.cursor.sh/)
+- [Claude Code Docs](https://docs.claude.com/en/docs/claude-code/overview)
+
+### Build Projects
+
+1. **Custom MCP** for your team's tools
+2. **Automated Workflow** with MCPs + cron
+3. **AI-Powered Dashboard** with Cursor + Database MCP
+
+### Join Community
+
+- [MCP Discord](https://discord.gg/anthropic-mcp)
+- [Cursor Community](https://forum.cursor.sh/)
+- [Claude Code GitHub Discussions](https://github.com/anthropics/claude-code/discussions)
+
+---
+
+**You're now equipped with advanced AI coding tools!** Experiment with MCPs and Cursor to supercharge your development workflow.
+
+**Continue:** [Automation Track](/automation) | [App Builder](/app-builder) | [Start Here](/start-here)

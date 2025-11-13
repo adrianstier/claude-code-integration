@@ -1,0 +1,1564 @@
+---
+title: 'Claude Code Best Practices - Pro Tips'
+description: 'Master Claude Code with proven workflows, optimization strategies, and expert techniques from Anthropic'
+order: 7
+duration: '90 minutes'
+---
+
+# Claude Code Best Practices - Pro Tips
+
+Master Claude Code with battle-tested workflows and optimization strategies. These practices come directly from Anthropic engineers and power users who use Claude Code daily.
+
+## What You'll Learn
+
+- 🎯 Environment customization with CLAUDE.md files
+- 🔧 Tool permissions and custom commands
+- 🚀 Proven workflows (Explore → Plan → Code → Commit)
+- 💡 Optimization strategies for better results
+- 🤖 Multi-Claude workflows for complex tasks
+- ⚡ Headless mode and automation
+
+---
+
+## Part 1: Environment Customization
+
+### CLAUDE.md Files - Your Secret Weapon
+
+**What are CLAUDE.md files?**
+
+Special documentation files that Claude automatically reads and incorporates into every conversation. Think of them as persistent instructions that guide Claude's behavior in your project.
+
+**What to include:**
+
+```markdown
+# Project: My Awesome App
+
+## Common Commands
+
+- `npm run dev` - Start development server on port 3000
+- `npm test` - Run Jest tests
+- `npm run lint` - Run ESLint with auto-fix
+- `./scripts/deploy.sh` - Deploy to staging
+
+## Architecture
+
+- `/src/components` - React components (use TypeScript)
+- `/src/lib` - Utility functions and shared logic
+- `/src/app` - Next.js App Router pages
+- `/tests` - Jest unit tests
+
+## Code Style
+
+IMPORTANT: Always use TypeScript strict mode.
+IMPORTANT: Prefer functional components with hooks.
+YOU MUST: Add JSDoc comments to all exported functions.
+
+## Testing
+
+- Write tests BEFORE implementation (TDD)
+- Avoid mocks unless absolutely necessary
+- Test edge cases: empty arrays, null values, errors
+
+## Repository Rules
+
+- Branch naming: `feature/description` or `fix/description`
+- Commit messages: Use conventional commits (feat:, fix:, docs:)
+- PRs require 2 approvals before merge
+
+## Environment Setup
+
+- Node.js 18+
+- PostgreSQL 14+
+- Redis for caching
+
+## Quirks & Warnings
+
+- IMPORTANT: Auth tokens expire after 1 hour
+- Database migrations must be reversible
+- Never commit `.env` files
+```
+
+**Where to place CLAUDE.md:**
+
+1. **Project root** - For project-specific guidelines
+2. **Parent directory** - Useful for monorepos (applies to all child projects)
+3. **Child directories** - Override parent settings for specific modules
+4. **Home folder** `~/.claude/CLAUDE.md` - Global guidelines for all projects
+
+**Generate automatically:**
+
+```bash
+# In your project directory
+claude
+
+# Type this command
+/init
+
+# Claude generates a CLAUDE.md based on your project structure
+```
+
+### Tuning Your CLAUDE.md
+
+Treat CLAUDE.md like a reusable prompt - iterate on effectiveness:
+
+**Use the `#` shortcut:**
+
+```
+You: # Add the new deployment script to CLAUDE.md
+
+Claude: [Automatically updates CLAUDE.md with deployment info]
+```
+
+**Add emphasis keywords:**
+
+```markdown
+IMPORTANT: Always validate user input
+YOU MUST: Run tests before committing
+NEVER: Use `any` type in TypeScript
+CRITICAL: Check for null/undefined before accessing properties
+```
+
+**Run through prompt improver:**
+
+Many teams run their CLAUDE.md through Anthropic's prompt improvement tools for better instruction adherence.
+
+---
+
+## Part 2: Tool Permissions & Extensions
+
+### Customize Tool Access
+
+**Three ways to configure permissions:**
+
+**1. Interactive (during sessions):**
+```
+Claude: I need permission to run bash commands.
+You: [Check "Always allow" → Allow]
+```
+
+**2. Via command:**
+```bash
+/permissions
+# Interactive menu to configure allowed tools
+```
+
+**3. Manual configuration:**
+
+Edit `.claude/settings.json` or `~/.claude.json`:
+
+```json
+{
+  "allowedTools": ["read", "write", "edit", "bash", "grep"],
+  "autoApprove": {
+    "bash": ["npm install", "npm run dev", "git status"]
+  }
+}
+```
+
+**Pro tip:** Curate permissions for safety while enabling productivity. Don't just allow everything.
+
+### Bash Tool Integration
+
+Claude inherits your shell environment and can use ANY command-line tool you have installed.
+
+**Document custom scripts:**
+
+```markdown
+# In CLAUDE.md
+
+## Custom Tools
+
+- `./scripts/db-backup.sh` - Creates PostgreSQL backup
+  Usage: `./scripts/db-backup.sh [environment]`
+
+- `analyze-bundle` - Custom npm script analyzing bundle size
+  Usage: `npm run analyze-bundle`
+
+- `deployment-checker` - Checks if app is ready for deployment
+  Run: `deployment-checker --env production`
+```
+
+**For tools with built-in help:**
+
+```
+You: Use the deployment-checker tool and check if we're ready for production
+
+Claude: [Runs `deployment-checker --help` first to understand usage, then executes with correct flags]
+```
+
+### Custom Slash Commands
+
+Create reusable prompt templates in `.claude/commands/` as Markdown files.
+
+**Example: `.claude/commands/fix-github-issue.md`**
+
+```markdown
+# Fix GitHub Issue
+
+Pull issue $ARGUMENTS from GitHub and:
+1. Read the issue description and comments
+2. Locate relevant code files
+3. Propose a fix with explanation
+4. Implement the fix with tests
+5. Create a PR referencing the issue
+```
+
+**Usage:**
+
+```
+claude
+
+> /fix-github-issue 1234
+
+[Claude automatically pulls issue #1234 and fixes it]
+```
+
+**More examples:**
+
+- `/review-pr [number]` - Review PR with detailed feedback
+- `/optimize-component [file]` - Optimize React component
+- `/add-tests [file]` - Generate comprehensive tests
+- `/document [file]` - Add JSDoc comments
+
+---
+
+## Part 3: Proven Workflows
+
+### Workflow 1: Explore → Plan → Code → Commit
+
+**The most important workflow. Following this prevents 80% of issues.**
+
+**Step 1: Explore**
+
+Ask Claude to READ first, not write:
+
+```
+You: Read src/auth/login.ts and src/lib/jwt.ts to understand our current authentication flow.
+
+Claude: [Reads files, summarizes architecture]
+
+You: Now read the tests in tests/auth/ to see what's already tested.
+
+Claude: [Reviews tests, identifies gaps]
+```
+
+**Step 2: Plan**
+
+Request a detailed plan with "think":
+
+```
+You: I need to add OAuth support. Think through how to implement this.
+
+Claude: [Activates extended thinking mode]
+
+Let me think through this carefully...
+
+Plan:
+1. Add OAuth provider configuration (Google, GitHub)
+2. Create OAuth callback handler
+3. Store OAuth tokens securely
+4. Integrate with existing JWT system
+5. Update user model to support OAuth identities
+6. Write tests for OAuth flow
+7. Update documentation
+
+Potential issues:
+- Token refresh logic needed
+- Handle account linking (OAuth + existing email/password)
+- Security: validate OAuth state parameter
+
+Shall I proceed with this plan?
+```
+
+**Use thinking modes:**
+- `think` - Basic extended thinking
+- `think hard` - Deeper analysis
+- `think harder` - Even more thorough
+- `ultrathink` - Maximum thinking time
+
+**Step 3: Code**
+
+```
+You: Looks good! Start with step 1 - add OAuth provider configuration.
+
+Claude: [Implements configuration system]
+
+You: Good. Now step 2 - the callback handler.
+
+Claude: [Implements handler]
+```
+
+Work through the plan systematically. Don't skip steps!
+
+**Step 4: Commit**
+
+```
+You: This looks great! Create a commit with an appropriate message.
+
+Claude: [Runs git add, creates commit with descriptive message based on changes]
+
+You: Now create a PR for review.
+
+Claude: [Creates PR with summary, test plan, screenshots if applicable]
+```
+
+**Why this workflow works:**
+
+- **Explore** = Claude understands context
+- **Plan** = Prevents suboptimal solutions
+- **Code** = Focused implementation with clear target
+- **Commit** = Clean git history with good messages
+
+---
+
+### Workflow 2: Test-Driven Development
+
+Claude excels with TDD when given clear targets to iterate against.
+
+**Step 1: Define tests from specs**
+
+```
+You: I need a function that parses markdown frontmatter. Here are input/output examples:
+
+Input:
+---
+title: Hello
+---
+# Content
+
+Output:
+{ title: "Hello", content: "# Content" }
+
+Write comprehensive test cases. IMPORTANT: Use TDD - write real tests, not mocks.
+
+Claude: [Creates test file with multiple test cases covering edge cases]
+```
+
+**Step 2: Verify tests fail**
+
+```
+You: Run the tests to confirm they fail (since we haven't implemented yet).
+
+Claude: [Runs tests, shows failures]
+
+All 8 tests failing as expected. Ready to implement.
+```
+
+**Step 3: Commit tests**
+
+```
+You: Commit the tests.
+
+Claude: [Commits with message "test: Add tests for markdown frontmatter parser"]
+```
+
+**Step 4: Implement iteratively**
+
+```
+You: Now implement the parser. Run tests after each change.
+
+Claude: [Writes initial implementation, runs tests]
+
+5/8 passing. Let me fix the edge case for empty frontmatter...
+
+[Updates code, runs tests again]
+
+7/8 passing. The Unicode handling needs work...
+
+[Final update]
+
+All 8 tests passing!
+```
+
+**Step 5: Verify with subagent (optional)**
+
+```
+You: Launch a review agent to check if the code is overfitting to the tests.
+
+Claude: [Launches subagent to review implementation]
+
+Subagent: Code looks good, properly handles general cases beyond test examples.
+```
+
+**Step 6: Commit implementation**
+
+```
+You: Perfect! Commit the implementation.
+
+Claude: [Commits with message "feat: Implement markdown frontmatter parser"]
+```
+
+---
+
+### Workflow 3: Visual Iteration
+
+For UI work, multiple iterations with visual feedback yield significantly better results.
+
+**Setup (choose one):**
+
+1. **Puppeteer MCP** - Automated screenshots
+2. **iOS Simulator** - Mobile app development
+3. **Manual screenshots** - Fastest to start
+
+**The workflow:**
+
+```
+You: Here's a design mock [paste screenshot of Figma design]
+
+Implement this dashboard component.
+
+Claude: [Creates initial implementation]
+
+You: [Take screenshot of result, paste it]
+
+Close but the spacing is off. The cards should have 24px gap, not 16px.
+
+Claude: [Updates spacing, rebuilds]
+
+You: [Paste updated screenshot]
+
+Better! Now the colors don't match. The blue should be #3B82F6.
+
+Claude: [Fixes colors]
+
+You: [Paste final screenshot]
+
+Perfect! That matches the design.
+
+Claude: Shall I commit this?
+
+You: Yes, commit it.
+```
+
+**Pro tips:**
+
+- **Iterate 3-4 times** - First attempt is rarely perfect
+- **Be specific** - "The spacing is off" < "Cards need 24px gap"
+- **Use actual screenshots** - Don't just describe what you see
+- **Check responsive design** - Test mobile, tablet, desktop
+
+**macOS screenshot shortcut:**
+- `Cmd+Ctrl+Shift+4` → Select area → Auto-copies to clipboard
+- `Ctrl+V` in Claude to paste
+
+---
+
+### Workflow 4: Safe YOLO Mode
+
+For repetitive, low-risk tasks where you trust Claude to work autonomously.
+
+**What it is:**
+
+```bash
+claude --dangerously-skip-permissions
+```
+
+Claude can run tools without asking permission for each operation.
+
+**Good use cases:**
+
+- Fixing lint errors across 50+ files
+- Formatting code consistently
+- Renaming variables throughout codebase
+- Adding TypeScript types to untyped code
+- Generating boilerplate
+
+**Safety measures:**
+
+1. **Run in containers** - Docker or similar
+2. **Disable internet** - Prevent external requests
+3. **Use git** - Easy rollback if needed
+4. **Review changes** - Check git diff before committing
+
+**Example:**
+
+```bash
+# In a container or sandboxed environment
+claude --dangerously-skip-permissions
+
+> Fix all ESLint errors in the src/ directory
+
+[Claude autonomously fixes 127 lint errors across 34 files]
+
+> git diff
+
+[Review changes]
+
+> Looks good! Commit with message "fix: Resolve ESLint errors"
+```
+
+**Don't use for:**
+- Production deployments
+- Database migrations
+- API calls to external services
+- Anything involving secrets/credentials
+
+---
+
+### Workflow 5: Codebase Q&A
+
+Ask Claude questions about your codebase as you would a colleague during pair programming.
+
+**Architecture questions:**
+
+```
+You: How does our logging system work?
+
+Claude: [Searches codebase]
+
+Your logging system uses Winston with a custom transport:
+
+1. src/lib/logger.ts - Core logger configuration
+2. src/lib/transports/cloudwatch.ts - AWS CloudWatch integration
+3. Environment variable LOG_LEVEL controls verbosity
+
+All API routes use logger.info() for requests and logger.error() for errors.
+
+Would you like me to show you specific files?
+```
+
+**Feature implementation:**
+
+```
+You: I need to add a new API endpoint for user preferences. Show me the pattern I should follow.
+
+Claude: Based on your existing API routes:
+
+1. Create src/app/api/preferences/route.ts
+2. Use NextAuth for authentication (see api/profile/route.ts example)
+3. Validate input with Zod schemas (pattern in api/users/route.ts)
+4. Return typed responses using ApiResponse<T> helper
+
+Here's a template following your conventions:
+[Shows code]
+```
+
+**Onboarding:**
+
+```
+New developer: Where should I start to understand the authentication system?
+
+Claude: Welcome! Here's the auth system overview:
+
+Entry points:
+1. src/app/api/auth/[...nextauth]/route.ts - NextAuth configuration
+2. src/middleware.ts - Route protection
+3. src/lib/auth.ts - Auth utility functions
+
+The flow:
+1. User hits /api/login
+2. Credentials validated against PostgreSQL
+3. JWT generated (see src/lib/jwt.ts)
+4. Token stored in HTTP-only cookie
+5. Middleware checks token on protected routes
+
+I'd recommend reading these files in this order...
+```
+
+---
+
+### Workflow 6: Git & GitHub Mastery
+
+Claude excels at Git operations and GitHub interactions.
+
+**Search git history:**
+
+```
+You: When did we switch from Express to Next.js? Why?
+
+Claude: [Searches git history]
+
+The migration happened in commit a3f8d92 on March 15, 2024:
+
+"feat: Migrate from Express to Next.js 14"
+
+From the commit message and code review:
+- Wanted better React integration
+- Needed server components for performance
+- SEO improvements with SSR
+
+PR #234 has the full discussion.
+```
+
+**Compose commit messages:**
+
+```
+You: Create a commit for these changes.
+
+Claude: [Analyzes diff, understands context]
+
+Based on your changes:
+- Added OAuth Google provider
+- Updated user model schema
+- Added integration tests
+
+Suggested commit message:
+feat(auth): Add Google OAuth authentication
+
+- Implement OAuth 2.0 flow with Google
+- Extend user model to support OAuth identities
+- Add integration tests for OAuth flow
+- Update documentation with OAuth setup guide
+
+Breaking change: User model now requires `authProvider` field
+
+Sound good?
+```
+
+**Resolve rebase conflicts:**
+
+```
+You: I have merge conflicts in src/api/users.ts after rebasing. Fix them.
+
+Claude: [Reads both versions, understands intent]
+
+The conflict is between:
+- Your changes: Added email validation
+- Main branch: Added rate limiting
+
+I can merge both features. Here's the resolution:
+[Shows resolved code]
+
+Both features preserved. Should I complete the rebase?
+```
+
+**Create pull requests:**
+
+```
+You: Create a PR for this feature branch.
+
+Claude: [Analyzes commits and changes]
+
+Title: Add real-time notifications with WebSockets
+
+Description:
+## Summary
+- Implements WebSocket server for real-time updates
+- Adds notification center UI component
+- Includes online presence indicators
+
+## Changes
+- src/server/websocket.ts - WebSocket server
+- src/components/NotificationCenter.tsx - UI
+- src/hooks/useNotifications.ts - React hook
+- tests/ - Full test coverage
+
+## Test Plan
+- [x] WebSocket connections handling
+- [x] Reconnection logic on disconnect
+- [x] Multiple tabs synchronization
+- [x] Notification persistence
+
+## Screenshots
+[Includes relevant screenshots]
+
+PR created: #456
+```
+
+**Fix failing builds:**
+
+```
+You: The CI build is failing. Fix it.
+
+Claude: [Checks CI logs]
+
+The issue is:
+- TypeScript errors in src/components/Dashboard.tsx
+- Missing type for `user` prop
+- ESLint error: unused import
+
+Fixing now...
+[Makes corrections]
+
+Tests passing locally. Pushing fix...
+
+Build should pass now.
+```
+
+---
+
+### Workflow 7: Jupyter Notebooks (For Data Scientists)
+
+Claude Code works excellently with Jupyter notebooks.
+
+**Read and analyze:**
+
+```
+You: Review my data analysis notebook and suggest improvements.
+
+Claude: [Reads notebook, including code, outputs, and visualizations]
+
+Your analysis looks good! Suggestions:
+
+1. Cell 3: The correlation matrix is hard to read
+   → Use seaborn heatmap with annotations
+
+2. Cell 7: The model seems to be overfitting
+   → Training accuracy 98%, validation 76%
+   → Suggest adding dropout or reducing complexity
+
+3. Cell 12: The chart is functional but plain
+   → Would you like me to make it more aesthetically pleasing?
+
+Shall I implement these improvements?
+```
+
+**Request beautiful visualizations:**
+
+```
+You: Create a visualization of this sales data. Make it aesthetically pleasing - this is for a presentation.
+
+Claude: [Creates polished visualization with]
+- Custom color palette
+- Proper labels and titles
+- Annotations for key points
+- Professional styling
+- High DPI for presentations
+
+[Shows result in notebook output]
+```
+
+**Side-by-side in VS Code:**
+
+1. Open notebook in VS Code
+2. Split editor (Cmd+\\)
+3. Run Claude Code in terminal panel
+4. Claude can read current notebook state
+5. Iterate on visualizations and analysis
+
+---
+
+## Part 4: Optimization Strategies
+
+### Be Specific in Instructions
+
+Vague requests reduce success rates dramatically.
+
+**❌ Bad examples:**
+
+```
+"Add tests for foo.py"
+"Make this faster"
+"Fix the bug"
+"Improve the UI"
+```
+
+**✅ Good examples:**
+
+```
+"Write test cases for foo.py covering the scenario where users are logged out. Use real database calls, avoid mocks."
+
+"Optimize the API endpoint /api/users - it's taking 3 seconds. Profile the database queries and add indexes if needed."
+
+"Fix the bug where clicking 'Save' twice creates duplicate entries. The issue is in src/components/Form.tsx line 45."
+
+"Improve the dashboard UI to match the design system: Use Tailwind's blue-600 for primary buttons, add 16px padding to cards, and ensure mobile responsiveness."
+```
+
+**Why specificity matters:**
+
+- Reduces back-and-forth iterations
+- Claude knows exactly what success looks like
+- Fewer course corrections needed
+- Better first-attempt results
+
+---
+
+### Use Images & Diagrams
+
+Leverage Claude's visual capabilities for better results.
+
+**When to use images:**
+
+1. **UI/UX work** - Design mocks, screenshots, wireframes
+2. **Bug reports** - Show what's wrong visually
+3. **Data visualization** - Chart outputs, dashboards
+4. **Architecture diagrams** - System design, ERDs
+5. **Error messages** - Screenshot of error screens
+
+**How to provide images:**
+
+```
+macOS: Cmd+Ctrl+Shift+4 → Select area → Ctrl+V in Claude
+Drag-drop: Drag image file into Claude
+File path: "Look at /path/to/screenshot.png"
+```
+
+**Examples:**
+
+```
+You: [Paste screenshot of broken layout]
+
+The header is overlapping the content on mobile. Fix it.
+
+Claude: [Analyzes screenshot]
+
+I see the issue - the header has fixed positioning but no padding-top on the main content. Fixing now...
+```
+
+```
+You: [Paste Figma design]
+
+Implement this product card component exactly as shown.
+
+Claude: [Studies design carefully]
+
+I'll implement with:
+- 24px border radius (as shown)
+- Shadow: 0 4px 6px rgba(0,0,0,0.1)
+- "Add to Cart" button: #3B82F6
+- Image height: 240px
+- 16px padding throughout
+
+[Creates matching implementation]
+```
+
+---
+
+### Reference Files Effectively
+
+Use tab-completion to quickly mention files.
+
+**Instead of:**
+
+```
+"Look at the user authentication code"
+```
+
+**Do this:**
+
+```
+"Look at sr[TAB] → src/au[TAB] → src/auth/login.ts"
+```
+
+Tab-completion:
+- ✅ Precise file references
+- ✅ No ambiguity about which file
+- ✅ Claude finds it instantly
+- ✅ Works for folders too
+
+**Reference multiple files:**
+
+```
+Review these files for security issues:
+- src/auth/[TAB]login.ts
+- src/api/[TAB]users/route.ts
+- src/lib/[TAB]jwt.ts
+```
+
+---
+
+### Provide URLs
+
+Paste documentation links with your requests.
+
+**Setup allowlist:**
+
+```
+/permissions
+
+→ Add to URL allowlist:
+  - docs.nextjs.org
+  - react.dev
+  - developer.mozilla.org
+  - docs.anthropic.com
+```
+
+**Usage:**
+
+```
+You: Implement authentication following NextAuth.js docs:
+https://next-auth.js.org/getting-started/example
+
+Claude: [Reads the documentation]
+
+I'll implement NextAuth following their example:
+1. Install next-auth
+2. Create api/auth/[...nextauth]/route.ts
+3. Add session provider
+...
+```
+
+**Benefits:**
+- Claude has latest docs (better than training data)
+- Follows current best practices
+- Implements correctly first time
+- No "I don't have that information" responses
+
+---
+
+### Course Correct Early
+
+Active collaboration produces better results faster.
+
+**Request plans before coding:**
+
+```
+You: Think through how to implement real-time notifications.
+
+Claude: [Provides detailed plan]
+
+You: Actually, let's use Server-Sent Events instead of WebSockets - simpler for our use case.
+
+Claude: Good point! Updated plan: [New approach]
+```
+
+**Press Escape to interrupt:**
+
+```
+You: Add authentication to all API routes
+
+Claude: [Starts modifying files]
+
+You: [Press Escape]
+
+Actually, wait - skip the admin routes, they have different auth.
+
+Claude: [Stops, context preserved]
+
+Got it. I'll skip api/admin/* routes and only auth the api/user/* routes.
+```
+
+**Double-tap Escape to edit:**
+
+Double Escape → Edit your last prompt → Explore alternative approaches
+
+**Ask for undos:**
+
+```
+You: Undo those changes. I want to try a different approach with middleware instead.
+
+Claude: [Reverts changes]
+
+Ready for the middleware approach. What did you have in mind?
+```
+
+---
+
+### Clear Context Between Tasks
+
+Use `/clear` frequently to reset the context window.
+
+**When to clear:**
+
+- ✅ Switching between unrelated tasks
+- ✅ After completing a major feature
+- ✅ Context feels "muddled" or unfocused
+- ✅ Long session with many tangents
+- ✅ Before starting something complex
+
+**Example:**
+
+```
+You: [Finish auth implementation]
+
+Great! That's done. /clear
+
+Now let's work on something completely different - optimizing the database queries.
+
+Claude: [Fresh context, focused on new task]
+```
+
+**Don't clear when:**
+- ❌ Tasks are related
+- ❌ Claude needs context from earlier
+- ❌ In the middle of multi-step process
+
+---
+
+### Manage Complex Multi-Step Tasks
+
+For large migrations or exhaustive solutions, create a checklist.
+
+**Example: TypeScript migration**
+
+```
+You: Create a checklist for migrating our codebase from JavaScript to TypeScript.
+
+Claude: Created migration-checklist.md:
+
+## TypeScript Migration Checklist
+
+### Phase 1: Setup
+- [ ] Install TypeScript and types
+- [ ] Create tsconfig.json
+- [ ] Configure build tools
+- [ ] Add lint rules
+
+### Phase 2: Core Files (Priority)
+- [ ] src/lib/utils.js → utils.ts
+- [ ] src/lib/api.js → api.ts
+- [ ] src/lib/auth.js → auth.ts
+
+### Phase 3: Components
+- [ ] src/components/Button.jsx → Button.tsx
+- [ ] src/components/Input.jsx → Input.tsx
+... [30 more components]
+
+### Phase 4: Testing
+- [ ] Update test files to .ts
+- [ ] Add type tests
+- [ ] Verify no any types
+
+Let's work through this systematically. Ready to start Phase 1?
+```
+
+**Work through items:**
+
+```
+You: Yes, start Phase 1.
+
+Claude: [Completes Phase 1, checks off items]
+
+Phase 1 complete! ✅ All items checked.
+
+Ready for Phase 2?
+
+You: Yes, do Phase 2 items 1-3.
+
+Claude: [Migrates core files, updates checklist]
+```
+
+Claude references the scratchpad to avoid missing items.
+
+---
+
+### Pass Data Effectively
+
+Multiple methods for getting data to Claude:
+
+**1. Copy-paste (most common):**
+
+```
+You: Analyze this data:
+
+id,name,sales
+1,Alice,5000
+2,Bob,3000
+3,Carol,7000
+
+Calculate total sales and average.
+
+Claude: Total sales: $15,000, Average: $5,000
+```
+
+**2. Pipe into Claude:**
+
+```bash
+cat data.csv | claude -p "Analyze this sales data"
+```
+
+**3. Direct Claude to fetch:**
+
+```
+You: Read the data from sales-q4.csv and analyze trends
+
+Claude: [Reads file, performs analysis]
+```
+
+**4. URLs:**
+
+```
+You: Fetch the API docs from https://api.example.com/docs and implement a client
+
+Claude: [Fetches docs, implements client]
+```
+
+**5. Images:**
+
+```
+You: [Paste chart image]
+
+What insights can you extract from this visualization?
+
+Claude: [Analyzes visual data]
+```
+
+---
+
+## Part 5: Multi-Claude Workflows
+
+### Parallel Verification
+
+Use multiple Claude instances for better quality.
+
+**The pattern:**
+
+1. **Claude A** - Writes initial implementation
+2. **Claude B** - Reviews and tests
+3. **Claude C** - Incorporates feedback into final version
+
+**Why it works:** Separate context yields fresh perspective and catches issues single-instance might miss.
+
+**Example:**
+
+**Terminal 1 (Claude A):**
+```
+You: Implement the user authentication system
+
+Claude A: [Implements auth]
+
+Done! Code in src/auth/
+```
+
+**Terminal 2 (Claude B):**
+```
+You: Review the authentication code in src/auth/ for security issues
+
+Claude B: [Reviews code]
+
+Issues found:
+1. Password hashing uses only 8 rounds - should be 12
+2. No rate limiting on login endpoint
+3. JWT tokens never expire
+4. Missing CSRF protection
+```
+
+**Terminal 1 (Claude A):**
+```
+You: Fix these security issues: [paste Claude B's findings]
+
+Claude A: [Implements fixes]
+
+All security issues resolved. Ready for final review.
+```
+
+---
+
+### Multiple Repository Checkouts
+
+Work on different features simultaneously without conflicts.
+
+**Setup:**
+
+```bash
+# Clone repo to multiple directories
+git clone git@github.com:you/project.git project-feature-a
+git clone git@github.com:you/project.git project-feature-b
+git clone git@github.com:you/project.git project-feature-c
+
+# Separate branches
+cd project-feature-a && git checkout -b feature-a
+cd ../project-feature-b && git checkout -b feature-b
+cd ../project-feature-c && git checkout -b feature-c
+```
+
+**Run Claude in each:**
+
+```bash
+# Terminal 1
+cd project-feature-a && claude
+
+# Terminal 2
+cd project-feature-b && claude
+
+# Terminal 3
+cd project-feature-c && claude
+```
+
+**Assign tasks:**
+
+```
+Terminal 1: Implement OAuth authentication
+Terminal 2: Build notification system
+Terminal 3: Optimize database queries
+```
+
+**Cycle through terminals** to approve permissions and monitor progress.
+
+---
+
+### Git Worktrees (Lighter Alternative)
+
+Lighter than full checkouts - shares git objects.
+
+**Setup:**
+
+```bash
+# Main repo
+cd my-project
+
+# Create worktrees for features
+git worktree add ../project-feature-a feature-a
+git worktree add ../project-feature-b feature-b
+git worktree add ../project-feature-c feature-c
+```
+
+**Run Claude:**
+
+```bash
+# Terminal 1
+cd ../project-feature-a && claude
+
+# Terminal 2
+cd ../project-feature-b && claude
+
+# Terminal 3
+cd ../project-feature-c && claude
+```
+
+**Clean up when done:**
+
+```bash
+git worktree remove ../project-feature-a
+git worktree remove ../project-feature-b
+git worktree remove ../project-feature-c
+```
+
+**Benefits:**
+- ✅ Saves disk space (shared git objects)
+- ✅ Faster than full clones
+- ✅ Each worktree is independent
+- ✅ No merge conflicts during development
+
+---
+
+### Headless Fanning Out
+
+For large-scale operations (analyzing thousands of files, performing migrations).
+
+**Pattern:**
+
+1. Generate task list
+2. Loop through tasks programmatically
+3. Call Claude headlessly for each task
+4. Refine prompts based on results
+
+**Example: Analyze 1000 files for security issues**
+
+**Step 1: Generate task list**
+
+```bash
+claude -p "List all TypeScript files in src/ that handle user input or authentication"
+```
+
+Output:
+```
+src/api/login.ts
+src/api/register.ts
+src/components/LoginForm.tsx
+... [997 more files]
+```
+
+**Step 2: Loop and analyze**
+
+```bash
+#!/bin/bash
+
+while IFS= read -r file; do
+  echo "Analyzing $file..."
+
+  claude -p "Review $file for security issues: SQL injection, XSS, CSRF, auth bypasses. Report any findings." --output-format stream-json > "analysis-$(basename $file).json"
+
+done < files-to-analyze.txt
+```
+
+**Step 3: Aggregate results**
+
+```bash
+claude -p "Summarize all security findings from analysis-*.json files. Prioritize by severity."
+```
+
+---
+
+### Headless Pipelining
+
+Integrate Claude into data processing pipelines.
+
+**Pattern:**
+
+```bash
+command1 | claude -p "prompt" --json | command2
+```
+
+**Examples:**
+
+**1. Log analysis:**
+
+```bash
+cat application.log | claude -p "Extract all errors and summarize by type" --json | jq '.summary'
+```
+
+**2. Data transformation:**
+
+```bash
+curl api.example.com/data | claude -p "Convert to CSV format" --json | csvlook
+```
+
+**3. Code generation:**
+
+```bash
+cat schema.sql | claude -p "Generate TypeScript types from this schema" > types.ts
+```
+
+**4. Test generation:**
+
+```bash
+ls src/**/*.ts | claude -p "For each file, generate a test skeleton" --json > test-plan.json
+```
+
+**Debugging:**
+
+Use `--verbose` flag during development:
+
+```bash
+claude -p "prompt" --verbose --json
+```
+
+Disable in production for clean output.
+
+---
+
+## Part 6: Pro Tips & Tricks
+
+### Hidden Shortcuts
+
+**Keyboard shortcuts:**
+
+- `Cmd/Ctrl + K` - Clear screen
+- `Escape` - Interrupt Claude
+- `Escape Escape` - Edit last prompt
+- `#` - Update documentation files
+- `/` - Slash commands menu
+- `Tab` - File/folder completion
+
+**Magic phrases:**
+
+- `think` / `think hard` / `think harder` / `ultrathink` - Extended thinking
+- `IMPORTANT:` / `YOU MUST:` / `NEVER:` - Emphasis in instructions
+- `--help` - Show command help
+- `/init` - Generate CLAUDE.md
+- `/clear` - Reset context
+
+### Performance Optimization
+
+**Token efficiency:**
+
+- ❌ Don't: Send huge files repeatedly
+- ✅ Do: Use file references, Claude caches them
+
+- ❌ Don't: Paste entire codebases
+- ✅ Do: Ask Claude to explore relevant files
+
+**Context management:**
+
+- Clear context between unrelated tasks
+- Use focused prompts instead of rambling
+- Reference specific files/functions
+- Break large tasks into smaller chunks
+
+**Response speed:**
+
+- Simpler prompts = faster responses
+- Use thinking modes only when needed
+- Enable tool permissions to avoid interruptions
+- Use headless mode for batch operations
+
+---
+
+### Debugging Claude
+
+**Claude is stuck/confused:**
+
+```
+You: /clear
+
+Let's start over. [Rephrase request more clearly]
+```
+
+**Claude is hallucinating solutions:**
+
+```
+You: Stop. Read the actual code in src/auth/login.ts first. Don't assume how it works.
+
+Claude: [Reads file]
+
+You're right, I was mistaken. The actual implementation...
+```
+
+**Claude keeps making same mistake:**
+
+```
+You: IMPORTANT: Do NOT use the `any` type. YOU MUST use proper TypeScript types.
+
+Claude: [Implements with proper types]
+```
+
+**Results aren't good enough:**
+
+```
+You: think harder
+
+This solution won't scale. Consider:
+1. What happens with 1M users?
+2. Database indexing strategy
+3. Caching layer
+4. Rate limiting
+
+Propose a better architecture.
+
+Claude: [Provides more thoughtful solution]
+```
+
+---
+
+### Team Best Practices
+
+**Document your CLAUDE.md:**
+
+Make it a living document that evolves with your project:
+
+```markdown
+# Last updated: 2025-01-15
+
+## Recent Changes
+- Added new deployment process (see scripts/deploy.sh)
+- Switched to Prisma ORM (no more raw SQL)
+- New branching strategy: feature/* and fix/*
+```
+
+**Share slash commands:**
+
+Commit `.claude/commands/` to git so the whole team benefits:
+
+```bash
+git add .claude/commands/
+git commit -m "chore: Add Claude slash commands for common tasks"
+```
+
+**Standardize permissions:**
+
+Use checked-in `.claude/settings.json` for consistent team experience:
+
+```json
+{
+  "allowedTools": ["read", "write", "edit", "bash", "grep"],
+  "autoApprove": {
+    "bash": ["npm install", "npm test", "git status"]
+  }
+}
+```
+
+**Code review with Claude:**
+
+```
+# In PR review
+You: Review this PR for:
+- Code quality issues
+- Potential bugs
+- Performance concerns
+- Security vulnerabilities
+- Missing tests
+
+Claude: [Provides detailed review]
+```
+
+---
+
+## Key Takeaways
+
+### The Golden Rules
+
+1. **Explore before coding** - Read files, understand context
+2. **Plan before implementing** - Use "think" to get better solutions
+3. **Be specific** - Vague prompts = poor results
+4. **Iterate with feedback** - Visual/test feedback improves outcomes
+5. **Clear context regularly** - Fresh start = focused results
+6. **Use TDD** - Tests guide implementation
+7. **Leverage tools** - MCP, bash, custom commands multiply impact
+8. **Multiple Claudes for complex tasks** - Separate contexts catch more issues
+
+### Quick Reference
+
+**Essential Commands:**
+- `/init` - Generate CLAUDE.md
+- `/clear` - Reset context
+- `/permissions` - Configure tool access
+- `#` - Update documentation
+
+**Thinking Modes:**
+- `think` - Extended thinking
+- `think hard` - Deep analysis
+- `think harder` - Very thorough
+- `ultrathink` - Maximum effort
+
+**Workflows:**
+1. Explore → Plan → Code → Commit
+2. TDD: Tests → Red → Green → Refactor
+3. Visual: Mock → Implement → Screenshot → Iterate
+4. Q&A: Ask questions about codebase
+
+---
+
+## Practice Exercises
+
+### Exercise 1: Create Your CLAUDE.md
+
+```bash
+cd your-project
+claude
+
+> /init
+
+# Edit the generated CLAUDE.md to include:
+# 1. Common commands
+# 2. Architecture overview
+# 3. Code style rules
+# 4. Testing guidelines
+```
+
+### Exercise 2: Test-Driven Feature
+
+```
+1. Ask Claude to write tests for a new feature
+2. Verify tests fail
+3. Have Claude implement until tests pass
+4. Commit tests, then implementation
+```
+
+### Exercise 3: Visual Iteration
+
+```
+1. Find a UI you want to build
+2. Share design screenshot with Claude
+3. Implement
+4. Share result screenshot
+5. Iterate 3-4 times until perfect
+```
+
+### Exercise 4: Custom Slash Command
+
+```
+1. Create .claude/commands/my-command.md
+2. Write a useful prompt template
+3. Test it: /my-command
+4. Share with your team
+```
+
+---
+
+## Next Steps
+
+### Advanced Topics
+
+- [MCP and Cursor](/advanced-topics/mcp-and-cursor) - Extend Claude's capabilities
+- [Automation Track](/automation) - Automate workflows with Claude
+- [App Builder](/app-builder) - Build full applications
+
+### Community Resources
+
+- [Claude Code GitHub](https://github.com/anthropics/claude-code)
+- [Claude Code Docs](https://docs.claude.com/en/docs/claude-code/overview)
+- [Anthropic Community](https://support.anthropic.com)
+
+---
+
+**You're now a Claude Code power user!** 🚀
+
+These practices come from thousands of hours of real-world usage by engineers at Anthropic and the community. Apply them consistently, and you'll see dramatic improvements in your productivity and code quality.
+
+**Pro tip:** Start with Explore → Plan → Code → Commit workflow. Master that, then add other techniques gradually.
+
+**Remember:** Claude Code is a tool that gets better with practice. The more you use these workflows, the more intuitive they become.
+
+Happy coding! 💻

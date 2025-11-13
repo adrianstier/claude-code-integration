@@ -1,0 +1,91 @@
+# .claudeignore - Keeps Claude's context focused and fast
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+.cache/
+
+# Database & Data
+*.sqlite
+*.db
+data/
+migrations/applied/
+*.csv
+*.xlsx
+*.parquet
+
+# Keep small sample files
+!sample-data/
+!**/examples/**/*.csv
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Test coverage
+coverage/
+.nyc_output/
+test-results/
+
+# IDE & OS
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+*.swp
+*.swo
+
+# Media files (except examples)
+*.mp4
+*.mov
+*.avi
+*.mp3
+*.wav
+!**/examples/**/*.mp4
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+
+# R
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
+.venv/
+ENV/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+.temp/
+
+# Documentation build artifacts
+.docusaurus/
+.mdx-cache/
+
+# Large generated files
+*.bundle.js.map
+*.chunk.js.map

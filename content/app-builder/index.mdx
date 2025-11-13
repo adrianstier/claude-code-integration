@@ -1,0 +1,571 @@
+---
+title: 'App Builder Track'
+description: 'Build and deploy web applications with Claude as your co-developer'
+order: 3
+duration: '6-8 hours'
+---
+
+# App Builder Track
+
+Build real web applications with modern frameworks! This track teaches you full-stack development through hands-on projects with Claude Code guiding you every step of the way.
+
+## What You'll Build
+
+1. **Task Manager App** (Next.js + TypeScript)
+2. **Weather Dashboard** (React + API Integration)
+3. **Blog Platform** (Full-stack with database)
+4. **Python REST API** (FastAPI)
+
+## What You'll Learn
+
+- 🏗️ Plan and architect applications
+- ⚛️ Build with Next.js and React
+- 🎨 Style with Tailwind CSS
+- 🗄️ Work with databases and APIs
+- 🚀 Deploy to production
+- 🤖 Use Claude Code for rapid development
+
+## Prerequisites
+
+- Completed [Start Here](/start-here) track
+- Basic HTML/CSS/JavaScript knowledge (or willingness to learn with Claude!)
+- Git configured and working
+- Node.js installed
+
+## Time Required
+
+6-8 hours to complete all projects
+
+---
+
+## Project 1: Task Manager with Next.js
+
+### Overview
+
+Build a modern task management application using Next.js 14, TypeScript, and Tailwind CSS. This project introduces you to React components, state management, and local storage.
+
+### Features
+
+- ✅ Create, edit, and delete tasks
+- 🏷️ Organize with categories
+- ⏰ Set due dates
+- 🎯 Mark tasks as complete
+- 💾 Persist data in local storage
+- 📱 Fully responsive design
+
+### Step 1: Project Setup
+
+**Ask Claude Code:**
+```
+Create a new Next.js 14 app for a task manager with:
+- TypeScript
+- Tailwind CSS
+- App Router
+- ESLint
+
+Set up the project structure with best practices.
+```
+
+Expected structure:
+```
+task-manager/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   ├── components/
+│   │   ├── TaskList.tsx
+│   │   ├── TaskItem.tsx
+│   │   ├── TaskForm.tsx
+│   │   └── FilterBar.tsx
+│   ├── lib/
+│   │   └── types.ts
+│   └── hooks/
+│       └── useTasks.ts
+├── public/
+├── tailwind.config.js
+└── package.json
+```
+
+### Step 2: Define Data Types
+
+Create `/src/lib/types.ts`:
+
+**Ask Claude Code:**
+```
+Define TypeScript types for a task manager:
+- Task interface with id, title, description, status, category, dueDate
+- Status type (pending, in-progress, completed)
+- Category type
+```
+
+### Step 3: Build the Task Form Component
+
+**Ask Claude Code:**
+```
+Create a TaskForm component that:
+1. Has inputs for title, description, category, due date
+2. Validates inputs
+3. Uses Tailwind for styling with a modern look
+4. Emits onSubmit event with task data
+5. Can be used for both creating and editing tasks
+```
+
+### Step 4: Create the Task List
+
+**Ask Claude Code:**
+```
+Build a TaskList component that:
+1. Displays tasks in a grid/list view
+2. Shows task status with color coding
+3. Has hover effects and animations
+4. Includes delete and edit buttons
+5. Groups tasks by status
+```
+
+### Step 5: Add State Management
+
+**Ask Claude Code:**
+```
+Create a custom hook useTasks that:
+1. Manages task state (add, edit, delete, toggle)
+2. Persists to localStorage
+3. Loads from localStorage on mount
+4. Provides filter/sort functionality
+```
+
+### Step 6: Build the Main Page
+
+**Ask Claude Code:**
+```
+Create the main page that:
+1. Uses the useTasks hook
+2. Displays TaskForm and TaskList
+3. Implements filtering (All, Active, Completed)
+4. Shows task statistics (total, completed, pending)
+5. Has a clean, modern layout with Tailwind
+```
+
+### Step 7: Add Styling and Polish
+
+**Ask Claude Code:**
+```
+Enhance the app with:
+1. Smooth animations for add/remove/complete
+2. Dark mode support
+3. Loading states
+4. Empty states with helpful messages
+5. Responsive design for mobile/tablet/desktop
+```
+
+### Step 8: Deploy
+
+**Ask Claude Code:**
+```
+Help me deploy my Next.js task manager to Vercel:
+1. Set up Vercel account
+2. Connect GitHub repository
+3. Configure build settings
+4. Deploy and test
+```
+
+### Testing Your App
+
+Test these scenarios:
+1. ✅ Create multiple tasks
+2. ✅ Edit existing tasks
+3. ✅ Mark tasks as complete
+4. ✅ Delete tasks
+5. ✅ Refresh page (data persists)
+6. ✅ Filter by status
+7. ✅ Test on mobile device
+
+---
+
+## Project 2: Weather Dashboard
+
+### Overview
+
+Build an interactive weather dashboard that fetches real-time data from an API and displays it with beautiful charts and animations.
+
+### Features
+
+- 🌤️ Current weather for any city
+- 📊 5-day forecast
+- 📈 Temperature charts
+- 🌍 Multiple location support
+- 💨 Wind, humidity, and more details
+- 🎨 Dynamic backgrounds based on weather
+
+### Step 1: Setup and API Key
+
+**Ask Claude Code:**
+```
+Help me set up a React + Vite project for a weather dashboard.
+I'll use the OpenWeatherMap API.
+
+1. Create the project with TypeScript
+2. Install dependencies (axios, recharts, lucide-react)
+3. Show me how to get a free API key from OpenWeatherMap
+4. Set up environment variables for the API key
+```
+
+### Step 2: Create API Service
+
+**Ask Claude Code:**
+```
+Create a weather API service that:
+1. Fetches current weather by city name
+2. Fetches 5-day forecast
+3. Handles errors gracefully
+4. Uses TypeScript types for API responses
+5. Includes loading states
+```
+
+### Step 3: Build Weather Display Components
+
+**Ask Claude Code:**
+```
+Create components for:
+1. CurrentWeather - Shows temp, condition, icon, city name
+2. ForecastCard - Displays single day forecast
+3. ForecastList - Shows 5-day forecast
+4. WeatherDetails - Wind, humidity, pressure, etc.
+5. SearchBar - Input for city search
+
+Use Tailwind CSS with a modern, glassmorphism design.
+```
+
+### Step 4: Add Data Visualization
+
+**Ask Claude Code:**
+```
+Add a temperature chart using Recharts that:
+1. Shows hourly temperatures for the next 24 hours
+2. Uses a gradient line chart
+3. Has responsive sizing
+4. Matches the app's color scheme
+```
+
+### Step 5: Implement Dynamic Backgrounds
+
+**Ask Claude Code:**
+```
+Create dynamic backgrounds that change based on:
+1. Weather condition (sunny, cloudy, rainy, snowy)
+2. Time of day (day/night)
+3. Use CSS gradients and animations
+4. Smooth transitions between states
+```
+
+### Step 6: Add Multiple Cities
+
+**Ask Claude Code:**
+```
+Implement:
+1. Save favorite cities to localStorage
+2. Display multiple city cards
+3. Quick switch between cities
+4. Remove cities from favorites
+```
+
+### Step 7: Polish and Deploy
+
+**Ask Claude Code:**
+```
+Add finishing touches:
+1. Loading skeletons
+2. Error messages with retry
+3. Animations for weather changes
+4. Mobile-responsive design
+5. Deploy to Netlify or Vercel
+```
+
+---
+
+## Project 3: Blog Platform (Full-Stack)
+
+### Overview
+
+Build a complete blog platform with authentication, database, and CRUD operations. Learn full-stack development with Next.js and PostgreSQL.
+
+### Features
+
+- 📝 Create, edit, delete blog posts
+- 👤 User authentication
+- 💬 Comments system
+- 🏷️ Tags and categories
+- 🔍 Search functionality
+- 📱 Responsive design
+
+### Tech Stack
+
+- **Frontend:** Next.js 14, TypeScript, Tailwind
+- **Backend:** Next.js API Routes
+- **Database:** PostgreSQL (via Supabase)
+- **Auth:** NextAuth.js
+- **ORM:** Prisma
+
+### Project Overview
+
+**Ask Claude Code:**
+```
+Guide me through building a blog platform with:
+- Next.js for frontend and API
+- Supabase for database and auth
+- Prisma for database ORM
+- Markdown support for posts
+- Image uploads
+
+Walk me through the complete setup.
+```
+
+### Database Schema
+
+**Ask Claude Code:**
+```
+Help me design a database schema for a blog with:
+- Users (id, email, name, avatar)
+- Posts (id, title, content, author, published, createdAt)
+- Comments (id, content, author, post, createdAt)
+- Tags (id, name)
+- PostTags (relationship table)
+
+Create the Prisma schema.
+```
+
+### Authentication Setup
+
+**Ask Claude Code:**
+```
+Set up NextAuth.js with:
+1. Email/password authentication
+2. Google OAuth
+3. Protected routes
+4. Session management
+5. User profile page
+```
+
+### Build Post Editor
+
+**Ask Claude Code:**
+```
+Create a rich text editor for blog posts:
+1. Markdown support
+2. Preview mode
+3. Auto-save drafts
+4. Image upload
+5. Tags selector
+6. Publish/draft toggle
+```
+
+### Deploy with Database
+
+**Ask Claude Code:**
+```
+Help me deploy the blog to Vercel with:
+1. Supabase database connection
+2. Environment variables setup
+3. Database migrations
+4. Production build optimization
+```
+
+---
+
+## Project 4: Python REST API with FastAPI
+
+### Overview
+
+Build a professional REST API using Python's FastAPI framework with database integration, authentication, and auto-generated documentation.
+
+### Features
+
+- 🚀 Fast, async API endpoints
+- 🔐 JWT authentication
+- 📚 Auto-generated OpenAPI docs
+- 🗄️ SQLite database
+- ✅ Input validation with Pydantic
+- 🧪 Unit tests
+
+### Step 1: Setup FastAPI
+
+**Ask Claude Code:**
+```
+Create a FastAPI project for a product inventory API:
+1. Set up virtual environment
+2. Install FastAPI, uvicorn, SQLAlchemy, Pydantic
+3. Create project structure with best practices
+4. Set up basic app with one endpoint
+```
+
+### Step 2: Database Models
+
+**Ask Claude Code:**
+```
+Create SQLAlchemy models for:
+- Product (id, name, description, price, quantity, category)
+- Category (id, name, description)
+- User (id, email, hashed_password, is_active)
+
+Include relationships between models.
+```
+
+### Step 3: Pydantic Schemas
+
+**Ask Claude Code:**
+```
+Create Pydantic schemas for:
+- ProductCreate, ProductUpdate, ProductResponse
+- UserCreate, UserLogin, UserResponse
+- CategoryCreate, CategoryResponse
+
+Include field validation (price > 0, email format, etc.)
+```
+
+### Step 4: CRUD Operations
+
+**Ask Claude Code:**
+```
+Implement CRUD endpoints for products:
+- POST /products - Create product
+- GET /products - List all products (with pagination)
+- GET /products/{id} - Get single product
+- PUT /products/{id} - Update product
+- DELETE /products/{id} - Delete product
+
+Include proper HTTP status codes and error handling.
+```
+
+### Step 5: Authentication
+
+**Ask Claude Code:**
+```
+Add JWT authentication:
+1. User registration endpoint
+2. Login endpoint (returns JWT token)
+3. Protected routes requiring authentication
+4. Password hashing with bcrypt
+5. Token verification middleware
+```
+
+### Step 6: Documentation and Testing
+
+**Ask Claude Code:**
+```
+1. Enhance OpenAPI docs with descriptions and examples
+2. Create pytest tests for all endpoints
+3. Add request/response examples
+4. Test authentication flow
+```
+
+### Step 7: Deploy API
+
+**Ask Claude Code:**
+```
+Deploy the FastAPI to:
+- Railway.app or Render.com
+- Set up environment variables
+- Configure database
+- Test production endpoints
+```
+
+---
+
+## Best Practices with Claude Code
+
+### Project Planning
+
+**Ask Claude Code:**
+```
+Help me plan a web app for [your idea]:
+1. Suggest the best tech stack
+2. Break down features into milestones
+3. Identify potential challenges
+4. Recommend learning resources
+```
+
+### Debugging
+
+**Ask Claude Code:**
+```
+I'm getting this error:
+[paste error message]
+
+In this code:
+[paste code]
+
+Help me understand and fix it.
+```
+
+### Code Review
+
+**Ask Claude Code:**
+```
+Review this code for:
+- Best practices
+- Performance issues
+- Security concerns
+- Readability improvements
+
+[paste code]
+```
+
+### Deployment Help
+
+**Ask Claude Code:**
+```
+Help me deploy my [framework] app to [platform]:
+1. What files/config do I need?
+2. How to set environment variables?
+3. Build commands
+4. Troubleshoot common issues
+```
+
+---
+
+## Next Steps
+
+### Advanced Projects
+
+Once you've completed the core projects, try:
+
+1. **E-commerce Platform** - Shopping cart, payments, inventory
+2. **Social Media App** - Posts, follows, real-time updates
+3. **Project Management Tool** - Kanban boards, teams, analytics
+4. **Chat Application** - WebSockets, real-time messaging
+
+### Learn More
+
+- **Testing**: Jest, Pytest, Playwright
+- **State Management**: Redux, Zustand, React Query
+- **Authentication**: OAuth, JWT, session management
+- **Real-time**: WebSockets, Server-Sent Events
+- **DevOps**: Docker, CI/CD, monitoring
+
+### Continue Learning
+
+- [Automation Track](/automation): Automate deployment and testing
+- [Data Analysis](/data-analysis): Build data-driven features
+- [Git & GitHub](/git-github): Advanced Git workflows
+
+---
+
+## Resources
+
+### Frameworks
+- [Next.js Documentation](https://nextjs.org/docs)
+- [React Documentation](https://react.dev/)
+- [FastAPI Documentation](https://fastapi.tiangulo.com/)
+
+### Deployment
+- [Vercel](https://vercel.com/)
+- [Netlify](https://www.netlify.com/)
+- [Railway](https://railway.app/)
+
+### Learning
+- [Frontend Mentor](https://www.frontendmentor.io/) - Practice projects
+- [Full Stack Open](https://fullstackopen.com/) - Free course
+
+---
+
+**Start building!** Pick a project and let Claude Code guide you through it. Remember: it's okay to make mistakes, ask questions, and iterate. That's how you learn!

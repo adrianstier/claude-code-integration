@@ -1,0 +1,542 @@
+---
+title: 'Windows Setup Guide'
+description: 'Complete setup guide for Claude Code, VS Code, and Git/GitHub on Windows'
+order: 3
+platform: 'windows'
+duration: '75 minutes'
+---
+
+This guide will walk you through setting up your Windows PC for development with Claude Code, VS Code, and Git/GitHub.
+
+## What You'll Install
+
+-  VS Code
+-  Claude Code CLI and Extension
+-  Git for Windows
+-  GitHub account and SSH keys
+-  Node.js
+-  Windows Terminal (recommended)
+-  Python or R (for data analysis)
+
+## Prerequisites
+
+- Windows 10 or Windows 11
+- Administrator access
+- Internet connection
+- About 75 minutes
+
+---
+
+## Step 1: Install Windows Terminal (Recommended)
+
+Windows Terminal is a modern, powerful terminal application.
+
+### 1.1 Install from Microsoft Store
+
+1. Open Microsoft Store
+2. Search for "Windows Terminal"
+3. Click "Get" or "Install"
+4. Pin it to your taskbar for easy access
+
+**Alternative:** Download from [GitHub](https://github.com/microsoft/terminal/releases)
+
+---
+
+## Step 2: Install VS Code
+
+### 2.1 Download and Install
+
+1. Visit [https://code.visualstudio.com](https://code.visualstudio.com)
+2. Click "Download for Windows"
+3. Run the installer (`.exe` file)
+4. **Important:** Check these boxes during installation:
+   -  Add "Open with Code" action to Windows Explorer file context menu
+   -  Add "Open with Code" action to Windows Explorer directory context menu
+   -  Add to PATH (important!)
+
+### 2.2 Verify Installation
+
+Open Windows Terminal or Command Prompt and run:
+
+```powershell
+code --version
+```
+
+You should see the VS Code version number.
+
+---
+
+## Step 3: Install Git for Windows
+
+### 3.1 Download and Install
+
+1. Visit [https://git-scm.com/download/win](https://git-scm.com/download/win)
+2. Download the installer
+3. Run the installer
+
+### 3.2 Installation Options
+
+Use these settings (most are defaults):
+
+- **Adjusting your PATH**: "Git from the command line and also from 3rd-party software"
+- **Choosing HTTPS transport backend**: "Use the OpenSSL library"
+- **Configuring the line ending conversions**: "Checkout Windows-style, commit Unix-style line endings"
+- **Configuring the terminal emulator**: "Use Windows' default console window"
+- **Choose a credential helper**: "Git Credential Manager"
+- **Configuring extra options**: Enable file system caching
+
+### 3.3 Configure Git
+
+Open Windows Terminal and run:
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
+
+Set VS Code as your default editor:
+
+```powershell
+git config --global core.editor "code --wait"
+```
+
+Set default branch to `main`:
+
+```powershell
+git config --global init.defaultBranch main
+```
+
+Configure line endings for Windows:
+
+```powershell
+git config --global core.autocrlf true
+```
+
+Create useful aliases:
+
+```powershell
+git config --global alias.st status
+git config --global alias.co checkout
+git config --global alias.br branch
+git config --global alias.cm commit
+```
+
+**Verify:**
+```powershell
+git --version
+git config --list
+```
+
+---
+
+## Step 4: Set Up GitHub
+
+### 4.1 Create GitHub Account
+
+1. Go to [https://github.com](https://github.com)
+2. Click "Sign up"
+3. Follow the prompts
+
+### 4.2 Generate SSH Key
+
+SSH keys provide secure authentication to GitHub.
+
+**Check for existing keys:**
+
+```powershell
+ls ~\.ssh
+```
+
+If you see `id_ed25519.pub`, you already have a key. Skip to Step 4.3.
+
+**Generate a new key:**
+
+```powershell
+ssh-keygen -t ed25519 -C "your.email@example.com"
+```
+
+When prompted:
+- Press `Enter` to accept the default location
+- Enter a passphrase (optional but recommended)
+- Press `Enter` to confirm
+
+**Start the SSH agent:**
+
+```powershell
+# Start the service (run as Administrator if needed)
+Get-Service -Name ssh-agent | Set-Service -StartupType Manual
+Start-Service ssh-agent
+```
+
+**Add your key:**
+
+```powershell
+ssh-add ~\.ssh\id_ed25519
+```
+
+### 4.3 Add SSH Key to GitHub
+
+**Copy your public key:**
+
+```powershell
+Get-Content ~\.ssh\id_ed25519.pub | Set-Clipboard
+```
+
+This copies your key to the clipboard.
+
+**Add to GitHub:**
+
+1. Go to [https://github.com/settings/keys](https://github.com/settings/keys)
+2. Click "New SSH key"
+3. Title: "My Windows PC" (or any name)
+4. Key type: Authentication Key
+5. Paste your key (Ctrl + V)
+6. Click "Add SSH key"
+
+**Test your connection:**
+
+```powershell
+ssh -T git@github.com
+```
+
+You should see: "Hi [username]! You've successfully authenticated..."
+
+---
+
+## Step 5: Install Node.js
+
+### 5.1 Download and Install
+
+1. Visit [https://nodejs.org](https://nodejs.org)
+2. Download the LTS (Long Term Support) version
+3. Run the installer
+4. Accept all defaults
+5. **Important:** Check "Automatically install the necessary tools" for native modules
+
+**Verify:**
+
+```powershell
+node --version
+npm --version
+```
+
+---
+
+## Step 6: Install Claude Code
+
+### 6.1 Install Claude Code Extension
+
+1. Open VS Code
+2. Click Extensions icon (or press `Ctrl + Shift + X`)
+3. Search for "Claude Code"
+4. Click "Install" on the official Anthropic extension
+
+### 6.2 Install Claude Code CLI (Optional)
+
+```powershell
+npm install -g @anthropic-ai/claude-code
+```
+
+### 6.3 Sign In
+
+1. Click the Claude icon in VS Code sidebar
+2. Click "Sign in to Claude"
+3. Follow the authentication prompts
+
+---
+
+## Step 7: Install Python (For Data Analysis)
+
+### 7.1 Download and Install Python
+
+1. Visit [https://www.python.org/downloads/](https://www.python.org/downloads/)
+2. Download Python 3.11.x (latest stable)
+3. Run the installer
+4. **Important:** Check "Add Python to PATH"
+5. Click "Install Now"
+
+**Verify:**
+
+```powershell
+python --version
+pip --version
+```
+
+### 7.2 Create a Virtual Environment
+
+For your first project:
+
+```powershell
+# Create project folder
+mkdir ~\projects
+cd ~\projects
+mkdir my-first-project
+cd my-first-project
+
+# Create virtual environment
+python -m venv venv
+
+# Activate it
+.\venv\Scripts\Activate.ps1
+```
+
+You'll see `(venv)` in your prompt.
+
+**If you get an execution policy error:**
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### 7.3 Install Data Science Packages
+
+```powershell
+pip install pandas numpy matplotlib jupyter
+```
+
+**Deactivate when done:**
+
+```powershell
+deactivate
+```
+
+---
+
+## Step 8: Install R (Optional - For R Users)
+
+### 8.1 Install R
+
+1. Visit [https://cran.r-project.org/bin/windows/base/](https://cran.r-project.org/bin/windows/base/)
+2. Click "Download R x.x.x for Windows"
+3. Run the installer
+4. Accept all defaults
+
+### 8.2 Install RStudio (Optional)
+
+Download from [https://posit.co/download/rstudio-desktop/](https://posit.co/download/rstudio-desktop/)
+
+### 8.3 Install R Extension for VS Code
+
+1. Open VS Code Extensions
+2. Search for "R"
+3. Install the official R extension
+
+---
+
+## Step 9: Clone Your First Project
+
+### 9.1 Create Projects Folder
+
+```powershell
+mkdir ~\projects
+cd ~\projects
+```
+
+### 9.2 Clone Starter Repository
+
+```powershell
+git clone git@github.com:yourusername/claude-code-integration.git
+cd claude-code-integration
+```
+
+### 9.3 Open in VS Code
+
+```powershell
+code .
+```
+
+### 9.4 Explore Templates
+
+Check out:
+- `CLAUDE.md` - Project context for Claude
+- `.claudeignore` - Context management
+- `.vscode\settings.json` - VS Code configuration
+
+---
+
+## Step 10: Verify Your Setup
+
+Run these commands to check everything:
+
+```powershell
+# VS Code
+code --version
+
+# Git
+git --version
+
+# Node.js
+node --version
+npm --version
+
+# Python
+python --version
+
+# SSH to GitHub
+ssh -T git@github.com
+```
+
+All should work without errors!
+
+---
+
+## Next Steps
+
+You're ready to code! Choose your path:
+
+1. **Learn Git**: [Git & GitHub Basics](/git-github)
+2. **Data Analysis**: [Python or R track](/data-analysis)
+3. **Build Apps**: [App Builder track](/app-builder)
+4. **Automate**: [Automation track](/automation)
+
+---
+
+## Troubleshooting
+
+### PowerShell Execution Policy
+
+If scripts won't run:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Command Not Found
+
+If commands aren't recognized:
+
+1. Close and reopen Windows Terminal
+2. Check if the program is in PATH:
+   ```powershell
+   $env:PATH -split ';'
+   ```
+3. Restart your computer if needed
+
+### Git Authentication Issues
+
+If git keeps asking for credentials:
+
+1. Verify SSH key: `ssh -T git@github.com`
+2. Use Git Credential Manager (should be installed with Git)
+3. Store credentials:
+   ```powershell
+   git config --global credential.helper manager
+   ```
+
+### VS Code Can't Find Git
+
+1. Open VS Code settings (Ctrl + ,)
+2. Search for "git.path"
+3. Set to: `C:\Program Files\Git\cmd\git.exe`
+
+### Python Not Found
+
+If Python isn't recognized:
+
+1. Find Python installation:
+   ```powershell
+   where python
+   ```
+2. Add to PATH manually:
+   - Search "Environment Variables" in Windows
+   - Edit "Path" variable
+   - Add: `C:\Users\[YourUsername]\AppData\Local\Programs\Python\Python311`
+
+---
+
+## Windows-Specific Tips
+
+### PowerShell Useful Commands
+
+```powershell
+# List files
+ls
+
+# Change directory
+cd path\to\folder
+
+# Create directory
+mkdir folder-name
+
+# Delete file
+rm file.txt
+
+# Clear screen
+cls
+
+# Show command history
+Get-History
+```
+
+### Keyboard Shortcuts
+
+- **Windows Terminal**:
+  - `Ctrl + Shift + T`: New tab
+  - `Ctrl + Shift + W`: Close tab
+  - `Ctrl + Shift + D`: Split pane
+
+- **VS Code**:
+  - `Ctrl + Shift + P`: Command Palette
+  - `Ctrl + \``: Toggle terminal
+  - `Ctrl + B`: Toggle sidebar
+
+### Path Differences
+
+Windows uses backslashes (`\`) in paths, but Git and many tools use forward slashes (`/`). PowerShell usually handles both.
+
+**Windows path:**
+```
+C:\Users\YourName\projects
+```
+
+**Git/Unix path:**
+```
+/c/Users/YourName/projects
+```
+
+---
+
+## Additional Tools (Optional)
+
+### Git Bash
+
+Installed with Git for Windows. Provides a Unix-like terminal:
+
+- Find it in Start Menu: "Git Bash"
+- Right-click folder � "Git Bash Here"
+
+### WSL (Windows Subsystem for Linux)
+
+For advanced users who want a full Linux environment:
+
+```powershell
+wsl --install
+```
+
+Restart required. Provides Ubuntu on Windows.
+
+### Windows Package Manager (winget)
+
+Modern package manager for Windows:
+
+```powershell
+# Already installed on Windows 11
+# Install VS Code
+winget install Microsoft.VisualStudioCode
+
+# Install Python
+winget install Python.Python.3.11
+```
+
+---
+
+## Additional Resources
+
+- [VS Code on Windows](https://code.visualstudio.com/docs/setup/windows)
+- [PowerShell Documentation](https://docs.microsoft.com/en-us/powershell/)
+- [Git for Windows](https://gitforwindows.org/)
+- [Windows Terminal Tips](https://docs.microsoft.com/en-us/windows/terminal/)
+
+---
+
+**You're all set!** Proceed to [Git & GitHub Basics](/git-github) to learn version control.

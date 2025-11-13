@@ -1,0 +1,445 @@
+---
+title: 'Python for Data Analysis'
+description: 'Get started with Python, pandas, and data analysis workflows'
+order: 2
+duration: '120 minutes'
+prerequisites: ['start-here']
+---
+
+Learn to analyze data with Python, pandas, and Claude as your coding partner.
+
+## What You'll Build
+
+A complete data analysis project that:
+- Loads and explores a real dataset
+- Cleans and transforms data
+- Creates visualizations
+- Generates insights
+- Is version-controlled with Git
+
+## Prerequisites
+
+- Python installed ([Mac setup](/start-here/mac-setup) or [Windows setup](/start-here/windows-setup))
+- Basic terminal/command line knowledge
+- Git configured
+
+---
+
+## Project Setup
+
+### 1. Create Your Project
+
+```bash
+# Create project folder
+mkdir sales-analysis
+cd sales-analysis
+
+# Initialize Git
+git init
+
+# Create virtual environment
+python -m venv venv
+
+# Activate it
+# Mac/Linux:
+source venv/bin/activate
+# Windows:
+.\venv\Scripts\Activate.ps1
+```
+
+### 2. Install Packages
+
+```bash
+pip install pandas numpy matplotlib jupyter
+```
+
+### 3. Create Project Structure
+
+```bash
+# Create folders
+mkdir data notebooks scripts outputs
+
+# Create files
+touch README.md
+touch scripts/analysis.py
+touch .gitignore
+```
+
+### 4. Set Up Git Ignore
+
+Add to `.gitignore`:
+```
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.csv
+!data/sample.csv
+outputs/*.png
+```
+
+---
+
+## Working with Claude
+
+### Ask Claude to Create CLAUDE.md
+
+Open VS Code and ask Claude:
+
+```
+Create a CLAUDE.md file for this data analysis project.
+
+Project: Sales data analysis
+Language: Python
+Libraries: pandas, matplotlib
+Goal: Analyze monthly sales trends
+
+Include:
+- Project context
+- Common commands
+- Example prompts for data analysis
+```
+
+Claude will generate a customized CLAUDE.md!
+
+---
+
+## Your First Analysis
+
+### Load Data
+
+Create `scripts/load_data.py`:
+
+Ask Claude:
+```
+Write a Python script to:
+1. Load data/sales.csv using pandas
+2. Display basic info (shape, columns, data types)
+3. Show first few rows
+4. Check for missing values
+
+Include error handling.
+```
+
+Claude will generate something like:
+
+```python
+import pandas as pd
+
+def load_and_inspect_data(filepath):
+    """Load and inspect CSV data"""
+    try:
+        df = pd.read_csv(filepath)
+        
+        print(f"Dataset shape: {df.shape}")
+        print(f"\nColumns: {df.columns.tolist()}")
+        print(f"\nData types:\n{df.dtypes}")
+        print(f"\nFirst 5 rows:\n{df.head()}")
+        print(f"\nMissing values:\n{df.isnull().sum()}")
+        
+        return df
+    except FileNotFoundError:
+        print(f"Error: {filepath} not found")
+        return None
+
+if __name__ == "__main__":
+    df = load_and_inspect_data("data/sales.csv")
+```
+
+### Clean Data
+
+Ask Claude:
+```
+I have sales data with these issues:
+- Some missing values in 'revenue' column
+- Date column is string, needs to be datetime
+- Some negative quantities (data errors)
+
+Write a function to clean this data.
+```
+
+### Create Visualizations
+
+Ask Claude:
+```
+Create visualizations for sales data:
+1. Monthly revenue trend (line plot)
+2. Revenue by product category (bar chart)
+3. Sales distribution (histogram)
+
+Save plots to outputs/ folder.
+Use clear labels and titles.
+```
+
+---
+
+## Common Data Analysis Patterns
+
+### Explore Data
+
+```python
+# Summary statistics
+df.describe()
+
+# Value counts
+df['category'].value_counts()
+
+# Group by analysis
+df.groupby('product')['revenue'].sum()
+
+# Correlation
+df.corr()
+```
+
+### Transform Data
+
+```python
+# Create new columns
+df['profit'] = df['revenue'] - df['cost']
+
+# Filter rows
+high_value = df[df['revenue'] > 1000]
+
+# Sort
+df.sort_values('date', ascending=False)
+
+# Aggregate
+monthly_sales = df.groupby('month').agg({
+    'revenue': 'sum',
+    'quantity': 'sum'
+})
+```
+
+---
+
+## Using Jupyter Notebooks
+
+### Start Jupyter
+
+```bash
+jupyter notebook
+```
+
+### Ask Claude for Notebook Structure
+
+```
+Create a Jupyter notebook structure for analyzing:
+- Customer purchase patterns
+- Seasonal trends
+- Product performance
+
+Include markdown sections and code cell placeholders.
+```
+
+---
+
+## Git Workflow for Analysis
+
+### Commit Your Progress
+
+```bash
+# After loading data
+git add scripts/load_data.py
+git commit -m "feat: add data loading script"
+
+# After cleaning
+git add scripts/clean_data.py
+git commit -m "feat: add data cleaning pipeline"
+
+# After visualization
+git add scripts/visualize.py outputs/
+git commit -m "feat: add sales visualizations"
+```
+
+### Using Claude for Commits
+
+```
+I made these changes to my analysis:
+[describe changes]
+
+Suggest a good commit message.
+```
+
+---
+
+## Example: Complete Analysis
+
+### Full Workflow with Claude
+
+1. **Plan** (ask Claude):
+```
+I have sales data with: date, product, category, quantity, price.
+
+Help me plan an analysis to find:
+- Best-selling products
+- Revenue trends
+- Seasonal patterns
+
+What steps should I take?
+```
+
+2. **Implement** (with Claude's guidance):
+- Write loading script
+- Clean data
+- Perform calculations
+- Create visualizations
+- Document findings
+
+3. **Review** (ask Claude):
+```
+Review my analysis code:
+[paste code]
+
+Check for:
+- Correctness
+- Efficiency
+- Best practices
+- Missing edge cases
+```
+
+4. **Document** (ask Claude):
+```
+Write a README for this analysis project.
+
+Include:
+- What the project does
+- How to run it
+- Key findings
+- Required dependencies
+```
+
+---
+
+## Best Practices
+
+### Code Organization
+
+```
+sales-analysis/
+├── data/              # Raw data (gitignored)
+├── notebooks/         # Jupyter notebooks
+├── scripts/           # Python scripts
+│   ├── load.py
+│   ├── clean.py
+│   └── analyze.py
+├── outputs/           # Generated plots/reports
+├── README.md
+├── CLAUDE.md
+├── .gitignore
+└── requirements.txt
+```
+
+### Requirements File
+
+Create `requirements.txt`:
+```
+pandas==2.1.0
+numpy==1.25.0
+matplotlib==3.7.0
+jupyter==1.0.0
+```
+
+Install from it:
+```bash
+pip install -r requirements.txt
+```
+
+### Document Your Analysis
+
+Ask Claude:
+```
+Document this analysis function:
+[paste function]
+
+Write a docstring explaining:
+- Purpose
+- Parameters
+- Returns
+- Example usage
+```
+
+---
+
+## Troubleshooting
+
+### Virtual Environment Issues
+
+```bash
+# Can't activate venv
+# Mac: Add to ~/.zshrc
+export PATH="$HOME/.local/bin:$PATH"
+
+# Windows: Change execution policy
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+### Import Errors
+
+```bash
+# Wrong Python/pip
+which python
+which pip
+
+# Reinstall in venv
+deactivate
+rm -rf venv
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### Pandas Issues
+
+Ask Claude:
+```
+I'm getting this pandas error:
+[paste error]
+
+From this code:
+[paste code]
+
+How do I fix it?
+```
+
+---
+
+## Next Steps
+
+### Expand Your Skills
+
+1. **More Complex Analysis**
+   - Time series forecasting
+   - Statistical testing
+   - Machine learning basics
+
+2. **Better Visualizations**
+   - Seaborn for statistical plots
+   - Plotly for interactive charts
+   - Dashboards with Streamlit
+
+3. **Automation**
+   - Schedule reports
+   - Process multiple files
+   - See [Automation track](/automation)
+
+### Sample Projects
+
+Try analyzing:
+- COVID-19 data
+- Stock prices
+- Sports statistics
+- Weather patterns
+- Your own data!
+
+---
+
+## Resources
+
+- [pandas documentation](https://pandas.pydata.org/docs/)
+- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
+- [Kaggle Learn](https://www.kaggle.com/learn) - Free courses
+- [Real Python](https://realpython.com/) - Tutorials
+
+---
+
+**Ready to analyze!** Start with a simple dataset and let Claude guide you through the process.
