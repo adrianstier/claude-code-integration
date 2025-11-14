@@ -1,0 +1,415 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+
+interface ProjectConfig {
+  projectName: string
+  projectType: string
+  language: string
+  framework: string
+  description: string
+  keyFiles: string
+  avoidFiles: string
+  codingStyle: string
+  testingApproach: string
+  specialInstructions: string
+}
+
+const projectTypes = [
+  { value: 'web-app', label: 'Web Application' },
+  { value: 'api', label: 'REST API' },
+  { value: 'data-analysis', label: 'Data Analysis' },
+  { value: 'cli-tool', label: 'CLI Tool' },
+  { value: 'library', label: 'Library/Package' },
+  { value: 'mobile', label: 'Mobile App' },
+  { value: 'desktop', label: 'Desktop App' },
+]
+
+const languages = [
+  { value: 'typescript', label: 'TypeScript' },
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'python', label: 'Python' },
+  { value: 'r', label: 'R' },
+  { value: 'go', label: 'Go' },
+  { value: 'rust', label: 'Rust' },
+  { value: 'java', label: 'Java' },
+  { value: 'other', label: 'Other' },
+]
+
+const frameworks = {
+  typescript: ['Next.js', 'React', 'Express', 'NestJS', 'Remix'],
+  javascript: ['Next.js', 'React', 'Vue', 'Express', 'Svelte'],
+  python: ['Django', 'FastAPI', 'Flask', 'Pandas', 'Streamlit'],
+  r: ['Shiny', 'Plumber', 'Tidyverse', 'None'],
+  go: ['Gin', 'Echo', 'Fiber', 'None'],
+  rust: ['Actix', 'Rocket', 'Axum', 'None'],
+  java: ['Spring Boot', 'Quarkus', 'Micronaut', 'None'],
+  other: ['None'],
+}
+
+export default function ClaudeMdGenerator() {
+  const [config, setConfig] = useState<ProjectConfig>({
+    projectName: '',
+    projectType: 'web-app',
+    language: 'typescript',
+    framework: '',
+    description: '',
+    keyFiles: '',
+    avoidFiles: '',
+    codingStyle: '',
+    testingApproach: '',
+    specialInstructions: '',
+  })
+
+  const [generated, setGenerated] = useState('')
+  const [copied, setCopied] = useState(false)
+
+  const generateClaudeMd = () => {
+    const frameworksList = frameworks[config.language as keyof typeof frameworks] || []
+    const frameworkText = config.framework ? `${config.framework} ` : ''
+
+    const content = `# ${config.projectName}
+
+${config.description}
+
+## Project Structure
+
+This is a ${projectTypes.find(t => t.value === config.projectType)?.label} built with ${frameworkText}${languages.find(l => l.value === config.language)?.label}.
+
+## Key Files & Directories
+
+${config.keyFiles || 'Please add information about important files and directories.'}
+
+## Development Guidelines
+
+### Coding Style
+
+${config.codingStyle || `- Follow ${config.language} best practices
+- Write clear, self-documenting code
+- Use meaningful variable and function names
+- Keep functions small and focused`}
+
+### Testing Approach
+
+${config.testingApproach || `- Write tests before implementation (TDD)
+- Aim for high test coverage
+- Test edge cases and error conditions`}
+
+## Files to Avoid
+
+${config.avoidFiles || `- node_modules/
+- .env files
+- Build artifacts (dist/, build/)
+- Log files`}
+
+## Special Instructions
+
+${config.specialInstructions || 'No special instructions.'}
+
+## Working with Claude Code
+
+### Preferred Workflow
+
+1. **Explore**: First understand the codebase
+2. **Plan**: Discuss the approach before coding
+3. **Code**: Implement with tests
+4. **Commit**: Use conventional commits
+
+### Git Workflow
+
+- Use Claude for 90% of git operations
+- Create descriptive commit messages
+- Branch naming: feature/*, bugfix/*, docs/*
+
+### Communication Style
+
+- Ask clarifying questions before implementing
+- Explain technical decisions
+- Suggest improvements when relevant
+- Point out potential issues proactively
+
+---
+
+*Generated with Claude Code Learning Hub - [https://your-site.com/tools/claude-md-generator](https://your-site.com/tools/claude-md-generator)*
+`
+
+    setGenerated(content)
+  }
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(generated)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const handleDownload = () => {
+    const blob = new Blob([generated], { type: 'text/markdown' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'CLAUDE.md'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      {/* Breadcrumbs */}
+      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600">
+        <Link href="/" className="hover:text-claude-600">
+          Home
+        </Link>
+        <span>/</span>
+        <span className="text-gray-900">CLAUDE.md Generator</span>
+      </nav>
+
+      {/* Header */}
+      <div className="mb-12">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          CLAUDE.md Generator
+        </h1>
+        <p className="text-xl text-gray-600">
+          Create a customized CLAUDE.md file for your project. This file helps Claude Code understand your project structure, preferences, and workflows.
+        </p>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-2">
+        {/* Form */}
+        <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900">Project Configuration</h2>
+
+          <div className="space-y-6">
+            {/* Project Name */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Project Name *
+              </label>
+              <input
+                type="text"
+                value={config.projectName}
+                onChange={(e) => setConfig({ ...config, projectName: e.target.value })}
+                placeholder="my-awesome-project"
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Project Type */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Project Type *
+              </label>
+              <select
+                value={config.projectType}
+                onChange={(e) => setConfig({ ...config, projectType: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              >
+                {projectTypes.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Language */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Primary Language *
+              </label>
+              <select
+                value={config.language}
+                onChange={(e) => setConfig({ ...config, language: e.target.value, framework: '' })}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              >
+                {languages.map((lang) => (
+                  <option key={lang.value} value={lang.value}>
+                    {lang.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Framework */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Framework
+              </label>
+              <select
+                value={config.framework}
+                onChange={(e) => setConfig({ ...config, framework: e.target.value })}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              >
+                <option value="">Select framework...</option>
+                {frameworks[config.language as keyof typeof frameworks]?.map((fw) => (
+                  <option key={fw} value={fw}>
+                    {fw}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Description */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Project Description
+              </label>
+              <textarea
+                value={config.description}
+                onChange={(e) => setConfig({ ...config, description: e.target.value })}
+                placeholder="A brief description of what your project does..."
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Key Files */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Key Files & Directories
+              </label>
+              <textarea
+                value={config.keyFiles}
+                onChange={(e) => setConfig({ ...config, keyFiles: e.target.value })}
+                placeholder="- src/: Main application code&#10;- tests/: Test files&#10;- config/: Configuration files"
+                rows={4}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Avoid Files */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Files to Avoid
+              </label>
+              <textarea
+                value={config.avoidFiles}
+                onChange={(e) => setConfig({ ...config, avoidFiles: e.target.value })}
+                placeholder="- node_modules/&#10;- .env&#10;- dist/"
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Coding Style */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Coding Style Preferences
+              </label>
+              <textarea
+                value={config.codingStyle}
+                onChange={(e) => setConfig({ ...config, codingStyle: e.target.value })}
+                placeholder="- Use functional components in React&#10;- Prefer const over let&#10;- Always use TypeScript types"
+                rows={4}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Testing */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Testing Approach
+              </label>
+              <textarea
+                value={config.testingApproach}
+                onChange={(e) => setConfig({ ...config, testingApproach: e.target.value })}
+                placeholder="- Use Jest for unit tests&#10;- Playwright for E2E tests&#10;- TDD when adding new features"
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Special Instructions */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Special Instructions
+              </label>
+              <textarea
+                value={config.specialInstructions}
+                onChange={(e) => setConfig({ ...config, specialInstructions: e.target.value })}
+                placeholder="Any additional context or instructions for Claude..."
+                rows={3}
+                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              />
+            </div>
+
+            {/* Generate Button */}
+            <button
+              onClick={generateClaudeMd}
+              disabled={!config.projectName}
+              className="w-full rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-6 py-3 font-semibold text-white shadow-md transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Generate CLAUDE.md
+            </button>
+          </div>
+        </div>
+
+        {/* Preview */}
+        <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900">Preview</h2>
+            {generated && (
+              <div className="flex gap-2">
+                <button
+                  onClick={handleCopy}
+                  className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                >
+                  {copied ? 'Copied!' : 'Copy'}
+                </button>
+                <button
+                  onClick={handleDownload}
+                  className="rounded-lg bg-claude-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-claude-700"
+                >
+                  Download
+                </button>
+              </div>
+            )}
+          </div>
+
+          {generated ? (
+            <div className="rounded-lg bg-gray-50 p-6 border border-gray-200">
+              <pre className="whitespace-pre-wrap font-mono text-sm text-gray-800">
+                {generated}
+              </pre>
+            </div>
+          ) : (
+            <div className="flex h-96 items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
+              <p className="text-gray-500">
+                Fill in the form and click Generate to see your CLAUDE.md file
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Tips */}
+      <div className="mt-12 rounded-2xl bg-claude-50 p-8 border border-claude-200">
+        <h3 className="mb-4 text-xl font-bold text-gray-900">💡 Tips for a Great CLAUDE.md</h3>
+        <ul className="space-y-2 text-gray-700">
+          <li className="flex items-start">
+            <span className="mr-2">✓</span>
+            <span>Be specific about your project structure and key files</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2">✓</span>
+            <span>Include coding conventions and style preferences</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2">✓</span>
+            <span>Mention testing approach and requirements</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2">✓</span>
+            <span>List files and directories to avoid modifying</span>
+          </li>
+          <li className="flex items-start">
+            <span className="mr-2">✓</span>
+            <span>Update CLAUDE.md as your project evolves</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  )
+}
