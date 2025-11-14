@@ -17,6 +17,21 @@
         rgb(var(--background-end-rgb))
       )
       rgb(var(--background-start-rgb));
+    min-height: 100vh;
+  }
+
+  /* Subtle background pattern */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(circle at 1px 1px, rgb(0 0 0 / 0.03) 1px, transparent 0);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
@@ -25,9 +40,71 @@
     @apply max-w-none;
   }
 
+  /* Enhanced prose typography */
+  .prose h1 {
+    @apply mb-6 mt-8 text-4xl font-bold text-gray-900;
+  }
+
+  .prose h2 {
+    @apply mb-4 mt-8 border-b border-gray-200 pb-2 text-3xl font-bold text-gray-900;
+  }
+
+  .prose h3 {
+    @apply mb-3 mt-6 text-2xl font-semibold text-gray-800;
+  }
+
+  .prose h4 {
+    @apply mb-2 mt-4 text-xl font-semibold text-gray-800;
+  }
+
+  .prose p {
+    @apply mb-4 leading-7 text-gray-700;
+  }
+
+  .prose ul {
+    @apply mb-4 space-y-2;
+  }
+
+  .prose ol {
+    @apply mb-4 space-y-2;
+  }
+
+  .prose li {
+    @apply leading-7 text-gray-700;
+  }
+
+  .prose strong {
+    @apply font-semibold text-gray-900;
+  }
+
+  .prose a {
+    @apply text-claude-600 underline decoration-claude-200 underline-offset-2 transition-colors hover:text-claude-700 hover:decoration-claude-400;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-claude-500 bg-claude-50 py-3 pl-4 pr-3 italic text-gray-700;
+  }
+
+  .prose hr {
+    @apply my-8 border-gray-200;
+  }
+
   /* Code blocks are handled by our custom CodeBlock component */
   /* Only style inline code in prose */
   .prose :not(pre) > code {
     @apply rounded bg-gray-100 px-1.5 py-0.5 text-sm font-mono text-gray-800;
+  }
+
+  /* Tables */
+  .prose table {
+    @apply w-full border-collapse;
+  }
+
+  .prose th {
+    @apply bg-gray-100 px-4 py-2 text-left font-semibold text-gray-900;
+  }
+
+  .prose td {
+    @apply border-t border-gray-200 px-4 py-2 text-gray-700;
   }
 }

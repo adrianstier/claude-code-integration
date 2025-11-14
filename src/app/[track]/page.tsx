@@ -68,7 +68,7 @@ export default async function TrackPage({ params }: TrackPageProps) {
       </nav>
 
       {/* Track Overview from index.mdx */}
-      <div className="mb-12">
+      <div className="mb-12 rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
         <div className="prose prose-lg max-w-none">
           <MDXRemote source={metadata.content} components={components} />
         </div>

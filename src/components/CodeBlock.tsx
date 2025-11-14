@@ -79,13 +79,13 @@ export default function CodeBlock({
       </div>
 
       {/* Code Content */}
-      <div className="relative bg-slate-950">
+      <div className="relative bg-gray-900">
         <pre className="overflow-x-auto p-6 text-sm leading-relaxed">
-          <code className={`language-${language} font-mono text-green-400`}>{code}</code>
+          <code className={`language-${language} font-mono text-gray-100`}>{code}</code>
         </pre>
 
         {/* Fade overlay for long code */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-slate-950 to-transparent opacity-20"></div>
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-gray-900 to-transparent opacity-30"></div>
       </div>
     </div>
   )
