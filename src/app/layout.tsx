@@ -20,9 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <a href="#main-content" className="skip-to-main">
+          Skip to main content
+        </a>
         <div className="flex min-h-screen flex-col">
           <Navigation />
-          <main className="flex-1">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
           <Footer />
         </div>
       </body>

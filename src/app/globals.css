@@ -33,6 +33,21 @@
     pointer-events: none;
     z-index: -1;
   }
+
+  /* Enhanced focus styles for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-claude-500 ring-offset-2 rounded;
+  }
+
+  /* Remove focus ring for mouse users but keep for keyboard users */
+  *:focus:not(:focus-visible) {
+    @apply outline-none ring-0;
+  }
+
+  /* Skip to main content link */
+  .skip-to-main {
+    @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-tooltip focus:rounded-lg focus:bg-claude-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg;
+  }
 }
 
 @layer components {
