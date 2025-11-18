@@ -67,7 +67,6 @@ export default function ClaudeMdGenerator() {
   const [copied, setCopied] = useState(false)
 
   const generateClaudeMd = () => {
-    const frameworksList = frameworks[config.language as keyof typeof frameworks] || []
     const frameworkText = config.framework ? `${config.framework} ` : ''
 
     const content = `# ${config.projectName}
