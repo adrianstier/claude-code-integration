@@ -314,6 +314,129 @@ tests/         # Jest tests`}</pre>
         </div>
       </div>
 
+      {/* Interactive Tools Section */}
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="text-center">
+          <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600">
+            Interactive Tools
+          </h2>
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            Boost Your Productivity
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+            Use our free tools to supercharge your Claude Code workflow
+          </p>
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+          {/* CLAUDE.md Generator Tool */}
+          <Link href="/tools/claude-md-generator" className="group">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-claude-200 bg-white p-8 shadow-md transition-all hover:border-claude-400 hover:shadow-2xl hover:-translate-y-1">
+              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
+
+              <div className="relative">
+                {/* Icon */}
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-claude-500 to-orange-500 text-4xl shadow-lg">
+                  ⚙️
+                </div>
+
+                {/* Content */}
+                <h3 className="mt-6 text-2xl font-bold text-gray-900">
+                  CLAUDE.md Generator
+                </h3>
+                <p className="mt-3 text-base leading-7 text-gray-600">
+                  Create customized CLAUDE.md files for your projects with our interactive form.
+                  Choose your stack, define coding standards, and export ready-to-use configuration.
+                </p>
+
+                {/* Features */}
+                <ul className="mt-6 space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Project type templates</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Framework-specific configurations</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Copy & download functionality</span>
+                  </li>
+                </ul>
+
+                {/* CTA */}
+                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-claude-600">
+                  <span>Generate CLAUDE.md</span>
+                  <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </Link>
+
+          {/* Slash Commands Library */}
+          <Link href="/tools/slash-commands" className="group">
+            <div className="relative overflow-hidden rounded-2xl border-2 border-indigo-200 bg-white p-8 shadow-md transition-all hover:border-indigo-400 hover:shadow-2xl hover:-translate-y-1">
+              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
+
+              <div className="relative">
+                {/* Icon */}
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-4xl shadow-lg">
+                  ⌨️
+                </div>
+
+                {/* Content */}
+                <h3 className="mt-6 text-2xl font-bold text-gray-900">
+                  Slash Commands Library
+                </h3>
+                <p className="mt-3 text-base leading-7 text-gray-600">
+                  Browse and copy ready-to-use slash commands for common development tasks.
+                  Search by category, copy with one click, and customize for your needs.
+                </p>
+
+                {/* Features */}
+                <ul className="mt-6 space-y-2 text-sm text-gray-700">
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>12+ production-ready commands</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Search & filter by category</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Usage examples included</span>
+                  </li>
+                </ul>
+
+                {/* CTA */}
+                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-indigo-600">
+                  <span>Browse Commands</span>
+                  <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+
       {/* Features Section */}
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
         <div className="rounded-3xl bg-gradient-to-br from-claude-50 via-orange-50 to-amber-50 p-12 shadow-xl">
