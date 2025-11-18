@@ -3,13 +3,15 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
+import { Rocket, BarChart3, Hammer, Zap, BookOpen, Bot, ArrowRight, Menu, X } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const navigationItems = [
-  { name: 'Start Here', href: '/start-here', icon: '🚀' },
-  { name: 'Data Analysis', href: '/data-analysis', icon: '📊' },
-  { name: 'App Builder', href: '/app-builder', icon: '🏗️' },
-  { name: 'Automation', href: '/automation', icon: '⚡' },
-  { name: 'Git & GitHub', href: '/git-github', icon: '📚' },
+const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> = [
+  { name: 'Start Here', href: '/start-here', icon: Rocket },
+  { name: 'Data Analysis', href: '/data-analysis', icon: BarChart3 },
+  { name: 'App Builder', href: '/app-builder', icon: Hammer },
+  { name: 'Automation', href: '/automation', icon: Zap },
+  { name: 'Git & GitHub', href: '/git-github', icon: BookOpen },
 ]
 
 export default function Navigation() {
@@ -27,8 +29,8 @@ export default function Navigation() {
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 text-xl shadow-md transition-transform group-hover:scale-110">
-              🤖
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 shadow-md transition-transform group-hover:scale-110">
+              <Bot className="h-6 w-6 text-white" />
             </div>
             <div className="hidden sm:block">
               <span className="text-lg font-bold bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
@@ -42,6 +44,7 @@ export default function Navigation() {
           <div className="hidden lg:flex lg:items-center lg:gap-2">
             {navigationItems.map((item) => {
               const active = isActive(item.href)
+              const Icon = item.icon
               return (
                 <Link
                   key={item.name}
@@ -52,9 +55,7 @@ export default function Navigation() {
                       : 'text-gray-700 hover:bg-gray-50 hover:text-claude-600'
                   }`}
                 >
-                  <span className="text-base transition-transform group-hover:scale-110">
-                    {item.icon}
-                  </span>
+                  <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
                   <span>{item.name}</span>
                   {active && (
                     <div className="absolute bottom-0 left-1/2 h-0.5 w-12 -translate-x-1/2 rounded-full bg-gradient-to-r from-claude-600 to-orange-500"></div>
@@ -89,9 +90,7 @@ export default function Navigation() {
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:scale-105"
             >
               <span>Get Started</span>
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
@@ -105,13 +104,9 @@ export default function Navigation() {
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X className="h-6 w-6" />
               ) : (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
+                <Menu className="h-6 w-6" />
               )}
             </button>
           </div>
@@ -124,6 +119,7 @@ export default function Navigation() {
           <div className="space-y-1 px-4 pb-4 pt-2">
             {navigationItems.map((item) => {
               const active = isActive(item.href)
+              const Icon = item.icon
               return (
                 <Link
                   key={item.name}
@@ -135,7 +131,7 @@ export default function Navigation() {
                       : 'text-gray-700 hover:bg-gray-50 hover:text-claude-600'
                   }`}
                 >
-                  <span className="text-xl">{item.icon}</span>
+                  <Icon className="h-5 w-5" />
                   <span>{item.name}</span>
                   {active && (
                     <svg className="ml-auto h-5 w-5 text-claude-600" fill="currentColor" viewBox="0 0 20 20">
@@ -163,9 +159,7 @@ export default function Navigation() {
                 className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-4 py-3 text-base font-semibold text-white shadow-md"
               >
                 <span>Get Started</span>
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </div>

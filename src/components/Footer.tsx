@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Rocket, BarChart3, Hammer, Zap, Bot } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -9,8 +10,8 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 text-xl shadow-md">
-                🤖
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 shadow-md">
+                <Bot className="h-6 w-6 text-white" />
               </div>
               <div>
                 <span className="block text-lg font-bold bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
@@ -59,7 +60,7 @@ export default function Footer() {
                   href="/start-here"
                   className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
                 >
-                  <span className="mr-2 text-base transition-transform group-hover:translate-x-1">🚀</span>
+                  <Rocket className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Start Here
                 </Link>
               </li>
@@ -68,7 +69,7 @@ export default function Footer() {
                   href="/data-analysis"
                   className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
                 >
-                  <span className="mr-2 text-base transition-transform group-hover:translate-x-1">📊</span>
+                  <BarChart3 className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Data Analysis
                 </Link>
               </li>
@@ -77,7 +78,7 @@ export default function Footer() {
                   href="/app-builder"
                   className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
                 >
-                  <span className="mr-2 text-base transition-transform group-hover:translate-x-1">🏗️</span>
+                  <Hammer className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   App Builder
                 </Link>
               </li>
@@ -86,7 +87,7 @@ export default function Footer() {
                   href="/automation"
                   className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
                 >
-                  <span className="mr-2 text-base transition-transform group-hover:translate-x-1">⚡</span>
+                  <Zap className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Automation
                 </Link>
               </li>

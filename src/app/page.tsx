@@ -1,4 +1,20 @@
 import Link from 'next/link'
+import {
+  Rocket,
+  BarChart3,
+  Hammer,
+  Zap,
+  Target,
+  Bot,
+  Wrench,
+  Settings,
+  Keyboard,
+  CheckCircle2,
+  ArrowRight,
+  Star,
+  Shield,
+  Sparkles
+} from 'lucide-react'
 
 export default function Home() {
   return (
@@ -35,9 +51,7 @@ export default function Home() {
             >
               <span className="relative flex items-center gap-2">
                 Get Started
-                <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
+                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
             <Link
@@ -45,32 +59,24 @@ export default function Home() {
               className="group inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:border-claude-600 hover:bg-claude-50"
             >
               Learn Git & GitHub
-              <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Link>
           </div>
 
           {/* Social Proof */}
           <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-500">
             <div className="flex items-center gap-2">
-              <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
+              <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
               <span>Free & Open Source</span>
             </div>
             <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
             <div className="flex items-center gap-2">
-              <svg className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+              <Shield className="h-5 w-5 text-green-500" />
               <span>Production Ready</span>
             </div>
             <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
             <div className="flex items-center gap-2">
-              <svg className="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
+              <Sparkles className="h-5 w-5 text-blue-500" />
               <span>Beginner Friendly</span>
             </div>
           </div>
@@ -96,8 +102,8 @@ export default function Home() {
           <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-claude-300 hover:shadow-2xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-claude-500 to-orange-500 text-3xl shadow-lg">
-                🚀
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-claude-500 to-orange-500 shadow-lg">
+                <Rocket className="h-7 w-7 text-white" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 Start Here
@@ -107,9 +113,7 @@ export default function Home() {
               </p>
               <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-claude-600">
                 <span>Begin setup</span>
-                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
               <Link href="/start-here" className="absolute inset-0">
                 <span className="sr-only">Start Here</span>
@@ -129,8 +133,8 @@ export default function Home() {
           <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-blue-300 hover:shadow-2xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-3xl shadow-lg">
-                📊
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg">
+                <BarChart3 className="h-7 w-7 text-white" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 Data Analysis
@@ -140,9 +144,7 @@ export default function Home() {
               </p>
               <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-blue-600">
                 <span>Start analyzing</span>
-                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
               <Link href="/data-analysis" className="absolute inset-0">
                 <span className="sr-only">Data Analysis</span>
@@ -162,8 +164,8 @@ export default function Home() {
           <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-purple-300 hover:shadow-2xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-3xl shadow-lg">
-                🏗️
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
+                <Hammer className="h-7 w-7 text-white" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 App Builder
@@ -173,9 +175,7 @@ export default function Home() {
               </p>
               <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-purple-600">
                 <span>Build an app</span>
-                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
               <Link href="/app-builder" className="absolute inset-0">
                 <span className="sr-only">App Builder</span>
@@ -195,8 +195,8 @@ export default function Home() {
           <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-yellow-300 hover:shadow-2xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 text-3xl shadow-lg">
-                ⚡
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 shadow-lg">
+                <Zap className="h-7 w-7 text-white" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 Automation
@@ -206,9 +206,7 @@ export default function Home() {
               </p>
               <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-yellow-600">
                 <span>Automate tasks</span>
-                <svg className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
               <Link href="/automation" className="absolute inset-0">
                 <span className="sr-only">Automation</span>
@@ -246,27 +244,19 @@ export default function Home() {
                 </p>
                 <ul className="mt-6 space-y-3 text-white/90">
                   <li className="flex items-start gap-3">
-                    <svg className="h-6 w-6 flex-shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
                     <span><strong>Explore → Plan → Code → Commit</strong> workflow</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg className="h-6 w-6 flex-shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
                     <span><strong>CLAUDE.md files</strong> for persistent instructions</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg className="h-6 w-6 flex-shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
                     <span><strong>Custom slash commands</strong> and tool permissions</span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <svg className="h-6 w-6 flex-shrink-0 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
+                    <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
                     <span><strong>Multi-Claude workflows</strong> for complex tasks</span>
                   </li>
                 </ul>
@@ -276,9 +266,7 @@ export default function Home() {
                     className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-claude-600 shadow-lg transition hover:bg-gray-50 hover:scale-105"
                   >
                     <span>Read Best Practices Guide</span>
-                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
+                    <ArrowRight className="h-5 w-5" />
                   </Link>
                 </div>
               </div>
@@ -336,8 +324,8 @@ tests/         # Jest tests`}</pre>
 
               <div className="relative">
                 {/* Icon */}
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-claude-500 to-orange-500 text-4xl shadow-lg">
-                  ⚙️
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-claude-500 to-orange-500 shadow-lg">
+                  <Settings className="h-8 w-8 text-white" />
                 </div>
 
                 {/* Content */}
@@ -352,21 +340,15 @@ tests/         # Jest tests`}</pre>
                 {/* Features */}
                 <ul className="mt-6 space-y-2 text-sm text-gray-700">
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
                     <span>Project type templates</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
                     <span>Framework-specific configurations</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-claude-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
                     <span>Copy & download functionality</span>
                   </li>
                 </ul>
@@ -374,9 +356,7 @@ tests/         # Jest tests`}</pre>
                 {/* CTA */}
                 <div className="mt-8 flex items-center gap-2 text-base font-semibold text-claude-600">
                   <span>Generate CLAUDE.md</span>
-                  <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </div>
@@ -389,8 +369,8 @@ tests/         # Jest tests`}</pre>
 
               <div className="relative">
                 {/* Icon */}
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 text-4xl shadow-lg">
-                  ⌨️
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 shadow-lg">
+                  <Keyboard className="h-8 w-8 text-white" />
                 </div>
 
                 {/* Content */}
@@ -405,21 +385,15 @@ tests/         # Jest tests`}</pre>
                 {/* Features */}
                 <ul className="mt-6 space-y-2 text-sm text-gray-700">
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
                     <span>12+ production-ready commands</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
                     <span>Search & filter by category</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <svg className="h-5 w-5 flex-shrink-0 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
                     <span>Usage examples included</span>
                   </li>
                 </ul>
@@ -427,9 +401,7 @@ tests/         # Jest tests`}</pre>
                 {/* CTA */}
                 <div className="mt-8 flex items-center gap-2 text-base font-semibold text-indigo-600">
                   <span>Browse Commands</span>
-                  <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
+                  <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
               </div>
             </div>
@@ -442,8 +414,8 @@ tests/         # Jest tests`}</pre>
         <div className="rounded-3xl bg-gradient-to-br from-claude-50 via-orange-50 to-amber-50 p-12 shadow-xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-3xl shadow-lg">
-                🎯
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
+                <Target className="h-8 w-8 text-claude-600" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 Guided Learning
@@ -454,8 +426,8 @@ tests/         # Jest tests`}</pre>
               </p>
             </div>
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-3xl shadow-lg">
-                🤖
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
+                <Bot className="h-8 w-8 text-claude-600" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 AI-Powered
@@ -466,8 +438,8 @@ tests/         # Jest tests`}</pre>
               </p>
             </div>
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-3xl shadow-lg">
-                🔧
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
+                <Wrench className="h-8 w-8 text-claude-600" />
               </div>
               <h3 className="mt-6 text-xl font-bold text-gray-900">
                 Practical Projects

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { BookOpen } from 'lucide-react'
 
 interface SlashCommand {
   id: string
@@ -370,7 +371,10 @@ export default function SlashCommandsLibrary() {
 
       {/* How to Use */}
       <div className="mt-12 rounded-2xl bg-claude-50 p-8 border border-claude-200">
-        <h3 className="mb-4 text-xl font-bold text-gray-900">📚 How to Use Slash Commands</h3>
+        <div className="mb-4 flex items-center gap-2">
+          <BookOpen className="h-6 w-6 text-claude-600" />
+          <h3 className="text-xl font-bold text-gray-900">How to Use Slash Commands</h3>
+        </div>
         <div className="space-y-4 text-gray-700">
           <div>
             <p className="font-semibold mb-2">1. Create the command file</p>

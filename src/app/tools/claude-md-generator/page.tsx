@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { Lightbulb, CheckCircle2 } from 'lucide-react'
 
 interface ProjectConfig {
   projectName: string
@@ -386,26 +387,29 @@ ${config.specialInstructions || 'No special instructions.'}
 
       {/* Tips */}
       <div className="mt-12 rounded-2xl bg-claude-50 p-8 border border-claude-200">
-        <h3 className="mb-4 text-xl font-bold text-gray-900">💡 Tips for a Great CLAUDE.md</h3>
+        <div className="mb-4 flex items-center gap-2">
+          <Lightbulb className="h-6 w-6 text-claude-600" />
+          <h3 className="text-xl font-bold text-gray-900">Tips for a Great CLAUDE.md</h3>
+        </div>
         <ul className="space-y-2 text-gray-700">
           <li className="flex items-start">
-            <span className="mr-2">✓</span>
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
             <span>Be specific about your project structure and key files</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">✓</span>
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
             <span>Include coding conventions and style preferences</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">✓</span>
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
             <span>Mention testing approach and requirements</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">✓</span>
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
             <span>List files and directories to avoid modifying</span>
           </li>
           <li className="flex items-start">
-            <span className="mr-2">✓</span>
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
             <span>Update CLAUDE.md as your project evolves</span>
           </li>
         </ul>
