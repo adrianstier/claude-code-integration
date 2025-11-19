@@ -27,6 +27,8 @@ export default function Navigation() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
+      {/* Single SearchModal instance for the entire navigation */}
+      <SearchModal />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
@@ -69,7 +71,6 @@ export default function Navigation() {
 
           {/* CTA Button (Desktop) */}
           <div className="hidden lg:flex lg:items-center lg:gap-4">
-            <SearchModal />
             <ThemeToggle />
             <Link
               href="/advanced-topics/best-practices"
@@ -100,7 +101,6 @@ export default function Navigation() {
 
           {/* Mobile menu button */}
           <div className="flex items-center gap-2 lg:hidden">
-            <SearchModal />
             <ThemeToggle />
             <button
               type="button"
