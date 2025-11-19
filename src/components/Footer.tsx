@@ -3,7 +3,7 @@ import { Rocket, BarChart3, Hammer, Zap, Bot } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gradient-to-br from-gray-50 via-white to-gray-50">
+    <footer className="border-t border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
@@ -17,10 +17,10 @@ export default function Footer() {
                 <span className="block text-lg font-bold bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
                   Claude Code
                 </span>
-                <span className="block text-xs text-gray-500 font-medium">Learning Hub</span>
+                <span className="block text-xs text-gray-500 dark:text-gray-400 font-medium">Learning Hub</span>
               </div>
             </div>
-            <p className="mt-4 text-sm leading-6 text-gray-600 max-w-md">
+            <p className="mt-4 text-sm leading-6 text-gray-600 dark:text-gray-400 max-w-md">
               Master AI-powered development with Claude Code. Learn to build real projects with VS Code, Git/GitHub, Python, and R.
             </p>
             <div className="mt-6 flex gap-4">
@@ -28,7 +28,7 @@ export default function Footer() {
                 href="https://github.com/anthropics/claude-code"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all hover:bg-claude-100 hover:text-claude-600 hover:scale-110"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-claude-100 dark:hover:bg-claude-900/50 hover:text-claude-600 dark:hover:text-claude-400 hover:scale-110"
                 aria-label="GitHub"
               >
                 <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ export default function Footer() {
                 href="https://docs.claude.com/en/docs/claude-code/overview"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 text-gray-600 transition-all hover:bg-claude-100 hover:text-claude-600 hover:scale-110"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-claude-100 dark:hover:bg-claude-900/50 hover:text-claude-600 dark:hover:text-claude-400 hover:scale-110"
                 aria-label="Documentation"
               >
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -51,14 +51,14 @@ export default function Footer() {
 
           {/* Learn Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
               Learn
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/start-here"
-                  className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   <Rocket className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Start Here
@@ -67,7 +67,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/data-analysis"
-                  className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   <BarChart3 className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Data Analysis
@@ -76,7 +76,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/app-builder"
-                  className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   <Hammer className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   App Builder
@@ -85,7 +85,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/automation"
-                  className="group inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   <Zap className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   Automation
@@ -96,14 +96,14 @@ export default function Footer() {
 
           {/* Resources Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
               Resources
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link
                   href="/git-github"
-                  className="text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   Git & GitHub
                 </Link>
@@ -113,7 +113,7 @@ export default function Footer() {
                   href="https://docs.claude.com/en/docs/claude-code/overview"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   Claude Code Docs
                   <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,7 +126,7 @@ export default function Footer() {
                   href="https://code.visualstudio.com/docs"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   VS Code Docs
                   <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -139,7 +139,7 @@ export default function Footer() {
 
           {/* Community Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
               Community
             </h3>
             <ul className="space-y-3">
@@ -148,7 +148,7 @@ export default function Footer() {
                   href="https://github.com/anthropics/claude-code"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   GitHub
                 </a>
@@ -158,7 +158,7 @@ export default function Footer() {
                   href="https://support.anthropic.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   Support
                 </a>
@@ -168,7 +168,7 @@ export default function Footer() {
                   href="https://www.anthropic.com"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-600 transition-colors hover:text-claude-600"
+                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >
                   Anthropic
                 </a>
@@ -178,18 +178,18 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 border-t border-gray-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
+        <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             &copy; {new Date().getFullYear()} Claude Code Learning.{' '}
-            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" className="text-claude-600 hover:text-claude-500">MIT License</a>
+            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" className="text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300">MIT License</a>
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             Built with{' '}
             <a
               href="https://docs.claude.com/en/docs/claude-code/overview"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-claude-600 hover:text-claude-500"
+              className="font-medium text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300"
             >
               Claude Code
             </a>

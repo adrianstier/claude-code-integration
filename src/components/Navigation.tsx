@@ -5,6 +5,8 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Rocket, BarChart3, Hammer, Zap, BookOpen, Bot, ArrowRight, Menu, X } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
+import SearchModal from './SearchModal'
 
 const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> = [
   { name: 'Start Here', href: '/start-here', icon: Rocket },
@@ -24,7 +26,7 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
+    <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
@@ -51,8 +53,8 @@ export default function Navigation() {
                   href={item.href}
                   className={`group relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
                     active
-                      ? 'bg-claude-50 text-claude-700 shadow-sm'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-claude-600'
+                      ? 'bg-claude-50 dark:bg-claude-900/30 text-claude-700 dark:text-claude-300 shadow-sm'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-claude-600 dark:hover:text-claude-400'
                   }`}
                 >
                   <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
@@ -67,9 +69,11 @@ export default function Navigation() {
 
           {/* CTA Button (Desktop) */}
           <div className="hidden lg:flex lg:items-center lg:gap-4">
+            <SearchModal />
+            <ThemeToggle />
             <Link
               href="/advanced-topics/best-practices"
-              className="group relative inline-flex items-center gap-1.5 text-sm font-semibold text-claude-600 hover:text-claude-700 transition-colors"
+              className="group relative inline-flex items-center gap-1.5 text-sm font-semibold text-claude-600 dark:text-claude-400 hover:text-claude-700 dark:hover:text-claude-300 transition-colors"
             >
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
@@ -81,7 +85,7 @@ export default function Navigation() {
               href="https://docs.claude.com/en/docs/claude-code/overview"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-gray-700 hover:text-claude-600 transition-colors"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-claude-600 dark:hover:text-claude-400 transition-colors"
             >
               Docs
             </a>
@@ -95,11 +99,13 @@ export default function Navigation() {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
+            <SearchModal />
+            <ThemeToggle />
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center rounded-lg p-2.5 text-gray-700 transition-colors hover:bg-gray-100"
+              className="inline-flex items-center justify-center rounded-lg p-2.5 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -115,7 +121,7 @@ export default function Navigation() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-gray-200 bg-white lg:hidden">
+        <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 lg:hidden">
           <div className="space-y-1 px-4 pb-4 pt-2">
             {navigationItems.map((item) => {
               const active = isActive(item.href)
@@ -127,8 +133,8 @@ export default function Navigation() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-all ${
                     active
-                      ? 'bg-claude-50 text-claude-700 shadow-sm'
-                      : 'text-gray-700 hover:bg-gray-50 hover:text-claude-600'
+                      ? 'bg-claude-50 dark:bg-claude-900/30 text-claude-700 dark:text-claude-300 shadow-sm'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-claude-600 dark:hover:text-claude-400'
                   }`}
                 >
                   <Icon className="h-5 w-5" />
@@ -141,11 +147,11 @@ export default function Navigation() {
                 </Link>
               )
             })}
-            <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
+            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
               <Link
                 href="/advanced-topics/best-practices"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-semibold text-claude-600 bg-claude-50 border border-claude-200 hover:bg-claude-100 transition-all"
+                className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-semibold text-claude-600 dark:text-claude-400 bg-claude-50 dark:bg-claude-900/30 border border-claude-200 dark:border-claude-700 hover:bg-claude-100 dark:hover:bg-claude-900/50 transition-all"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>

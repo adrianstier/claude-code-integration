@@ -3,6 +3,8 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import { ProgressProvider } from '@/components/ProgressTracker'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,16 +20,20 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <a href="#main-content" className="skip-to-main">
-          Skip to main content
-        </a>
-        <div className="flex min-h-screen flex-col">
-          <Navigation />
-          <main id="main-content" className="flex-1">{children}</main>
-          <Footer />
-        </div>
+        <ThemeProvider>
+          <ProgressProvider>
+            <a href="#main-content" className="skip-to-main">
+              Skip to main content
+            </a>
+            <div className="flex min-h-screen flex-col">
+              <Navigation />
+              <main id="main-content" className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </ProgressProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
