@@ -13,18 +13,33 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined)
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('system')
+  const [theme, setThemeState] = useState<Theme>('system')
   const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light')
+  const [mounted, setMounted] = useState(false)
 
+  // Initialize on mount - read from localStorage and current DOM state
   useEffect(() => {
+    setMounted(true)
+
     // Load saved theme from localStorage
     const savedTheme = localStorage.getItem('theme') as Theme | null
     if (savedTheme) {
-      setTheme(savedTheme)
+      setThemeState(savedTheme)
+    }
+
+    // Set initial resolved theme based on current document class (set by inline script)
+    const root = window.document.documentElement
+    if (root.classList.contains('dark')) {
+      setResolvedTheme('dark')
+    } else {
+      setResolvedTheme('light')
     }
   }, [])
 
+  // Apply theme changes - only after mounted to avoid hydration mismatch
   useEffect(() => {
+    if (!mounted) return
+
     const root = window.document.documentElement
 
     // Determine the actual theme to apply
@@ -45,7 +60,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Save to localStorage
     localStorage.setItem('theme', theme)
-  }, [theme])
+  }, [theme, mounted])
+
+  // Custom setTheme that always triggers the effect
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme)
+  }
 
   // Listen for system theme changes
   useEffect(() => {
