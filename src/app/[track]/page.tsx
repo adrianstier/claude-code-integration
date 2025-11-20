@@ -27,7 +27,7 @@ const components = {
   code: ({ children, className }: { children?: React.ReactNode; className?: string }) => {
     // Inline code (not in pre blocks)
     if (!className) {
-      return <code className="rounded bg-gray-100 px-1.5 py-0.5 text-sm font-mono text-gray-800">{children}</code>
+      return <code className="rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-gray-800 dark:text-gray-200">{children}</code>
     }
     // Let pre handle code blocks
     return <code className={className}>{children}</code>
@@ -58,19 +58,19 @@ export default async function TrackPage({ params }: TrackPageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Breadcrumbs */}
-      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600">
-        <Link href="/" className="hover:text-claude-600">
+      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+        <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
           Home
         </Link>
         <span>/</span>
-        <span className="capitalize text-gray-900">
+        <span className="capitalize text-gray-900 dark:text-white">
           {track.replace('-', ' ')}
         </span>
       </nav>
 
       {/* Track Overview from index.mdx */}
-      <div className="mb-12 rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
-        <div className="prose prose-lg max-w-none">
+      <div className="mb-12 rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="prose prose-lg dark:prose-invert max-w-none">
           <MDXRemote source={metadata.content} components={components} />
         </div>
       </div>
@@ -78,7 +78,7 @@ export default async function TrackPage({ params }: TrackPageProps) {
       {/* Module List */}
       {allContent.length > 0 && (
         <div className="mt-12">
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">Modules</h2>
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Modules</h2>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {allContent.map((item) => (
               <Card
@@ -87,7 +87,7 @@ export default async function TrackPage({ params }: TrackPageProps) {
                 description={item.frontmatter.description || ''}
                 href={`/${track}/${item.slug}`}
               >
-                <div className="flex items-center space-x-4 text-sm text-gray-500">
+                <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
                   {item.frontmatter.duration && (
                     <span className="flex items-center">
                       <svg
