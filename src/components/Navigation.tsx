@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Rocket, BarChart3, Hammer, Zap, BookOpen, Bot, ArrowRight, Menu, X } from 'lucide-react'
+import { Rocket, BarChart3, Hammer, Zap, BookOpen, Bot, ArrowRight, Menu, X, Brain } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import SearchModal from './SearchModal'
@@ -14,6 +14,7 @@ const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> =
   { name: 'App Builder', href: '/app-builder', icon: Hammer },
   { name: 'Automation', href: '/automation', icon: Zap },
   { name: 'Git & GitHub', href: '/git-github', icon: BookOpen },
+  { name: 'AI Agents', href: '/agents', icon: Brain },
 ]
 
 export default function Navigation() {

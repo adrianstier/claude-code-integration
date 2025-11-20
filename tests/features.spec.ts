@@ -165,8 +165,14 @@ test.describe('Search Modal', () => {
   })
 
   test('should navigate to page on Enter', async ({ page }) => {
+    await page.goto('http://localhost:3001')
+
     // Open modal
     await page.keyboard.press('Control+k')
+
+    // Wait for modal to open
+    const searchInput = page.locator('input[placeholder="Search documentation..."]')
+    await expect(searchInput).toBeVisible()
 
     // Press Enter (selects first item)
     await page.keyboard.press('Enter')
@@ -176,8 +182,14 @@ test.describe('Search Modal', () => {
   })
 
   test('should navigate to page on click', async ({ page }) => {
+    await page.goto('http://localhost:3001')
+
     // Open modal
     await page.keyboard.press('Control+k')
+
+    // Wait for modal to open
+    const searchInput = page.locator('input[placeholder="Search documentation..."]')
+    await expect(searchInput).toBeVisible()
 
     // Click on an item
     await page.locator('button:has-text("Data Analysis")').first().click()
@@ -843,10 +855,14 @@ test.describe('Accessibility', () => {
     // Open search (use Control+k for Playwright compatibility)
     await page.keyboard.press('Control+k')
 
-    // Check for keyboard hints
-    await expect(page.locator('text=Navigate')).toBeVisible()
-    await expect(page.locator('text=Select')).toBeVisible()
-    await expect(page.locator('text=Close')).toBeVisible()
+    // Wait for modal to be visible
+    const searchInput = page.locator('input[placeholder="Search documentation..."]')
+    await expect(searchInput).toBeVisible()
+
+    // Check for keyboard hints (use first() as text may appear elsewhere)
+    await expect(page.locator('text=Navigate').first()).toBeVisible()
+    await expect(page.locator('text=Select').first()).toBeVisible()
+    await expect(page.locator('text=Close').first()).toBeVisible()
   })
 })
 
@@ -861,7 +877,7 @@ test.describe('Edge Cases', () => {
     }
 
     // Page should not crash
-    await expect(page.locator('nav')).toBeVisible()
+    await expect(page.locator('nav').first()).toBeVisible()
   })
 
   test('should handle rapid search open/close', async ({ page }) => {
@@ -874,7 +890,7 @@ test.describe('Edge Cases', () => {
     }
 
     // Page should not crash
-    await expect(page.locator('nav')).toBeVisible()
+    await expect(page.locator('nav').first()).toBeVisible()
   })
 
   test('should handle empty search gracefully', async ({ page }) => {

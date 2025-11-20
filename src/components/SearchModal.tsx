@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import { Search, X, FileText, Rocket, BarChart3, Hammer, Zap, BookOpen, ArrowRight, Command, FolderOpen, Code, FileCode, Server } from 'lucide-react'
+import { Search, X, FileText, Rocket, BarChart3, Hammer, Zap, BookOpen, ArrowRight, Command, FolderOpen, Code, FileCode, Server, Brain } from 'lucide-react'
 
 interface SearchItem {
   title: string
@@ -110,6 +110,34 @@ const searchItems: SearchItem[] = [
     href: '/tools/mcp-explorer',
     category: 'Tools',
     icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'AI Agents',
+    description: 'Build, use, and deploy autonomous AI agents',
+    href: '/agents',
+    category: 'Learning Tracks',
+    icon: <Brain className="h-4 w-4" />,
+  },
+  {
+    title: 'Building Agents',
+    description: 'Learn to build agents from scratch with Claude Agent SDK',
+    href: '/agents/building-agents',
+    category: 'Learning Tracks',
+    icon: <Brain className="h-4 w-4" />,
+  },
+  {
+    title: 'Using Agents',
+    description: 'Master prompting, tool selection, and output handling',
+    href: '/agents/using-agents',
+    category: 'Learning Tracks',
+    icon: <Brain className="h-4 w-4" />,
+  },
+  {
+    title: 'Agent Products',
+    description: 'Build and deploy production-ready agent products',
+    href: '/agents/agent-products',
+    category: 'Learning Tracks',
+    icon: <Brain className="h-4 w-4" />,
   },
 ]
 

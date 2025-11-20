@@ -31,7 +31,7 @@ test.describe('Visual Testing - All Pages', () => {
       const title = await page.locator('h1').first()
       await expect(title).toBeVisible()
 
-      const nav = await page.locator('nav')
+      const nav = await page.locator('nav').first()
       await expect(nav).toBeVisible()
 
       const footer = await page.locator('footer')
@@ -100,10 +100,10 @@ test.describe('Content Validation', () => {
     await page.goto(baseURL)
     await page.waitForLoadState('networkidle')
 
-    await expect(page.locator('text=Start Here')).toBeVisible()
-    await expect(page.locator('text=Data Analysis')).toBeVisible()
-    await expect(page.locator('text=App Builder')).toBeVisible()
-    await expect(page.locator('text=Automation')).toBeVisible()
+    await expect(page.locator('text=Start Here').first()).toBeVisible()
+    await expect(page.locator('text=Data Analysis').first()).toBeVisible()
+    await expect(page.locator('text=App Builder').first()).toBeVisible()
+    await expect(page.locator('text=Automation').first()).toBeVisible()
 
     console.log('✓ All track cards present')
   })
@@ -112,9 +112,9 @@ test.describe('Content Validation', () => {
     await page.goto(`${baseURL}/start-here/mac-setup`)
     await page.waitForLoadState('networkidle')
 
-    await expect(page.locator('text=Install VS Code')).toBeVisible()
-    await expect(page.locator('text=Install Git')).toBeVisible()
-    await expect(page.locator('text=GitHub')).toBeVisible()
+    await expect(page.locator('text=Install VS Code').first()).toBeVisible()
+    await expect(page.locator('text=Install Git').first()).toBeVisible()
+    await expect(page.locator('text=GitHub').first()).toBeVisible()
 
     console.log('✓ Mac setup complete')
   })

@@ -13,7 +13,8 @@ import {
   ArrowRight,
   Star,
   Shield,
-  Sparkles
+  Sparkles,
+  Brain
 } from 'lucide-react'
 
 export default function Home() {
@@ -97,7 +98,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {/* Start Here Card */}
           <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-claude-300 hover:shadow-2xl hover:-translate-y-1">
             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
@@ -218,6 +219,37 @@ export default function Home() {
               </span>
               <span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
                 Practical
+              </span>
+            </div>
+          </div>
+
+          {/* AI Agents Card */}
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-emerald-300 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+            <div className="relative">
+              <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg">
+                <Brain className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="mt-6 text-xl font-bold text-gray-900">
+                AI Agents
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-600">
+                Build autonomous agents that can reason, plan, and take actions
+              </p>
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-emerald-600">
+                <span>Build agents</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </div>
+              <Link href="/agents" className="absolute inset-0">
+                <span className="sr-only">AI Agents</span>
+              </Link>
+            </div>
+            <div className="mt-6 flex gap-2">
+              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+                8-10 hours
+              </span>
+              <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+                Advanced
               </span>
             </div>
           </div>

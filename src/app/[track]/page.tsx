@@ -41,6 +41,7 @@ export async function generateStaticParams() {
     { track: 'app-builder' },
     { track: 'automation' },
     { track: 'git-github' },
+    { track: 'agents' },
   ]
 }
 
