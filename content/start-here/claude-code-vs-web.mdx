@@ -1,0 +1,294 @@
+---
+title: "Claude Code vs Claude Web"
+description: "Understand the key differences between Claude Code CLI and the Claude.com web interface"
+order: 4
+---
+
+# Claude Code vs Claude Web Interface
+
+Understanding when to use Claude Code (the CLI tool) versus the Claude.com web interface will help you work more effectively. Each has unique strengths for different tasks.
+
+## Quick Comparison
+
+| Feature | Claude Code (CLI) | Claude.com (Web) |
+|---------|-------------------|------------------|
+| **File Access** | Direct read/write to your files | Copy/paste only |
+| **Code Execution** | Run bash commands, tests, builds | No execution capability |
+| **Git Integration** | Full git operations (commit, push, PR) | No git access |
+| **Context** | Sees your entire codebase | Limited to conversation |
+| **Persistence** | CLAUDE.md files for project memory | Conversation history only |
+| **Tool Use** | MCP servers, custom tools | Web search, artifacts |
+| **Best For** | Development tasks | Brainstorming, learning |
+
+## When to Use Claude Code
+
+### Development Tasks
+Claude Code excels when you need to:
+
+- **Write and modify code** - Direct file editing without copy/paste
+- **Run tests and builds** - Execute `npm test`, `pytest`, etc.
+- **Debug issues** - Read error logs, check file states
+- **Git operations** - Commit, create branches, open PRs
+- **Refactor codebases** - Multi-file changes with context
+
+```bash
+# Example: Claude Code can do this in one request
+claude "Add error handling to all API routes, run the tests,
+       and commit the changes with a descriptive message"
+```
+
+### Project-Specific Knowledge
+With CLAUDE.md files, Claude Code remembers:
+- Your coding standards
+- Project architecture
+- Common commands
+- File conventions
+
+### Multi-Step Workflows
+Claude Code handles complex workflows:
+
+```bash
+# Claude Code can execute this entire workflow
+claude "Create a new React component for user profiles,
+       add tests, update the exports, and run the build"
+```
+
+## When to Use Claude Web
+
+### Brainstorming & Planning
+The web interface is better for:
+
+- **Architecture discussions** - Think through designs before coding
+- **Learning concepts** - Understand new technologies
+- **Code review** - Paste code for detailed review
+- **Writing documentation** - Draft READMEs, guides
+
+### Quick Questions
+For isolated questions that don't need file access:
+
+- "How do I implement rate limiting in Express?"
+- "What's the difference between useMemo and useCallback?"
+- "Explain this error message..."
+
+### Visual Artifacts
+Claude.com can create:
+- Interactive diagrams
+- Preview components
+- Downloadable files
+
+## Permission-Based Workflow
+
+One of Claude Code's unique features is its **permission system**. Unlike the web interface, Claude Code asks before taking actions that affect your system.
+
+### How Permissions Work
+
+When Claude Code wants to:
+- Read a file → Asks permission first
+- Write/edit a file → Asks permission first
+- Run a bash command → Asks permission first
+
+```
+Claude wants to edit src/utils/api.ts
+Allow? [y/n/always]
+```
+
+### Permission Options
+
+- **y** - Allow this specific action once
+- **n** - Deny this action
+- **always** - Allow this type of action for the session
+
+### Configuring Permissions
+
+You can pre-approve certain actions in your settings:
+
+```bash
+# Allow all read operations
+claude config set allowedTools.Read always
+
+# Allow specific bash commands
+claude config set allowedTools.Bash "npm test, npm run build"
+```
+
+### Safe Experimentation Mode
+
+For trusted projects, you can enable broader permissions:
+
+```bash
+# Enable "YOLO mode" for the session (use carefully!)
+claude --dangerously-skip-permissions
+```
+
+**Warning**: Only use this in isolated environments or for trusted projects.
+
+## Optimizing Your Prompts
+
+Claude Code responds to prompts differently than the web interface because it has access to your files and tools.
+
+### Be Specific About Actions
+
+**Web Interface Style** (too vague for Claude Code):
+```
+"Help me fix the authentication bug"
+```
+
+**Claude Code Style** (actionable):
+```
+"Read src/auth/login.ts, find why the JWT token isn't being
+refreshed, fix the issue, and run the auth tests"
+```
+
+### Include File Paths When Known
+
+```bash
+# Good - specific path
+claude "Update the API endpoint in src/services/api.ts to use v2"
+
+# Less good - requires searching
+claude "Update the API endpoint to use v2"
+```
+
+### Request Verification
+
+```bash
+# Ask Claude Code to verify its changes
+claude "Add input validation to the signup form,
+       then run the tests to verify it works"
+```
+
+### Use CLAUDE.md for Repeated Instructions
+
+Instead of repeating context in every prompt, add it to your CLAUDE.md:
+
+```markdown
+## Important Rules
+- Always use TypeScript strict mode
+- Write tests before implementing features
+- Use Zod for runtime validation
+```
+
+Then your prompts can be simpler:
+```bash
+claude "Add a new endpoint for user preferences"
+# Claude Code will automatically follow your CLAUDE.md rules
+```
+
+### Multi-Step Task Prompts
+
+Claude Code handles complex workflows well:
+
+```bash
+claude "I need to:
+1. Add a dark mode toggle component
+2. Create a theme context provider
+3. Update the layout to use the provider
+4. Add the toggle to the navbar
+5. Test the implementation"
+```
+
+## Real-World Examples
+
+### Example 1: Bug Fix (Claude Code)
+
+```bash
+claude "There's a bug where users can't upload images larger
+       than 1MB. Check the upload handler in src/api/uploads,
+       increase the limit to 10MB, add proper error messages,
+       and test with a large file"
+```
+
+Claude Code will:
+1. Read the upload handler file
+2. Find the size limit configuration
+3. Update the code
+4. Add error handling
+5. Run tests or suggest manual testing
+
+### Example 2: Learning (Claude Web)
+
+In Claude.com:
+```
+"Explain how React Server Components work.
+What are the benefits over traditional client components?
+When should I use each?"
+```
+
+Best for learning because:
+- Detailed explanations with examples
+- Follow-up questions easy to ask
+- Can create visual diagrams
+- No project files needed
+
+### Example 3: Code Review (Either)
+
+**Claude Code** (if code is in your project):
+```bash
+claude "Review src/components/Dashboard.tsx for
+       performance issues and accessibility"
+```
+
+**Claude Web** (for isolated review):
+```
+"Review this React component for performance issues:
+[paste code]"
+```
+
+## Workflow Integration
+
+### Recommended Workflow
+
+1. **Plan in Claude Web**
+   - Discuss architecture
+   - Explore approaches
+   - Learn new concepts
+
+2. **Implement with Claude Code**
+   - Write code with file access
+   - Run tests and builds
+   - Commit changes
+
+3. **Review in Either**
+   - Code review
+   - Documentation
+   - Final polish
+
+### Example Integrated Workflow
+
+**Step 1: Claude Web**
+```
+"I want to add user authentication to my Next.js app.
+What are my options? Compare NextAuth vs Clerk vs Auth0."
+```
+
+**Step 2: Claude Code**
+```bash
+claude "Set up NextAuth with GitHub and Google providers.
+       Create the auth API route, add the session provider
+       to the layout, and create a protected dashboard page"
+```
+
+**Step 3: Claude Web**
+```
+"Review my authentication implementation for security best practices:
+[paste key files]"
+```
+
+## Summary
+
+| Task Type | Best Tool | Why |
+|-----------|-----------|-----|
+| Writing code | Claude Code | Direct file access |
+| Running commands | Claude Code | Bash execution |
+| Git operations | Claude Code | Full git integration |
+| Learning concepts | Claude Web | Detailed explanations |
+| Brainstorming | Claude Web | No context constraints |
+| Code review | Either | Depends on file access needs |
+| Documentation | Either | Web for drafts, Code for files |
+
+The key insight: **Claude Code is for doing, Claude Web is for thinking**. Use both together for maximum productivity.
+
+## Next Steps
+
+- [Set up CLAUDE.md for your project](/advanced-topics/best-practices#claudemd-files)
+- [Configure tool permissions](/advanced-topics/best-practices#tool-permissions)
+- [Learn prompt optimization](/advanced-topics/best-practices#be-specific-in-instructions)

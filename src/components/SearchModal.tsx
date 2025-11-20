@@ -21,6 +21,13 @@ const searchItems: SearchItem[] = [
     icon: <Rocket className="h-4 w-4" />,
   },
   {
+    title: 'Claude Code vs Web',
+    description: 'Compare Claude Code CLI with the web interface, permissions, and prompt optimization',
+    href: '/start-here/claude-code-vs-web',
+    category: 'Learning Tracks',
+    icon: <Rocket className="h-4 w-4" />,
+  },
+  {
     title: 'Data Analysis',
     description: 'Learn data analysis workflows with Python and R',
     href: '/data-analysis',
