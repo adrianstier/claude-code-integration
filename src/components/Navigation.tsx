@@ -3,18 +3,16 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { Rocket, BarChart3, Hammer, Zap, BookOpen, Bot, ArrowRight, Menu, X, Brain } from 'lucide-react'
+import { Rocket, BookOpen, Bot, ArrowRight, Menu, X, Wrench, GraduationCap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import ThemeToggle from './ThemeToggle'
 import SearchModal from './SearchModal'
 
 const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> = [
   { name: 'Start Here', href: '/start-here', icon: Rocket },
-  { name: 'Data Analysis', href: '/data-analysis', icon: BarChart3 },
-  { name: 'App Builder', href: '/app-builder', icon: Hammer },
-  { name: 'Automation', href: '/automation', icon: Zap },
-  { name: 'Git & GitHub', href: '/git-github', icon: BookOpen },
-  { name: 'AI Agents', href: '/agents', icon: Brain },
+  { name: 'Learning Tracks', href: '/#tracks', icon: GraduationCap },
+  { name: 'Tools', href: '/tools/templates', icon: Wrench },
+  { name: 'Resources', href: '/git-github', icon: BookOpen },
 ]
 
 export default function Navigation() {
@@ -23,6 +21,7 @@ export default function Navigation() {
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
+    if (href.startsWith('/#')) return pathname === '/'
     return pathname.startsWith(href)
   }
 

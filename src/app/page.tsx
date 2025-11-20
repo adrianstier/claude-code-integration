@@ -85,7 +85,7 @@ export default function Home() {
       </div>
 
       {/* Learning Paths Section */}
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div id="tracks" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 scroll-mt-24">
         <div className="text-center">
           <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600">
             Learning Tracks
