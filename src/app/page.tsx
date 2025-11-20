@@ -19,12 +19,12 @@ import {
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-claude-50 px-4 py-2 text-sm font-medium text-claude-700 ring-1 ring-inset ring-claude-600/10">
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-claude-50 dark:bg-claude-900/50 px-4 py-2 text-sm font-medium text-claude-700 dark:text-claude-300 ring-1 ring-inset ring-claude-600/10 dark:ring-claude-400/20">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
@@ -33,13 +33,13 @@ export default function Home() {
           </div>
 
           {/* Main Heading */}
-          <h1 className="text-5xl font-bold tracking-tight text-gray-900 sm:text-7xl">
+          <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl">
             Learn{' '}
             <span className="bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
               Claude Code
             </span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-gray-600">
+          <p className="mx-auto mt-6 max-w-2xl text-xl leading-8 text-gray-600 dark:text-gray-300">
             Master AI-powered development with Claude Code, VS Code, Git/GitHub, Python, and R.
             Build real projects, not just tutorials.
           </p>
@@ -57,7 +57,7 @@ export default function Home() {
             </Link>
             <Link
               href="/git-github"
-              className="group inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-8 py-3.5 text-base font-semibold text-gray-900 transition-all hover:border-claude-600 hover:bg-claude-50"
+              className="group inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-8 py-3.5 text-base font-semibold text-gray-900 dark:text-white transition-all hover:border-claude-600 dark:hover:border-claude-500 hover:bg-claude-50 dark:hover:bg-gray-700"
             >
               Learn Git & GitHub
               <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -65,17 +65,17 @@ export default function Home() {
           </div>
 
           {/* Social Proof */}
-          <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-500">
+          <div className="mt-12 flex items-center justify-center gap-8 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-2">
               <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
               <span>Free & Open Source</span>
             </div>
-            <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+            <div className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-green-500" />
               <span>Production Ready</span>
             </div>
-            <div className="hidden sm:block h-4 w-px bg-gray-300"></div>
+            <div className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-600"></div>
             <div className="flex items-center gap-2">
               <Sparkles className="h-5 w-5 text-blue-500" />
               <span>Beginner Friendly</span>
@@ -87,32 +87,32 @@ export default function Home() {
       {/* Learning Paths Section */}
       <div id="tracks" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 scroll-mt-24">
         <div className="text-center">
-          <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600">
+          <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600 dark:text-claude-400">
             Learning Tracks
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             Choose Your Learning Path
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
             Start with any track that matches your goals. All paths include hands-on projects and Claude Code integration.
           </p>
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {/* Start Here Card */}
-          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-claude-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm transition-all hover:border-claude-300 dark:hover:border-claude-600 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 dark:from-claude-900/50 dark:to-orange-900/50 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-claude-500 to-orange-500 shadow-lg">
                 <Rocket className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 Start Here
               </h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
                 Install and configure Claude Code, VS Code, and Git/GitHub on Mac or Windows
               </p>
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-claude-600">
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-claude-600 dark:text-claude-400">
                 <span>Begin setup</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -121,29 +121,29 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-6 flex gap-2">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+              <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:text-gray-200">
                 60-75 min
               </span>
-              <span className="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+              <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/50 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-300">
                 Essential
               </span>
             </div>
           </div>
 
           {/* Data Analysis Card */}
-          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-blue-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm transition-all hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/50 dark:to-indigo-900/50 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 shadow-lg">
                 <BarChart3 className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 Data Analysis
               </h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
                 Learn Python or R for data cleaning, visualization, and modeling with Claude
               </p>
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-blue-600">
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-blue-600 dark:text-blue-400">
                 <span>Start analyzing</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -152,29 +152,29 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-6 flex gap-2">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+              <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:text-gray-200">
                 4-6 hours
               </span>
-              <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800">
+              <span className="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/50 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:text-blue-300">
                 Popular
               </span>
             </div>
           </div>
 
           {/* App Builder Card */}
-          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-purple-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm transition-all hover:border-purple-300 dark:hover:border-purple-600 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 shadow-lg">
                 <Hammer className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 App Builder
               </h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
                 Build and deploy small web apps and APIs with Claude as your co-developer
               </p>
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-purple-600">
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-purple-600 dark:text-purple-400">
                 <span>Build an app</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -183,29 +183,29 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-6 flex gap-2">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+              <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:text-gray-200">
                 Varies
               </span>
-              <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-800">
+              <span className="inline-flex items-center rounded-full bg-purple-100 dark:bg-purple-900/50 px-2.5 py-0.5 text-xs font-medium text-purple-800 dark:text-purple-300">
                 Advanced
               </span>
             </div>
           </div>
 
           {/* Automation Card */}
-          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-yellow-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm transition-all hover:border-yellow-300 dark:hover:border-yellow-600 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-yellow-100 to-amber-100 dark:from-yellow-900/50 dark:to-amber-900/50 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 shadow-lg">
                 <Zap className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 Automation
               </h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
                 Create scripts and workflows to automate repetitive tasks with Claude
               </p>
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-yellow-600">
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-yellow-600 dark:text-yellow-400">
                 <span>Automate tasks</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -214,29 +214,29 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-6 flex gap-2">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+              <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:text-gray-200">
                 2-3 hours
               </span>
-              <span className="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+              <span className="inline-flex items-center rounded-full bg-yellow-100 dark:bg-yellow-900/50 px-2.5 py-0.5 text-xs font-medium text-yellow-800 dark:text-yellow-300">
                 Practical
               </span>
             </div>
           </div>
 
           {/* AI Agents Card */}
-          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-sm transition-all hover:border-emerald-300 hover:shadow-2xl hover:-translate-y-1">
-            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
+          <div className="group relative overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 shadow-sm transition-all hover:border-emerald-300 dark:hover:border-emerald-600 hover:shadow-2xl hover:-translate-y-1">
+            <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/50 dark:to-teal-900/50 opacity-50 blur-2xl transition-opacity group-hover:opacity-75"></div>
             <div className="relative">
               <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-lg">
                 <Brain className="h-7 w-7 text-white" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 AI Agents
               </h3>
-              <p className="mt-3 text-sm leading-6 text-gray-600">
+              <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
                 Build autonomous agents that can reason, plan, and take actions
               </p>
-              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-emerald-600">
+              <div className="mt-6 flex items-center gap-2 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
                 <span>Build agents</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>
@@ -245,10 +245,10 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-6 flex gap-2">
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800">
+              <span className="inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:text-gray-200">
                 8-10 hours
               </span>
-              <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800">
+              <span className="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-900/50 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:text-emerald-300">
                 Advanced
               </span>
             </div>
@@ -337,13 +337,13 @@ tests/         # Jest tests`}</pre>
       {/* Interactive Tools Section */}
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600">
+          <h2 className="text-base font-semibold uppercase tracking-wide text-claude-600 dark:text-claude-400">
             Interactive Tools
           </h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
             Boost Your Productivity
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600 dark:text-gray-300">
             Use our free tools to supercharge your Claude Code workflow
           </p>
         </div>
@@ -351,8 +351,8 @@ tests/         # Jest tests`}</pre>
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
           {/* CLAUDE.md Generator Tool */}
           <Link href="/tools/claude-md-generator" className="group">
-            <div className="relative overflow-hidden rounded-2xl border-2 border-claude-200 bg-white p-8 shadow-md transition-all hover:border-claude-400 hover:shadow-2xl hover:-translate-y-1">
-              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-claude-200 dark:border-claude-700 bg-white dark:bg-gray-800 p-8 shadow-md transition-all hover:border-claude-400 dark:hover:border-claude-500 hover:shadow-2xl hover:-translate-y-1">
+              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-claude-100 to-orange-100 dark:from-claude-900/50 dark:to-orange-900/50 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
 
               <div className="relative">
                 {/* Icon */}
@@ -361,32 +361,32 @@ tests/         # Jest tests`}</pre>
                 </div>
 
                 {/* Content */}
-                <h3 className="mt-6 text-2xl font-bold text-gray-900">
+                <h3 className="mt-6 text-2xl font-bold text-gray-900 dark:text-white">
                   CLAUDE.md Generator
                 </h3>
-                <p className="mt-3 text-base leading-7 text-gray-600">
+                <p className="mt-3 text-base leading-7 text-gray-600 dark:text-gray-300">
                   Create customized CLAUDE.md files for your projects with our interactive form.
                   Choose your stack, define coding standards, and export ready-to-use configuration.
                 </p>
 
                 {/* Features */}
-                <ul className="mt-6 space-y-2 text-sm text-gray-700">
+                <ul className="mt-6 space-y-2 text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600 dark:text-claude-400" />
                     <span>Project type templates</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600 dark:text-claude-400" />
                     <span>Framework-specific configurations</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-claude-600 dark:text-claude-400" />
                     <span>Copy & download functionality</span>
                   </li>
                 </ul>
 
                 {/* CTA */}
-                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-claude-600">
+                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-claude-600 dark:text-claude-400">
                   <span>Generate CLAUDE.md</span>
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -396,8 +396,8 @@ tests/         # Jest tests`}</pre>
 
           {/* Slash Commands Library */}
           <Link href="/tools/slash-commands" className="group">
-            <div className="relative overflow-hidden rounded-2xl border-2 border-indigo-200 bg-white p-8 shadow-md transition-all hover:border-indigo-400 hover:shadow-2xl hover:-translate-y-1">
-              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
+            <div className="relative overflow-hidden rounded-2xl border-2 border-indigo-200 dark:border-indigo-700 bg-white dark:bg-gray-800 p-8 shadow-md transition-all hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-2xl hover:-translate-y-1">
+              <div className="absolute top-0 right-0 -mt-4 -mr-4 h-32 w-32 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/50 dark:to-purple-900/50 opacity-50 blur-3xl transition-opacity group-hover:opacity-75"></div>
 
               <div className="relative">
                 {/* Icon */}
@@ -406,32 +406,32 @@ tests/         # Jest tests`}</pre>
                 </div>
 
                 {/* Content */}
-                <h3 className="mt-6 text-2xl font-bold text-gray-900">
+                <h3 className="mt-6 text-2xl font-bold text-gray-900 dark:text-white">
                   Slash Commands Library
                 </h3>
-                <p className="mt-3 text-base leading-7 text-gray-600">
+                <p className="mt-3 text-base leading-7 text-gray-600 dark:text-gray-300">
                   Browse and copy ready-to-use slash commands for common development tasks.
                   Search by category, copy with one click, and customize for your needs.
                 </p>
 
                 {/* Features */}
-                <ul className="mt-6 space-y-2 text-sm text-gray-700">
+                <ul className="mt-6 space-y-2 text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600 dark:text-indigo-400" />
                     <span>12+ production-ready commands</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600 dark:text-indigo-400" />
                     <span>Search & filter by category</span>
                   </li>
                   <li className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600" />
+                    <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-indigo-600 dark:text-indigo-400" />
                     <span>Usage examples included</span>
                   </li>
                 </ul>
 
                 {/* CTA */}
-                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-indigo-600">
+                <div className="mt-8 flex items-center gap-2 text-base font-semibold text-indigo-600 dark:text-indigo-400">
                   <span>Browse Commands</span>
                   <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </div>
@@ -443,40 +443,40 @@ tests/         # Jest tests`}</pre>
 
       {/* Features Section */}
       <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-br from-claude-50 via-orange-50 to-amber-50 p-12 shadow-xl">
+        <div className="rounded-3xl bg-gradient-to-br from-claude-50 via-orange-50 to-amber-50 dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 p-12 shadow-xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
-                <Target className="h-8 w-8 text-claude-600" />
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-gray-700 shadow-lg">
+                <Target className="h-8 w-8 text-claude-600 dark:text-claude-400" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 Guided Learning
               </h3>
-              <p className="mt-3 text-base leading-7 text-gray-700">
+              <p className="mt-3 text-base leading-7 text-gray-700 dark:text-gray-300">
                 Step-by-step tutorials designed for beginners and experienced developers alike.
                 No prior experience required.
               </p>
             </div>
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
-                <Bot className="h-8 w-8 text-claude-600" />
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-gray-700 shadow-lg">
+                <Bot className="h-8 w-8 text-claude-600 dark:text-claude-400" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 AI-Powered
               </h3>
-              <p className="mt-3 text-base leading-7 text-gray-700">
+              <p className="mt-3 text-base leading-7 text-gray-700 dark:text-gray-300">
                 Learn how to effectively partner with Claude for real coding tasks.
                 Write better code, faster.
               </p>
             </div>
             <div className="text-center lg:text-left">
-              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-lg">
-                <Wrench className="h-8 w-8 text-claude-600" />
+              <div className="mx-auto lg:mx-0 flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-gray-700 shadow-lg">
+                <Wrench className="h-8 w-8 text-claude-600 dark:text-claude-400" />
               </div>
-              <h3 className="mt-6 text-xl font-bold text-gray-900">
+              <h3 className="mt-6 text-xl font-bold text-gray-900 dark:text-white">
                 Practical Projects
               </h3>
-              <p className="mt-3 text-base leading-7 text-gray-700">
+              <p className="mt-3 text-base leading-7 text-gray-700 dark:text-gray-300">
                 Build real projects you can use and share, not just toy examples.
                 Portfolio-ready work.
               </p>
