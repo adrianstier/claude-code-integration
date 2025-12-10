@@ -158,33 +158,33 @@ ${config.specialInstructions || 'No special instructions.'}
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Breadcrumbs */}
-      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600">
-        <Link href="/" className="hover:text-claude-600">
+      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+        <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
           Home
         </Link>
         <span>/</span>
-        <span className="text-gray-900">CLAUDE.md Generator</span>
+        <span className="text-gray-900 dark:text-white">CLAUDE.md Generator</span>
       </nav>
 
       {/* Header */}
       <div className="mb-12">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
           CLAUDE.md Generator
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-xl text-gray-600 dark:text-gray-300">
           Create a customized CLAUDE.md file for your project. This file helps Claude Code understand your project structure, preferences, and workflows.
         </p>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Form */}
-        <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
-          <h2 className="mb-6 text-2xl font-bold text-gray-900">Project Configuration</h2>
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-sm border border-gray-100 dark:border-gray-700">
+          <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">Project Configuration</h2>
 
           <div className="space-y-6">
             {/* Project Name */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Project Name *
               </label>
               <input
@@ -192,19 +192,19 @@ ${config.specialInstructions || 'No special instructions.'}
                 value={config.projectName}
                 onChange={(e) => setConfig({ ...config, projectName: e.target.value })}
                 placeholder="my-awesome-project"
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Project Type */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Project Type *
               </label>
               <select
                 value={config.projectType}
                 onChange={(e) => setConfig({ ...config, projectType: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               >
                 {projectTypes.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -216,13 +216,13 @@ ${config.specialInstructions || 'No special instructions.'}
 
             {/* Language */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Primary Language *
               </label>
               <select
                 value={config.language}
                 onChange={(e) => setConfig({ ...config, language: e.target.value, framework: '' })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               >
                 {languages.map((lang) => (
                   <option key={lang.value} value={lang.value}>
@@ -234,13 +234,13 @@ ${config.specialInstructions || 'No special instructions.'}
 
             {/* Framework */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Framework
               </label>
               <select
                 value={config.framework}
                 onChange={(e) => setConfig({ ...config, framework: e.target.value })}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               >
                 <option value="">Select framework...</option>
                 {frameworks[config.language as keyof typeof frameworks]?.map((fw) => (
@@ -253,7 +253,7 @@ ${config.specialInstructions || 'No special instructions.'}
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Project Description
               </label>
               <textarea
@@ -261,13 +261,13 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, description: e.target.value })}
                 placeholder="A brief description of what your project does..."
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Key Files */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Key Files & Directories
               </label>
               <textarea
@@ -275,13 +275,13 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, keyFiles: e.target.value })}
                 placeholder="- src/: Main application code&#10;- tests/: Test files&#10;- config/: Configuration files"
                 rows={4}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 font-mono text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Avoid Files */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Files to Avoid
               </label>
               <textarea
@@ -289,13 +289,13 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, avoidFiles: e.target.value })}
                 placeholder="- node_modules/&#10;- .env&#10;- dist/"
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 font-mono text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Coding Style */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Coding Style Preferences
               </label>
               <textarea
@@ -303,13 +303,13 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, codingStyle: e.target.value })}
                 placeholder="- Use functional components in React&#10;- Prefer const over let&#10;- Always use TypeScript types"
                 rows={4}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 font-mono text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Testing */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Testing Approach
               </label>
               <textarea
@@ -317,13 +317,13 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, testingApproach: e.target.value })}
                 placeholder="- Use Jest for unit tests&#10;- Playwright for E2E tests&#10;- TDD when adding new features"
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-sm focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 font-mono text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
             {/* Special Instructions */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                 Special Instructions
               </label>
               <textarea
@@ -331,7 +331,7 @@ ${config.specialInstructions || 'No special instructions.'}
                 onChange={(e) => setConfig({ ...config, specialInstructions: e.target.value })}
                 placeholder="Any additional context or instructions for Claude..."
                 rows={3}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
               />
             </div>
 
@@ -347,14 +347,14 @@ ${config.specialInstructions || 'No special instructions.'}
         </div>
 
         {/* Preview */}
-        <div className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100">
+        <div className="rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-sm border border-gray-100 dark:border-gray-700">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Preview</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Preview</h2>
             {generated && (
               <div className="flex gap-2">
                 <button
                   onClick={handleCopy}
-                  className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                  className="rounded-lg bg-gray-100 dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
                 >
                   {copied ? 'Copied!' : 'Copy'}
                 </button>
@@ -369,14 +369,14 @@ ${config.specialInstructions || 'No special instructions.'}
           </div>
 
           {generated ? (
-            <div className="rounded-lg bg-gray-50 p-6 border border-gray-200">
-              <pre className="whitespace-pre-wrap font-mono text-sm text-gray-800">
+            <div className="rounded-lg bg-gray-50 dark:bg-gray-900 p-6 border border-gray-200 dark:border-gray-700">
+              <pre className="whitespace-pre-wrap font-mono text-sm text-gray-800 dark:text-gray-200">
                 {generated}
               </pre>
             </div>
           ) : (
-            <div className="flex h-96 items-center justify-center rounded-lg border-2 border-dashed border-gray-300">
-              <p className="text-gray-500">
+            <div className="flex h-96 items-center justify-center rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600">
+              <p className="text-gray-500 dark:text-gray-400">
                 Fill in the form and click Generate to see your CLAUDE.md file
               </p>
             </div>
@@ -385,30 +385,30 @@ ${config.specialInstructions || 'No special instructions.'}
       </div>
 
       {/* Tips */}
-      <div className="mt-12 rounded-2xl bg-claude-50 p-8 border border-claude-200">
+      <div className="mt-12 rounded-2xl bg-claude-50 dark:bg-gray-800 p-8 border border-claude-200 dark:border-gray-700">
         <div className="mb-4 flex items-center gap-2">
-          <Lightbulb className="h-6 w-6 text-claude-600" />
-          <h3 className="text-xl font-bold text-gray-900">Tips for a Great CLAUDE.md</h3>
+          <Lightbulb className="h-6 w-6 text-claude-600 dark:text-claude-400" />
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">Tips for a Great CLAUDE.md</h3>
         </div>
-        <ul className="space-y-2 text-gray-700">
+        <ul className="space-y-2 text-gray-700 dark:text-gray-300">
           <li className="flex items-start">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600 dark:text-claude-400" />
             <span>Be specific about your project structure and key files</span>
           </li>
           <li className="flex items-start">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600 dark:text-claude-400" />
             <span>Include coding conventions and style preferences</span>
           </li>
           <li className="flex items-start">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600 dark:text-claude-400" />
             <span>Mention testing approach and requirements</span>
           </li>
           <li className="flex items-start">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600 dark:text-claude-400" />
             <span>List files and directories to avoid modifying</span>
           </li>
           <li className="flex items-start">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600" />
+            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mr-2 text-claude-600 dark:text-claude-400" />
             <span>Update CLAUDE.md as your project evolves</span>
           </li>
         </ul>

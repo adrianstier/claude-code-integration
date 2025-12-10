@@ -251,30 +251,30 @@ export default function SlashCommandsLibrary() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Breadcrumbs */}
-      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600">
-        <Link href="/" className="hover:text-claude-600">
+      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+        <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
           Home
         </Link>
         <span>/</span>
-        <span className="text-gray-900">Slash Commands Library</span>
+        <span className="text-gray-900 dark:text-white">Slash Commands Library</span>
       </nav>
 
       {/* Header */}
       <div className="mb-12">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
           Slash Commands Library
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-xl text-gray-600 dark:text-gray-300">
           Ready-to-use slash commands for common development tasks. Copy, customize, and add to your project.
         </p>
       </div>
 
       {/* Filters */}
-      <div className="mb-8 rounded-2xl bg-white p-6 shadow-sm border border-gray-100">
+      <div className="mb-8 rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="grid gap-4 md:grid-cols-2">
           {/* Search */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Search Commands
             </label>
             <input
@@ -282,19 +282,19 @@ export default function SlashCommandsLibrary() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search by name, description, or tags..."
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
             />
           </div>
 
           {/* Category */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
               Category
             </label>
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2 text-gray-900 dark:text-white focus:border-claude-500 focus:outline-none focus:ring-2 focus:ring-claude-200 dark:focus:ring-claude-800"
             >
               <option value="All">All Categories</option>
               {categories.map((cat) => (
@@ -306,7 +306,7 @@ export default function SlashCommandsLibrary() {
           </div>
         </div>
 
-        <div className="mt-4 text-sm text-gray-600">
+        <div className="mt-4 text-sm text-gray-600 dark:text-gray-400">
           Showing {filteredCommands.length} of {commands.length} commands
         </div>
       </div>
@@ -316,20 +316,20 @@ export default function SlashCommandsLibrary() {
         {filteredCommands.map((command) => (
           <div
             key={command.id}
-            className="rounded-2xl bg-white p-6 shadow-sm border border-gray-100 transition-all hover:shadow-md"
+            className="rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-sm border border-gray-100 dark:border-gray-700 transition-all hover:shadow-md"
           >
             {/* Header */}
             <div className="mb-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">{command.name}</h3>
-                  <span className="inline-block mt-1 rounded-full bg-claude-100 px-3 py-1 text-xs font-medium text-claude-800">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{command.name}</h3>
+                  <span className="inline-block mt-1 rounded-full bg-claude-100 dark:bg-claude-900/50 px-3 py-1 text-xs font-medium text-claude-800 dark:text-claude-300">
                     {command.category}
                   </span>
                 </div>
                 <button
                   onClick={() => handleCopy(command)}
-                  className="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200"
+                  className="rounded-lg bg-gray-100 dark:bg-gray-700 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-200 dark:hover:bg-gray-600"
                 >
                   {copiedId === command.id ? 'Copied!' : 'Copy'}
                 </button>
@@ -337,11 +337,11 @@ export default function SlashCommandsLibrary() {
             </div>
 
             {/* Description */}
-            <p className="mb-4 text-sm text-gray-600">{command.description}</p>
+            <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">{command.description}</p>
 
             {/* Code */}
             <div className="mb-4">
-              <div className="rounded-lg bg-gray-900 p-4">
+              <div className="rounded-lg bg-gray-900 dark:bg-gray-950 p-4">
                 <pre className="whitespace-pre-wrap font-mono text-xs text-gray-100">
                   {command.code}
                 </pre>
@@ -350,8 +350,8 @@ export default function SlashCommandsLibrary() {
 
             {/* Example */}
             <div className="mb-4">
-              <p className="text-sm font-semibold text-gray-700 mb-1">Example Usage:</p>
-              <p className="text-sm text-gray-600 italic">{command.example}</p>
+              <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">Example Usage:</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400 italic">{command.example}</p>
             </div>
 
             {/* Tags */}
@@ -359,7 +359,7 @@ export default function SlashCommandsLibrary() {
               {command.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700"
+                  className="rounded-full bg-gray-100 dark:bg-gray-700 px-2.5 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-300"
                 >
                   {tag}
                 </span>
@@ -370,15 +370,15 @@ export default function SlashCommandsLibrary() {
       </div>
 
       {/* How to Use */}
-      <div className="mt-12 rounded-2xl bg-claude-50 p-8 border border-claude-200">
+      <div className="mt-12 rounded-2xl bg-claude-50 dark:bg-gray-800 p-8 border border-claude-200 dark:border-gray-700">
         <div className="mb-4 flex items-center gap-2">
-          <BookOpen className="h-6 w-6 text-claude-600" />
-          <h3 className="text-xl font-bold text-gray-900">How to Use Slash Commands</h3>
+          <BookOpen className="h-6 w-6 text-claude-600 dark:text-claude-400" />
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">How to Use Slash Commands</h3>
         </div>
-        <div className="space-y-4 text-gray-700">
+        <div className="space-y-4 text-gray-700 dark:text-gray-300">
           <div>
             <p className="font-semibold mb-2">1. Create the command file</p>
-            <code className="block rounded bg-white px-3 py-2 text-sm font-mono border border-claude-200">
+            <code className="block rounded bg-white dark:bg-gray-900 px-3 py-2 text-sm font-mono border border-claude-200 dark:border-gray-600 text-gray-800 dark:text-gray-200">
               .claude/commands/command-name.md
             </code>
           </div>
