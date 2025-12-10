@@ -28,6 +28,13 @@ const searchItems: SearchItem[] = [
     icon: <Rocket className="h-4 w-4" />,
   },
   {
+    title: 'Claude Code for Researchers',
+    description: 'Research workflows with Python, R, and Claude Code for data analysis',
+    href: '/start-here/claude-code-for-researchers',
+    category: 'Learning Tracks',
+    icon: <Rocket className="h-4 w-4" />,
+  },
+  {
     title: 'Data Analysis',
     description: 'Learn data analysis workflows with Python and R',
     href: '/data-analysis',
@@ -38,6 +45,13 @@ const searchItems: SearchItem[] = [
     title: 'Python Track',
     description: 'Learn pandas, matplotlib, and scikit-learn for data analysis',
     href: '/data-analysis/python-intro',
+    category: 'Learning Tracks',
+    icon: <BarChart3 className="h-4 w-4" />,
+  },
+  {
+    title: 'R Track',
+    description: 'Learn tidyverse, ggplot2, and statistical analysis with R',
+    href: '/data-analysis/r-intro',
     category: 'Learning Tracks',
     icon: <BarChart3 className="h-4 w-4" />,
   },

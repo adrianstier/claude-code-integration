@@ -1,0 +1,468 @@
+---
+title: "Claude Code for Researchers"
+description: "A comprehensive guide for researchers and analysts getting started with Claude Code for data analysis, scripting, and research workflows"
+order: 4
+duration: "20 min"
+---
+
+# Claude Code for Researchers
+
+If you're a researcher, data analyst, or scientist looking to integrate AI into your workflow, Claude Code offers powerful capabilities that can transform how you work with data, write code, and manage research projects.
+
+## What Claude Code Can Do
+
+Claude Code is a command-line AI assistant that lives in your terminal and can:
+
+### Direct File System Access
+
+Unlike web-based AI assistants, Claude Code can directly read, write, and modify files on your computer:
+
+```bash
+# Claude can read your data files directly
+claude "analyze the CSV file in ./data/experiment_results.csv"
+
+# It can write scripts and save them
+claude "create a Python script to clean this dataset and save it as clean_data.py"
+
+# It can even run your code and iterate on errors
+claude "run the analysis script and fix any errors"
+```
+
+### Execute Code in Real-Time
+
+Claude Code can run Python, R, and shell commands, see the output, and iterate:
+
+```bash
+# Run analysis and get results
+claude "run a statistical analysis on my survey data and show me the results"
+
+# Debug interactively
+claude "this script is throwing an error - help me fix it"
+```
+
+### Understand Your Full Project Context
+
+Claude Code can explore your entire codebase, not just single files:
+
+```bash
+# Get project-wide understanding
+claude "explain how the data pipeline in this project works"
+
+# Find and modify across files
+claude "update all functions that use the old API format"
+```
+
+## Working with Python
+
+Claude Code excels at Python-based research workflows. Here are practical examples:
+
+### Data Cleaning and Preprocessing
+
+```python
+# Ask Claude to help clean messy data
+# "Clean this survey data: handle missing values, standardize date formats,
+#  and remove duplicates"
+
+import pandas as pd
+import numpy as np
+
+def clean_survey_data(filepath):
+    """Clean and preprocess survey data."""
+    df = pd.read_csv(filepath)
+
+    # Handle missing values
+    df['age'] = df['age'].fillna(df['age'].median())
+    df['response'] = df['response'].fillna('No Response')
+
+    # Standardize dates
+    df['date'] = pd.to_datetime(df['date'], format='mixed')
+
+    # Remove duplicates based on participant ID
+    df = df.drop_duplicates(subset=['participant_id'], keep='first')
+
+    return df
+```
+
+### Statistical Analysis
+
+```python
+# "Run a regression analysis on my experiment data with proper diagnostics"
+
+import pandas as pd
+import statsmodels.api as sm
+from scipy import stats
+
+def analyze_experiment(df, dependent_var, independent_vars):
+    """Run regression with full diagnostics."""
+    X = df[independent_vars]
+    X = sm.add_constant(X)
+    y = df[dependent_var]
+
+    model = sm.OLS(y, X).fit()
+
+    # Print comprehensive results
+    print(model.summary())
+
+    # Check assumptions
+    residuals = model.resid
+    print(f"\nNormality test (Shapiro-Wilk): {stats.shapiro(residuals)}")
+    print(f"Homoscedasticity test (Breusch-Pagan): {sm.stats.diagnostic.het_breuschpagan(residuals, X)}")
+
+    return model
+```
+
+### Visualization
+
+```python
+# "Create publication-ready figures for my results"
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def create_publication_figure(df, x_var, y_var, group_var=None):
+    """Create a publication-ready scatter plot with regression line."""
+    plt.figure(figsize=(10, 6))
+
+    if group_var:
+        sns.scatterplot(data=df, x=x_var, y=y_var, hue=group_var, alpha=0.7)
+    else:
+        sns.regplot(data=df, x=x_var, y=y_var, scatter_kws={'alpha':0.5})
+
+    plt.xlabel(x_var.replace('_', ' ').title(), fontsize=12)
+    plt.ylabel(y_var.replace('_', ' ').title(), fontsize=12)
+    plt.title(f'{y_var.replace("_", " ").title()} vs {x_var.replace("_", " ").title()}',
+              fontsize=14, fontweight='bold')
+
+    plt.tight_layout()
+    plt.savefig('figure.png', dpi=300, bbox_inches='tight')
+    plt.savefig('figure.pdf', bbox_inches='tight')  # Vector format for publications
+
+    return plt.gcf()
+```
+
+### Machine Learning Pipelines
+
+```python
+# "Build a classification model with cross-validation and feature importance"
+
+from sklearn.model_selection import cross_val_score, train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.pipeline import Pipeline
+import pandas as pd
+
+def build_classifier(df, target_col, feature_cols):
+    """Build and evaluate a classification pipeline."""
+    X = df[feature_cols]
+    y = df[target_col]
+
+    # Create pipeline
+    pipeline = Pipeline([
+        ('scaler', StandardScaler()),
+        ('classifier', RandomForestClassifier(n_estimators=100, random_state=42))
+    ])
+
+    # Cross-validation
+    cv_scores = cross_val_score(pipeline, X, y, cv=5, scoring='accuracy')
+    print(f"Cross-validation accuracy: {cv_scores.mean():.3f} (+/- {cv_scores.std()*2:.3f})")
+
+    # Fit and get feature importance
+    pipeline.fit(X, y)
+    importance = pd.DataFrame({
+        'feature': feature_cols,
+        'importance': pipeline.named_steps['classifier'].feature_importances_
+    }).sort_values('importance', ascending=False)
+
+    print("\nFeature Importance:")
+    print(importance.to_string(index=False))
+
+    return pipeline, importance
+```
+
+## Working with R
+
+Claude Code also supports R for statistical analysis. Here are examples:
+
+### Data Manipulation with tidyverse
+
+```r
+# "Clean and reshape my longitudinal study data"
+
+library(tidyverse)
+
+clean_longitudinal_data <- function(filepath) {
+  data <- read_csv(filepath)
+
+  cleaned <- data %>%
+    # Handle missing values
+    mutate(across(where(is.numeric), ~replace_na(., median(., na.rm = TRUE)))) %>%
+    # Standardize variable names
+    rename_with(tolower) %>%
+    rename_with(~str_replace_all(., " ", "_")) %>%
+    # Convert to long format for repeated measures
+    pivot_longer(
+      cols = starts_with("time_"),
+      names_to = "timepoint",
+      values_to = "measurement",
+      names_prefix = "time_"
+    ) %>%
+    # Create factors
+    mutate(
+      timepoint = factor(timepoint, levels = c("1", "2", "3")),
+      group = factor(group)
+    )
+
+  return(cleaned)
+}
+```
+
+### Statistical Modeling
+
+```r
+# "Run a mixed-effects model for my repeated measures design"
+
+library(lme4)
+library(lmerTest)
+library(emmeans)
+
+analyze_repeated_measures <- function(data) {
+  # Fit mixed-effects model
+  model <- lmer(
+    measurement ~ group * timepoint + (1 | participant_id),
+    data = data
+  )
+
+  # Print summary with p-values
+  print(summary(model))
+
+  # Post-hoc comparisons
+  emm <- emmeans(model, ~ group | timepoint)
+  print(pairs(emm, adjust = "tukey"))
+
+  # Effect sizes
+  print(effectsize::eta_squared(model))
+
+  return(model)
+}
+```
+
+### Publication-Ready Plots with ggplot2
+
+```r
+# "Create a figure showing group differences over time with error bars"
+
+library(ggplot2)
+library(ggpubr)
+
+create_longitudinal_plot <- function(data) {
+  # Calculate summary statistics
+  summary_data <- data %>%
+    group_by(group, timepoint) %>%
+    summarise(
+      mean = mean(measurement, na.rm = TRUE),
+      se = sd(measurement, na.rm = TRUE) / sqrt(n()),
+      .groups = "drop"
+    )
+
+  # Create plot
+  p <- ggplot(summary_data, aes(x = timepoint, y = mean, color = group, group = group)) +
+    geom_line(linewidth = 1) +
+    geom_point(size = 3) +
+    geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.1) +
+    labs(
+      x = "Time Point",
+      y = "Measurement (Mean +/- SE)",
+      color = "Group",
+      title = "Change in Measurement Over Time by Group"
+    ) +
+    theme_pubr() +
+    theme(
+      legend.position = "bottom",
+      plot.title = element_text(hjust = 0.5, face = "bold")
+    ) +
+    scale_color_brewer(palette = "Set1")
+
+  # Save in multiple formats
+  ggsave("figure.png", p, width = 8, height = 6, dpi = 300)
+  ggsave("figure.pdf", p, width = 8, height = 6)
+
+  return(p)
+}
+```
+
+## Real-World Research Workflows
+
+### Example 1: Analyzing Survey Data
+
+```bash
+# Start a conversation with Claude Code
+claude
+
+# Then interact naturally:
+> "I have survey responses in data/survey.csv. Can you:
+   1. Load and explore the data
+   2. Check for missing values and outliers
+   3. Run reliability analysis on the Likert scale items
+   4. Create summary statistics by demographic groups
+   5. Export a clean dataset for further analysis"
+```
+
+### Example 2: Processing Multiple Data Files
+
+```bash
+claude "I have 50 CSV files in the experiments/ folder, each from a different
+participant. Combine them into a single dataframe, add a participant ID column
+based on filename, and calculate summary statistics per participant."
+```
+
+### Example 3: Reproducing an Analysis
+
+```bash
+claude "Read the methods section in paper_notes.md and help me implement
+the same statistical analysis on my replication data in data/replication.csv"
+```
+
+### Example 4: Debugging Complex Code
+
+```bash
+claude "My analysis script analysis.py is throwing a memory error when
+processing large files. Help me optimize it to handle datasets over 10GB."
+```
+
+## Benefits for Researchers
+
+### Speed and Efficiency
+
+| Task | Traditional Approach | With Claude Code |
+|------|---------------------|------------------|
+| Data cleaning script | 2-4 hours | 15-30 minutes |
+| Debugging complex code | Hours of Stack Overflow | Minutes of conversation |
+| Learning new library | Days of documentation | Guided examples in minutes |
+| Creating visualizations | Trial and error | Describe what you want |
+
+### Reproducibility
+
+Claude Code helps maintain reproducible research:
+
+- **Documented workflows**: Every command and modification is tracked
+- **Version control integration**: Works seamlessly with Git
+- **Environment management**: Helps set up virtual environments and dependencies
+- **Code comments**: Generates well-documented, readable code
+
+### Learning Accelerator
+
+For researchers learning to code:
+
+- **Explains concepts**: Ask "why" about any code it writes
+- **Shows alternatives**: Request different approaches to the same problem
+- **Teaches best practices**: Suggests improvements to your existing code
+- **Adapts to your level**: Provide more or less detail based on your expertise
+
+## Limitations to Be Aware Of
+
+### Data Privacy Considerations
+
+```text
+IMPORTANT: Claude Code sends your prompts and relevant file contents to
+Anthropic's servers for processing.
+
+- Do NOT use with sensitive/identifiable participant data
+- Do NOT include API keys, passwords, or credentials in files
+- Consider using anonymized or synthetic data for development
+- Check your institution's policies on AI tool usage
+```
+
+### Technical Limitations
+
+| Limitation | Details | Workaround |
+|------------|---------|------------|
+| **Context window** | ~200K tokens per conversation | Break large analyses into steps |
+| **No internet access** | Can't fetch live data or APIs | Download data first, then analyze |
+| **Computation limits** | Complex ML training may timeout | Use for prototyping, run production elsewhere |
+| **Package knowledge** | May not know very new packages | Provide documentation or examples |
+
+### Research-Specific Considerations
+
+1. **Verify statistical results**: Always double-check statistical outputs against known software
+2. **Code review**: Review generated code before using in publications
+3. **Citation**: Consider how to acknowledge AI assistance in your methods
+4. **Reproducibility**: Save conversation logs for your records
+
+## Best Practices for Research Use
+
+### 1. Start with Clear Prompts
+
+```bash
+# Good: Specific and detailed
+claude "Load the CSV file data/experiment.csv, run a two-way ANOVA with
+factors 'treatment' and 'time', check assumptions, and create an interaction plot"
+
+# Less effective: Vague
+claude "analyze my data"
+```
+
+### 2. Iterate and Refine
+
+```bash
+# First pass
+claude "create a basic scatter plot of x vs y"
+
+# Refine
+claude "add a regression line, confidence interval, and make it publication-ready"
+
+# Further refine
+claude "change the color scheme to colorblind-friendly and add axis labels"
+```
+
+### 3. Use Project Context Files
+
+Create a `CLAUDE.md` file in your project root:
+
+```markdown
+# Project: Effects of Sleep on Cognitive Performance
+
+## Data Structure
+- data/raw/ - Original experiment data (do not modify)
+- data/processed/ - Cleaned datasets
+- analysis/ - R and Python scripts
+- figures/ - Output visualizations
+
+## Analysis Standards
+- Use alpha = 0.05 for significance
+- Report effect sizes (Cohen's d or eta-squared)
+- All figures should be 300 DPI for publication
+
+## Key Variables
+- dv: reaction_time (ms)
+- iv: sleep_condition (control, deprived, extended)
+- covariates: age, gender, caffeine_intake
+```
+
+### 4. Maintain Audit Trails
+
+```bash
+# Save your Claude Code sessions
+claude --save-conversation analysis_session_2024.md
+
+# Or use git to track all changes
+git add -A && git commit -m "Analysis updates via Claude Code"
+```
+
+## Getting Started Checklist
+
+- [ ] Install Claude Code: `npm install -g @anthropic-ai/claude-code`
+- [ ] Authenticate: `claude auth`
+- [ ] Create project structure with clear folder organization
+- [ ] Add a `CLAUDE.md` file describing your project
+- [ ] Start with a small, non-sensitive dataset to learn the workflow
+- [ ] Set up version control with Git
+- [ ] Review your institution's AI usage policies
+
+## Next Steps
+
+Ready to dive deeper? Explore these resources:
+
+- [Python Data Analysis Track](/data-analysis) - Comprehensive Python tutorials
+- [Project Templates](/tools/templates) - Pre-built research project structures
+- [Code Snippets](/tools/snippets) - Common research code patterns
+- [Git & GitHub Guide](/git-github) - Version control for reproducibility
