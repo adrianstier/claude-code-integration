@@ -5,8 +5,8 @@ import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Rocket, BookOpen, Bot, ArrowRight, Menu, X, Wrench, GraduationCap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import ThemeToggle from './ThemeToggle'
 import SearchModal from './SearchModal'
+import ThemeToggle from './ThemeToggle'
 
 const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> = [
   { name: 'Start Here', href: '/start-here', icon: Rocket },
@@ -71,7 +71,6 @@ export default function Navigation() {
 
           {/* CTA Button (Desktop) */}
           <div className="hidden lg:flex lg:items-center lg:gap-4">
-            <ThemeToggle />
             <Link
               href="/start-here/claude-code-for-researchers"
               className="group relative inline-flex items-center gap-1.5 text-sm font-semibold text-claude-600 dark:text-claude-400 hover:text-claude-700 dark:hover:text-claude-300 transition-colors"
@@ -90,6 +89,7 @@ export default function Navigation() {
             >
               Docs
             </a>
+            <ThemeToggle />
             <Link
               href="/start-here"
               className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:scale-105"

@@ -4,8 +4,8 @@ import Script from 'next/script'
 import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
-import { ThemeProvider } from '@/components/ThemeProvider'
 import { ProgressProvider } from '@/components/ProgressTracker'
+import { ThemeProvider } from '@/components/ThemeProvider'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
@@ -42,26 +42,6 @@ export default function RootLayout({
             </Script>
           </>
         )}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                try {
-                  var theme = localStorage.getItem('theme');
-                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-                  if (theme === 'dark' || (theme === 'system' && systemDark) || (!theme && systemDark)) {
-                    document.documentElement.classList.add('dark');
-                  } else {
-                    document.documentElement.classList.add('light');
-                  }
-                } catch (e) {
-                  document.documentElement.classList.add('light');
-                }
-              })();
-            `,
-          }}
-        />
       </head>
       <body className={inter.className}>
         <ThemeProvider>
