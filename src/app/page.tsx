@@ -24,13 +24,15 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* Badge */}
-          <Link href="/start-here/claude-code-for-researchers" className="mb-8 inline-flex items-center gap-2 rounded-full bg-claude-50 dark:bg-claude-900/50 px-4 py-2 text-sm font-medium text-claude-700 dark:text-claude-300 ring-1 ring-inset ring-claude-600/10 dark:ring-claude-400/20 hover:bg-claude-100 dark:hover:bg-claude-900/70 transition-colors">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
-            </span>
-            New: Claude Code Guide for Researchers
-          </Link>
+          <div className="mb-8">
+            <Link href="/start-here/claude-code-for-researchers" className="inline-flex items-center gap-2 rounded-full bg-claude-50 dark:bg-claude-900/50 px-4 py-2 text-sm font-medium text-claude-700 dark:text-claude-300 ring-1 ring-inset ring-claude-600/10 dark:ring-claude-400/20 hover:bg-claude-100 dark:hover:bg-claude-900/70 transition-colors">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
+              </span>
+              New: Claude Code Guide for Researchers
+            </Link>
+          </div>
 
           {/* Main Heading */}
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl">

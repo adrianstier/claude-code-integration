@@ -73,14 +73,14 @@ export default function Navigation() {
           <div className="hidden lg:flex lg:items-center lg:gap-4">
             <ThemeToggle />
             <Link
-              href="/advanced-topics/best-practices"
+              href="/start-here/claude-code-for-researchers"
               className="group relative inline-flex items-center gap-1.5 text-sm font-semibold text-claude-600 dark:text-claude-400 hover:text-claude-700 dark:hover:text-claude-300 transition-colors"
             >
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-claude-600"></span>
               </span>
-              <span>Best Practices</span>
+              <span>For Researchers</span>
             </Link>
             <a
               href="https://docs.claude.com/en/docs/claude-code/overview"
@@ -149,7 +149,7 @@ export default function Navigation() {
             })}
             <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
               <Link
-                href="/advanced-topics/best-practices"
+                href="/start-here/claude-code-for-researchers"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-semibold text-claude-600 dark:text-claude-400 bg-claude-50 dark:bg-claude-900/30 border border-claude-200 dark:border-claude-700 hover:bg-claude-100 dark:hover:bg-claude-900/50 transition-all"
               >
@@ -157,7 +157,7 @@ export default function Navigation() {
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
                 </span>
-                <span>Best Practices</span>
+                <span>For Researchers</span>
               </Link>
               <Link
                 href="/start-here"
