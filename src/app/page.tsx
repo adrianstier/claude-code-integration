@@ -24,13 +24,13 @@ export default function Home() {
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* Badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-claude-50 dark:bg-claude-900/50 px-4 py-2 text-sm font-medium text-claude-700 dark:text-claude-300 ring-1 ring-inset ring-claude-600/10 dark:ring-claude-400/20">
+          <Link href="/start-here/claude-code-for-researchers" className="mb-8 inline-flex items-center gap-2 rounded-full bg-claude-50 dark:bg-claude-900/50 px-4 py-2 text-sm font-medium text-claude-700 dark:text-claude-300 ring-1 ring-inset ring-claude-600/10 dark:ring-claude-400/20 hover:bg-claude-100 dark:hover:bg-claude-900/70 transition-colors">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
               <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
             </span>
-            New: Best Practices from Anthropic Engineers
-          </div>
+            New: Claude Code Guide for Researchers
+          </Link>
 
           {/* Main Heading */}
           <h1 className="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl">
@@ -255,9 +255,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Best Practices Highlight - NEW */}
+        {/* For Researchers Highlight */}
         <div className="mt-16">
-          <div className="group relative overflow-hidden rounded-3xl border-2 border-gradient-to-r from-claude-400 to-orange-400 bg-gradient-to-br from-claude-600 via-orange-500 to-amber-500 p-12 shadow-2xl transition-all hover:shadow-3xl hover:-translate-y-1">
+          <div className="group relative overflow-hidden rounded-3xl border-2 border-gradient-to-r from-blue-400 to-indigo-400 bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-500 p-12 shadow-2xl transition-all hover:shadow-3xl hover:-translate-y-1">
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
             <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               <div>
@@ -266,38 +266,38 @@ export default function Home() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-white"></span>
                   </span>
-                  NEW: Pro Tips from Anthropic Engineers
+                  NEW: For Academic Researchers
                 </div>
                 <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Master Claude Code Best Practices
+                  Claude Code for Researchers
                 </h2>
                 <p className="mt-4 text-lg leading-8 text-white/90">
-                  Learn proven workflows, optimization strategies, and advanced techniques directly from the team that built Claude Code. Includes CLAUDE.md customization, TDD workflows, multi-Claude patterns, and more.
+                  A comprehensive guide designed specifically for academic researchers, analysts, and scientists who want to accelerate their work with AI-powered coding assistance.
                 </p>
                 <ul className="mt-6 space-y-3 text-white/90">
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
-                    <span><strong>Explore → Plan → Code → Commit</strong> workflow</span>
+                    <span><strong>Data analysis workflows</strong> with Python & R</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
-                    <span><strong>CLAUDE.md files</strong> for persistent instructions</span>
+                    <span><strong>Literature review automation</strong> and synthesis</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
-                    <span><strong>Custom slash commands</strong> and tool permissions</span>
+                    <span><strong>Statistical analysis</strong> and visualization</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-white" />
-                    <span><strong>Multi-Claude workflows</strong> for complex tasks</span>
+                    <span><strong>Reproducible research</strong> best practices</span>
                   </li>
                 </ul>
                 <div className="mt-8">
                   <Link
-                    href="/advanced-topics/best-practices"
-                    className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-claude-600 shadow-lg transition hover:bg-gray-50 hover:scale-105"
+                    href="/start-here/claude-code-for-researchers"
+                    className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-3.5 text-base font-semibold text-blue-600 shadow-lg transition hover:bg-gray-50 hover:scale-105"
                   >
-                    <span>Read Best Practices Guide</span>
+                    <span>Read the Researcher Guide</span>
                     <ArrowRight className="h-5 w-5" />
                   </Link>
                 </div>
@@ -308,25 +308,25 @@ export default function Home() {
                     <div className="h-3 w-3 rounded-full bg-red-400"></div>
                     <div className="h-3 w-3 rounded-full bg-yellow-400"></div>
                     <div className="h-3 w-3 rounded-full bg-green-400"></div>
-                    <span className="ml-2 text-xs text-gray-400 font-mono">CLAUDE.md</span>
+                    <span className="ml-2 text-xs text-gray-400 font-mono">analysis.py</span>
                   </div>
                   <pre className="text-sm text-green-400 font-mono leading-relaxed overflow-x-auto">
-{`# Project Guidelines
+{`# Load and clean survey data
+import pandas as pd
 
-## Important Rules
-IMPORTANT: Use TypeScript strict mode
-YOU MUST: Write tests before code
-NEVER: Commit without running tests
+df = pd.read_csv("survey_data.csv")
+df = df.dropna(subset=["response"])
 
-## Common Commands
-npm run dev    # Start dev server
-npm test       # Run tests
-/init          # Generate CLAUDE.md
+# Run sentiment analysis
+from transformers import pipeline
+analyzer = pipeline("sentiment-analysis")
 
-## Architecture
-src/app/       # Next.js routes
-src/components # React components
-tests/         # Jest tests`}</pre>
+df["sentiment"] = df["response"].apply(
+    lambda x: analyzer(x)[0]["label"]
+)
+
+# Generate summary statistics
+print(df.groupby("sentiment").size())`}</pre>
                 </div>
               </div>
             </div>
