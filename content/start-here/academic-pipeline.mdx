@@ -1,0 +1,504 @@
+---
+title: "Grant & Manuscript Pipeline"
+description: "Claude Code for the full academic production cycle - from BCO-DMO documentation to reviewer responses"
+order: 8
+duration: "25 min"
+---
+
+# Grant & Manuscript Pipeline
+
+Research isn't just analysis. Here's how Claude Code fits into the full academic production cycle.
+
+## Data Documentation for Repositories
+
+### BCO-DMO Submission Package
+
+NSF requires data archiving. Make it less painful.
+
+```bash
+claude "I need to prepare my dataset for BCO-DMO submission.
+
+Read data/coral_survey_final.csv and create a complete submission package:
+
+1. DATA DICTIONARY
+   - All column names, types, units
+   - Allowed values/ranges
+   - Missing value codes used
+   - Link each variable to collection method (I'll fill details)
+
+2. ABSTRACT (250 words)
+   - What data this is
+   - How it was collected
+   - Geographic/temporal scope
+   - Potential uses
+
+3. METHODS DOCUMENT
+   - Sampling design
+   - Collection protocols
+   - Quality control procedures
+   - Processing steps applied
+   - Known limitations
+
+4. METADATA FILE (ISO 19115 format)
+   - Following BCO-DMO template structure
+
+5. README.txt
+   - File inventory
+   - How to cite
+   - Contact information
+   - Related publications
+
+Export each as separate files matching BCO-DMO naming conventions."
+```
+
+### Zenodo/Figshare Documentation
+
+```bash
+claude "Create documentation for archiving this analysis on Zenodo:
+
+1. README.md covering:
+   - Project description
+   - File inventory with descriptions
+   - How to reproduce the analysis
+   - Citation instructions
+   - License information (suggest appropriate one)
+
+2. CITATION.cff file for proper citation tracking
+
+3. Suggested keywords and description for the Zenodo upload form
+
+Match the style of highly-cited data repositories in ecology."
+```
+
+---
+
+## Supplementary Materials
+
+### Generating Supplement Structure
+
+```bash
+claude "Based on our main analysis, create a supplementary materials document:
+
+STRUCTURE NEEDED:
+- Table S1: Full model results (not truncated like Table 2)
+- Table S2: Sensitivity analysis results
+- Table S3: Site characteristics
+- Figure S1: Diagnostic plots for main model
+- Figure S2: Map of study sites
+- Methods S1: Detailed statistical methodology
+
+For each item:
+1. Generate the content from our analysis results
+2. Add appropriate captions
+3. Cross-reference to main text
+
+Format for Nature Ecology & Evolution style.
+Export as both Word (.docx) and LaTeX (.tex)."
+```
+
+### Converting Between Formats
+
+```bash
+claude "Convert this supplementary material:
+- FROM: supplementary.tex (LaTeX)
+- TO: supplementary.docx (Word)
+
+Preserve:
+- Table formatting
+- Figure references
+- Equation numbering
+- Citation style
+
+My co-author needs Word and won't learn LaTeX."
+```
+
+---
+
+## Reviewer Response Management
+
+### Organizing Comments
+
+```bash
+claude "Parse this reviewer response document and create a structured response template:
+
+REVIEWER COMMENTS:
+[paste the full reviewer letter]
+
+CREATE:
+1. A numbered list of every distinct comment/request
+2. Categorize each as:
+   - Minor: Quick fix
+   - Moderate: Some work needed
+   - Major: Significant revision
+   - Disagree: We should push back
+
+3. For each comment, create response skeleton:
+   - Our response: [to fill]
+   - Changes made: [to fill]
+   - Location in manuscript: [to fill]
+
+4. Track which analyses/figures need updating
+
+Export as Word table I can fill in with co-authors."
+```
+
+### Drafting Responses
+
+```bash
+claude "Draft a response to this reviewer comment:
+
+COMMENT: 'The authors should justify their choice of mixed-effects
+model over a simpler repeated-measures ANOVA. The sample size
+(n=47) may be insufficient for the complexity of their model.'
+
+CONTEXT:
+- We chose mixed-effects because we have unbalanced data
+- Random slopes are needed due to site-specific variation
+- We did run power analysis during design phase
+
+Draft a response that:
+1. Acknowledges the valid concern
+2. Explains our rationale clearly
+3. Cites methodological literature supporting our choice
+4. Describes any additional analyses we'll add to address this
+5. Is diplomatic but defends our approach
+
+Tone: Respectful but confident. Don't be obsequious."
+```
+
+### Response Letter Assembly
+
+```bash
+claude "Compile our individual responses into a formatted response letter:
+
+Include:
+1. Cover letter to editor (brief, professional)
+2. Point-by-point responses organized by reviewer
+3. Summary of major changes
+4. Track changes reference guide
+
+Format conventions:
+- Reviewer comments in italic
+- Our responses in regular text
+- Changed manuscript text in quotes with line numbers
+- New analyses/figures highlighted
+
+Generate both Word and PDF versions."
+```
+
+---
+
+## Manuscript Preparation
+
+### Methods Section Drafting
+
+```bash
+claude "Based on my analysis code in analysis/main.R, draft a Methods section:
+
+REQUIREMENTS:
+- Sufficient detail for reproducibility
+- Statistical terminology appropriate for [journal]
+- Report all test statistics, effect sizes, confidence intervals
+- Explain any non-standard approaches
+- Reference software versions
+
+STRUCTURE:
+1. Study design and sampling
+2. Data collection procedures
+3. Statistical analysis
+   - Data cleaning and preparation
+   - Primary analysis approach
+   - Secondary/sensitivity analyses
+4. Software and packages used
+
+LENGTH: ~500 words for PLOS ONE format
+
+I'll add the domain-specific details; you handle the statistical reporting."
+```
+
+### Results Section Support
+
+```bash
+claude "Generate a Results section skeleton from my analysis outputs:
+
+For each significant finding:
+1. State the finding in plain language
+2. Report statistics properly: F(df1, df2) = X.XX, p = .XXX, η² = .XX
+3. Reference the appropriate table/figure
+4. Note effect size interpretation
+
+For non-significant findings:
+1. Report the statistics
+2. Note the power/sample size considerations
+
+DO NOT interpret—just report. I'll add the interpretation."
+```
+
+### Figure Captions
+
+```bash
+claude "Write publication-ready figure captions for these figures:
+
+Figure 1: [describe what it shows]
+Figure 2: [describe what it shows]
+Figure 3: [describe what it shows]
+
+Each caption should:
+1. Start with a single-sentence summary
+2. Describe what is being plotted (axes, colors, symbols)
+3. Explain any statistical annotations
+4. Define abbreviations on first use
+5. Note sample sizes
+
+Style: Nature Ecology & Evolution
+Maximum: 350 words per caption"
+```
+
+---
+
+## Grant Writing Support
+
+### Specific Aims Iteration
+
+```bash
+claude "I'm writing an NSF proposal. Here are my three specific aims:
+
+[paste current aims]
+
+Help me strengthen them:
+1. Are they logically connected?
+2. Is each aim achievable in the timeline?
+3. Do they build on each other or are they independent?
+4. Suggest how to make the impact statement stronger
+5. Flag any red flags a reviewer might raise
+
+Be critical—I'd rather fix problems now than get triaged."
+```
+
+### Data Management Plan
+
+```bash
+claude "Generate a Data Management Plan for my NSF proposal:
+
+PROJECT: [brief description]
+DATA TYPES:
+- Field observations (CSV, ~10GB)
+- Photographs (JPEG, ~50GB)
+- Derived data products (NetCDF, ~5GB)
+- Analysis code (R scripts)
+
+REQUIREMENTS TO ADDRESS:
+1. What data will be generated
+2. Data formats and standards
+3. Data storage during project
+4. Data sharing and access
+5. Long-term preservation
+6. Roles and responsibilities
+
+Follow NSF BIO requirements.
+Include specific repository names (BCO-DMO, Zenodo, GitHub).
+Keep to 2 pages."
+```
+
+### Budget Justification Text
+
+```bash
+claude "Draft budget justification text for these line items:
+
+1. Graduate student (2 years, 50% time): $XX,XXX
+2. Undergraduate assistants (3 students, summer): $X,XXX
+3. Field equipment (list attached): $XX,XXX
+4. Travel (2 field seasons + 1 conference/year): $XX,XXX
+5. Publication costs: $X,XXX
+
+For each item:
+- Explain what they'll do
+- Why this amount/duration is appropriate
+- How it connects to the proposed work
+
+Tone: Clear, justified, not defensive."
+```
+
+---
+
+## LaTeX Workflow Integration
+
+### Compiling Multi-Author Documents
+
+```bash
+claude "Help me set up a collaborative LaTeX project:
+
+CREATE:
+1. Main.tex (master document that includes chapters)
+2. Chapters/ directory structure for sections
+3. A preamble.tex with common packages and commands
+4. A Makefile for easy compilation
+5. .gitignore for LaTeX projects
+
+INCLUDE:
+- Natbib setup for [citation style]
+- Cross-referencing with cleveref
+- Draft mode with line numbers
+- Clean compilation without warnings
+
+My co-authors will edit separate chapter files."
+```
+
+### Converting Analysis Output to LaTeX Tables
+
+```bash
+claude "Convert this regression output to a publication-ready LaTeX table:
+
+[paste R/Python output or CSV]
+
+REQUIREMENTS:
+- Three-line table style (no vertical lines)
+- Proper alignment (left for text, right for numbers)
+- Significance stars with footnote explaining
+- Standard errors in parentheses
+- Model fit statistics at bottom
+- Booktabs package formatting
+
+Match the style of tables in Journal of Ecology."
+```
+
+### BibTeX Management
+
+```bash
+claude "Clean up my BibTeX file:
+
+Read references.bib and:
+1. Fix inconsistent formatting
+2. Fill in missing fields where you can infer them
+3. Flag entries that seem incomplete
+4. Remove duplicate entries (keep most complete version)
+5. Standardize journal name abbreviations
+6. Check DOIs are properly formatted
+
+Also create a 'needed_refs.txt' listing any citations in my .tex files
+that aren't in the .bib file."
+```
+
+---
+
+## Multi-Format Output
+
+### One Analysis, Many Outputs
+
+```bash
+claude "From this analysis, generate outputs for different audiences:
+
+1. TECHNICAL (for co-authors):
+   - Full statistical output
+   - All diagnostics
+   - Code and data references
+
+2. MANUSCRIPT (for submission):
+   - Cleaned tables (Tables 1-3)
+   - Publication figures (Figures 1-4)
+   - Results text snippets
+
+3. PRESENTATION (for conference):
+   - Key findings as bullet points
+   - Simplified figures (higher contrast, bigger fonts)
+   - Talking points for each slide
+
+4. SUMMARY (for stakeholders):
+   - Plain language summary (1 paragraph)
+   - Key numbers without statistics
+   - Implications for practice
+
+Export each to appropriate formats."
+```
+
+---
+
+## Workflow Templates
+
+### Paper Submission Checklist
+
+```bash
+claude "Create a submission checklist for [journal]:
+
+PRE-SUBMISSION:
+- [ ] All co-authors have approved final version
+- [ ] All figures meet journal specifications
+- [ ] References formatted correctly
+- [ ] Word/page count within limits
+- [ ] Cover letter drafted
+- [ ] Suggested reviewers identified
+- [ ] Competing interests declared
+
+REQUIRED FILES:
+- [ ] Main manuscript (format: ___)
+- [ ] Figures (format: ___, resolution: ___)
+- [ ] Tables (format: ___)
+- [ ] Supplementary materials
+- [ ] Data availability statement
+- [ ] Author contributions (CRediT format)
+
+METADATA NEEDED:
+- [ ] All author ORCIDs
+- [ ] Keywords (n = ___)
+- [ ] Running title (max ___ characters)
+- [ ] Corresponding author details
+
+Pull specific requirements from [journal] guidelines."
+```
+
+---
+
+## Common Pain Points Solved
+
+### "Track Changes Is a Mess"
+
+```bash
+claude "Compare these two manuscript versions and create a clean summary:
+- v2_from_advisor.docx
+- v2_from_coauthor.docx
+
+Show me:
+1. Changes they both made (keep these)
+2. Conflicting changes (I need to decide)
+3. Changes only one person made (review needed)
+
+Don't generate a merged file—just help me see what needs reconciling."
+```
+
+### "Reference Numbers Shifted"
+
+```bash
+claude "My figure/table numbers changed during revision.
+Search the manuscript and update all references:
+
+OLD -> NEW mapping:
+- Figure 2 -> Figure 3
+- Figure 3 -> Figure 2
+- Table 1 -> Table 2
+- Table S1 -> Table S2
+
+Find and update all occurrences in main text and supplementary materials."
+```
+
+### "The Journal Wants Different Figure Sizes"
+
+```bash
+claude "Regenerate all figures at these specifications:
+- Single column: 89mm wide
+- Double column: 183mm wide
+- Full page: 183mm x 247mm
+- Resolution: 300 DPI for photos, 600 DPI for line art
+- Format: TIFF with LZW compression
+- Fonts: Arial, minimum 8pt
+
+Current figures are in figures/. Match content exactly, just resize."
+```
+
+---
+
+## Next Steps
+
+- [First 30 Minutes Exercise](/start-here/quick-start-exercise) — Try it with your own data
+- [Research Case Studies](/start-here/research-case-studies) — Complete workflow examples
+- [CLAUDE.md Templates](/tools/claude-md-generator) — Set up your research project
+

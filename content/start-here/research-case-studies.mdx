@@ -1,0 +1,364 @@
+---
+title: "Research Case Studies"
+description: "Real-world examples of Claude Code in academic research workflows - from raw data to publication"
+order: 5
+duration: "25 min"
+---
+
+# Research Case Studies
+
+See Claude Code in action with complete academic workflows. These aren't toy examples—they're the kinds of tasks that eat up your research time.
+
+## Case Study 1: From Raw Data to Publication Figure
+
+**Scenario:** You have messy field data and need a publication-ready figure for a journal submission deadline.
+
+### The Problem
+
+```
+Raw data: 847 observations across 12 sites
+Issues: Mixed date formats, missing values coded differently, outliers
+Deadline: Reviewer comments due in 3 days
+```
+
+### The Workflow
+
+**Step 1: Assess the mess**
+
+```bash
+claude "Read data/field_observations.csv and give me a data quality report:
+- Missing values by column
+- Date format inconsistencies
+- Potential outliers
+- Any obvious data entry errors"
+```
+
+Claude examines your data and returns:
+
+```
+Data Quality Report for field_observations.csv:
+
+MISSING VALUES:
+- temperature: 23 missing (2.7%)
+- salinity: 8 missing (0.9%)
+- depth: 0 missing
+- species_count: 45 missing (5.3%) ← mostly from Site_07
+
+DATE ISSUES:
+- Rows 1-234: MM/DD/YYYY format
+- Rows 235-847: YYYY-MM-DD format
+- 3 rows have "unknown" as date
+
+OUTLIERS (>3 SD):
+- temperature: 2 values (89°C, 91°C) ← likely Fahrenheit not Celsius
+- species_count: 1 value (9,847) ← likely typo, check field notes
+
+RECOMMENDATIONS:
+1. Convert temperature outliers: (F-32)*5/9
+2. Investigate Site_07 missing species counts
+3. Standardize dates to ISO format
+```
+
+**Step 2: Clean with audit trail**
+
+```bash
+claude "Create a cleaning script that:
+1. Fixes the issues you identified
+2. Logs every change made (row, column, old value, new value)
+3. Saves cleaned data with '_cleaned' suffix
+4. Generates a cleaning report I can include in supplementary materials
+
+Use pandas. Make it reproducible."
+```
+
+**Step 3: Generate the figure**
+
+```bash
+claude "Create a publication-ready figure showing:
+- Species count by site (x-axis) vs temperature (y-axis)
+- Color by depth category (shallow/medium/deep)
+- Include regression line with 95% CI
+- Error bars showing standard error
+
+Style requirements:
+- 300 DPI for print
+- Sans-serif fonts (Nature style)
+- Colorblind-friendly palette
+- Panel dimensions: 180mm x 120mm
+
+Save as both PNG and PDF."
+```
+
+### Time Comparison
+
+| Task | Traditional | With Claude Code |
+|------|-------------|------------------|
+| Data quality assessment | 45 min | 3 min |
+| Cleaning script | 2-3 hours | 15 min |
+| Publication figure | 1-2 hours | 10 min |
+| **Total** | **4-5 hours** | **~30 min** |
+
+---
+
+## Case Study 2: Responding to Reviewer 2
+
+**Scenario:** Reviewer 2 wants a sensitivity analysis you didn't plan for. Your co-author's original analysis code is... creative.
+
+### The Problem
+
+> "The authors should test whether their results are robust to excluding the three sites with incomplete temporal coverage. Additionally, a bootstrap analysis would strengthen confidence in the reported effect sizes."
+
+Your co-author's code: 847 lines of R with variable names like `temp2`, `df_final_FINAL`, and `# TODO: fix this later`.
+
+### The Workflow
+
+**Step 1: Understand the existing analysis**
+
+```bash
+claude "Read analysis/main_analysis.R and explain:
+1. What statistical tests are being performed
+2. What the key results are
+3. Where I would need to modify to exclude specific sites
+4. Any concerns about the current approach
+
+Be specific about line numbers."
+```
+
+**Step 2: Create the sensitivity analysis**
+
+```bash
+claude "Based on your understanding of main_analysis.R, create a new script sensitivity_analysis.R that:
+
+1. Runs the original analysis (baseline)
+2. Re-runs excluding sites 3, 7, and 11 (incomplete temporal coverage)
+3. Performs bootstrap analysis (1000 iterations) on the main effect
+4. Generates a comparison table showing:
+   - Original effect size and CI
+   - Sensitivity analysis effect size and CI
+   - Bootstrap effect size and CI
+
+Format the output table for easy copy-paste into Word.
+Add comments explaining each step for the reviewer."
+```
+
+**Step 3: Generate reviewer response**
+
+```bash
+claude "Based on the sensitivity analysis results, draft a response to Reviewer 2:
+- Acknowledge their valid concern
+- Describe the sensitivity analysis approach
+- Present the results (effect sizes remained significant)
+- Reference the new supplementary table
+
+Use academic tone but be concise."
+```
+
+### Result
+
+```markdown
+**Response to Reviewer 2, Comment 3:**
+
+We thank the reviewer for this suggestion to test robustness. We conducted
+a sensitivity analysis excluding sites 3, 7, and 11 (those with <80% temporal
+coverage). The main effect remained significant (β = 0.34, 95% CI [0.21, 0.47],
+p < 0.001), compared to the full dataset (β = 0.31, 95% CI [0.19, 0.43]).
+
+Additionally, we performed bootstrap analysis (n = 1,000 iterations) which
+yielded consistent estimates (β = 0.32, 95% CI [0.20, 0.44]). These results
+are presented in new Supplementary Table S4.
+
+We have added a statement regarding robustness to the Results section
+(lines 234-238).
+```
+
+---
+
+## Case Study 3: Inheriting a Grad Student's Code
+
+**Scenario:** Your grad student defended and left. Now you need to re-run their analysis for a follow-up paper. The code "worked on their laptop."
+
+### The Problem
+
+- Code references absolute paths (`/Users/alex/Desktop/thesis/...`)
+- Missing dependency versions ("it just needs pandas")
+- Cryptic error: `KeyError: 'treatment_group'`
+- No documentation
+
+### The Workflow
+
+**Step 1: Forensic analysis**
+
+```bash
+claude "Analyze the code in legacy_analysis/:
+1. List all Python files and their apparent purpose
+2. Identify all dependencies being imported
+3. Find all hardcoded paths that need updating
+4. Identify where 'treatment_group' should come from
+5. Create a dependency list with likely version requirements
+
+Be thorough—I need to get this running without the original author."
+```
+
+**Step 2: Create reproducible environment**
+
+```bash
+claude "Based on your analysis:
+1. Create a requirements.txt with pinned versions
+2. Create a setup script that:
+   - Sets up a virtual environment
+   - Installs dependencies
+   - Creates necessary directories
+3. Update all hardcoded paths to use relative paths or config file
+4. Add the missing 'treatment_group' column based on the data patterns you see"
+```
+
+**Step 3: Document for posterity**
+
+```bash
+claude "Create documentation for this project:
+1. README.md explaining what the analysis does
+2. Add docstrings to all functions
+3. Create a flowchart of the analysis pipeline
+4. Add inline comments for non-obvious code
+
+This needs to be understandable by the next grad student."
+```
+
+---
+
+## Case Study 4: Multi-Author Analysis Integration
+
+**Scenario:** Three co-authors analyzed different aspects of the same dataset. One used R, one used Python, one used Stata. You need to integrate their results.
+
+### The Problem
+
+```
+Author 1 (R/tidyverse): Descriptive statistics, demographic analysis
+Author 2 (Python/statsmodels): Main regression models
+Author 3 (Stata): Robustness checks, instrumental variables
+
+All analyzing: survey_data_2024.csv
+Output formats: .rds, .pkl, .dta
+```
+
+### The Workflow
+
+**Step 1: Standardize outputs**
+
+```bash
+claude "I have analysis outputs in three formats:
+- author1_results/ contains .rds files (R)
+- author2_results/ contains .pkl files (Python)
+- author3_results/ contains .dta files (Stata)
+
+Create a script that:
+1. Reads all result files
+2. Extracts key statistics (coefficients, SEs, p-values, CIs)
+3. Standardizes to a common format
+4. Outputs a combined results table
+
+Handle the different statistical object structures appropriately."
+```
+
+**Step 2: Create master results table**
+
+```bash
+claude "Using the standardized results, create:
+1. A master regression table (Table 2 format) combining all models
+2. Export as:
+   - LaTeX (for manuscript)
+   - Word-compatible format (for co-authors who don't use LaTeX)
+   - CSV (for supplementary materials)
+
+Use APA formatting for statistics."
+```
+
+**Step 3: Verify consistency**
+
+```bash
+claude "Cross-check the three analyses:
+1. Do sample sizes match where they should?
+2. Are baseline descriptives consistent?
+3. Flag any discrepancies between authors' results
+4. Create a verification report I can share with co-authors"
+```
+
+---
+
+## Case Study 5: BCO-DMO Data Documentation
+
+**Scenario:** NSF requires you to submit your data to BCO-DMO. You need comprehensive metadata documentation.
+
+### The Workflow
+
+```bash
+claude "I need to prepare my dataset for BCO-DMO submission.
+
+Read data/coral_survey_2024.csv and create:
+
+1. A data dictionary with:
+   - Variable names
+   - Data types
+   - Units
+   - Allowed values/ranges
+   - Missing value codes
+   - Collection methods (I'll fill these in)
+
+2. Methods documentation covering:
+   - Sampling design
+   - Data collection protocols
+   - Quality control procedures
+   - Known limitations
+
+3. A README following BCO-DMO guidelines
+
+Format everything in their required template structure."
+```
+
+---
+
+## Quick Reference: Research Prompts That Work
+
+### Data Cleaning
+```
+"Read [file] and identify data quality issues. For each issue, suggest a fix and explain the tradeoff."
+```
+
+### Statistical Analysis
+```
+"Run [specific test] on [variables] and interpret the results as I would for a Methods section. Include effect sizes."
+```
+
+### Visualization
+```
+"Create a [plot type] suitable for [journal]. Use [specific style guide] formatting. Make it colorblind-accessible."
+```
+
+### Code Documentation
+```
+"Add documentation to [file] that would let a new grad student understand and modify it. Include example usage."
+```
+
+### Reviewer Response
+```
+"Based on [analysis results], draft a response to this reviewer comment: [paste comment]. Be diplomatic but defend our approach where appropriate."
+```
+
+---
+
+## What These Cases Have in Common
+
+1. **Real deadlines** — Not "exploring data for fun" but "reviewer response due Friday"
+2. **Messy inputs** — Data and code are never as clean as tutorials assume
+3. **Audit trails** — Academic work requires documentation of every decision
+4. **Multiple formats** — Journals want LaTeX, co-authors want Word, repos want Markdown
+5. **Reproducibility** — Someone else needs to run this code in 5 years
+
+---
+
+## Next Steps
+
+- [Research Limitations & When Not to Use Claude Code](/start-here/research-limitations) — Honest assessment for skeptical PIs
+- [Collaboration Workflows](/start-here/collaboration-workflows) — Working with co-authors and students
+- [First 30 Minutes Exercise](/start-here/quick-start-exercise) — Try it with your own data
+

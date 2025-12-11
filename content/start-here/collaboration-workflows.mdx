@@ -1,0 +1,375 @@
+---
+title: "Collaboration Workflows"
+description: "Using Claude Code when working with grad students, co-authors, and research teams"
+order: 6
+duration: "20 min"
+---
+
+# Collaboration Workflows
+
+R1 researchers don't work alone. Here's how Claude Code fits into the messy reality of academic collaboration.
+
+## The Grad Student Code Problem
+
+Your student's analysis "works" but...
+
+- Variable names are `df2`, `temp`, `final_final`
+- No comments explaining why decisions were made
+- Runs on their laptop but nowhere else
+- You need to present this at a conference next week
+
+### Workflow: Code Review and Cleanup
+
+**Step 1: Understand what it does**
+
+```bash
+claude "Read analysis/student_analysis.py and explain:
+1. What is this code trying to accomplish?
+2. What statistical methods are being used?
+3. What are the inputs and outputs?
+4. What are the implicit assumptions?
+
+Be specific—I need to present this work."
+```
+
+**Step 2: Identify issues without rewriting**
+
+```bash
+claude "Review this code for:
+1. Potential bugs or logic errors
+2. Places where the methodology might be questioned by reviewers
+3. Hardcoded values that should be parameters
+4. Missing error handling that could cause silent failures
+
+Don't rewrite the code yet—just identify issues with line numbers."
+```
+
+**Step 3: Create a review document**
+
+```bash
+claude "Based on your analysis, create a code review document I can share with my student:
+1. What's working well (be encouraging)
+2. Issues to address, ranked by importance
+3. Suggested improvements with examples
+4. Questions I need them to answer about methodology choices
+
+Format this constructively—they're learning."
+```
+
+### Teaching Moment: Turn It Into Learning
+
+```bash
+claude "My student wrote this function:
+
+[paste messy function]
+
+Create a side-by-side comparison showing:
+1. Their version
+2. A cleaner version with better practices
+3. Explanation of each improvement
+
+Make this educational, not critical."
+```
+
+---
+
+## Integrating Co-Author Contributions
+
+Three co-authors, three coding styles, one paper.
+
+### Workflow: Harmonizing Analyses
+
+**Step 1: Audit the contributions**
+
+```bash
+claude "I have analysis code from three co-authors in:
+- author1_analysis/ (R)
+- author2_analysis/ (Python)
+- author3_analysis/ (Stata)
+
+For each directory:
+1. List the main scripts and their purpose
+2. Identify the key outputs (tables, figures, statistics)
+3. Note any overlapping analyses
+4. Flag potential inconsistencies (e.g., different sample sizes)
+
+Create a summary table I can share with co-authors."
+```
+
+**Step 2: Create consistency checks**
+
+```bash
+claude "Create a verification script that:
+1. Loads key results from all three analyses
+2. Checks that sample sizes match where appropriate
+3. Verifies that shared variables have consistent descriptives
+4. Flags any discrepancies
+
+Output a report I can discuss at our next co-author meeting."
+```
+
+**Step 3: Generate unified outputs**
+
+```bash
+claude "Combine results from all three analyses into:
+1. Table 1: Descriptive statistics (from author1's R analysis)
+2. Table 2: Main regression results (from author2's Python analysis)
+3. Table 3: Robustness checks (from author3's Stata analysis)
+
+Export each as:
+- LaTeX (I'll compile the manuscript)
+- Word (for co-authors who prefer it)
+
+Use consistent formatting across all tables."
+```
+
+---
+
+## The Reproducibility Handoff
+
+Making your analysis runnable by anyone, anywhere.
+
+### Workflow: Creating a Reproducible Package
+
+```bash
+claude "Make this analysis fully reproducible. Create:
+
+1. requirements.txt with pinned versions
+2. A setup.sh script that creates the environment
+3. A master run_analysis.sh that executes everything in order
+4. A README.md with:
+   - System requirements
+   - Step-by-step instructions
+   - Expected outputs
+   - Troubleshooting common issues
+   - Contact info for questions
+
+5. A MANIFEST.md listing all files and their purposes
+
+Test this by checking if the instructions are complete enough
+that someone could run it without asking me questions."
+```
+
+### The "New Lab Member" Test
+
+```bash
+claude "Imagine you're a new grad student joining my lab.
+Read the entire analysis/ directory and tell me:
+
+1. Can you figure out what this project does?
+2. Can you run the analysis from start to finish?
+3. What questions would you need to ask me?
+4. What's confusing or undocumented?
+
+Be honest—I want this to be self-explanatory."
+```
+
+---
+
+## Working With Different Skill Levels
+
+### For Less Technical Co-Authors
+
+They send you an Excel file with "the data." You need to integrate it.
+
+```bash
+claude "My co-author sent coauthor_data.xlsx. Please:
+
+1. Read it and show me the structure
+2. Identify any issues (missing values, inconsistent formatting)
+3. Suggest how to clean it for merging with our main dataset
+4. Create a simple script they could run themselves in the future
+
+Keep explanations non-technical—they're a domain expert, not a coder."
+```
+
+### For Technical Co-Authors
+
+They want to understand your analysis deeply.
+
+```bash
+claude "Create technical documentation for analysis/main_model.py:
+
+1. Mathematical specification of the model
+2. Algorithm pseudocode
+3. Computational complexity
+4. Key implementation decisions and alternatives considered
+5. Validation approach
+
+This is for a co-author who will scrutinize every methodological choice."
+```
+
+---
+
+## Lab Meeting Prep
+
+### Quick Analysis Summary
+
+```bash
+claude "I'm presenting this analysis at lab meeting in an hour.
+Read analysis/ and create:
+
+1. A 5-bullet summary of what we did and found
+2. The 3 most important figures (regenerate if needed)
+3. A list of 'questions we should discuss'
+4. Known limitations to acknowledge proactively
+
+Format for screen sharing."
+```
+
+### Anticipated Questions
+
+```bash
+claude "Based on this analysis, what critical questions might come up at lab meeting?
+For each question:
+1. Why someone might ask it
+2. How to respond
+3. Any additional analysis that would strengthen our answer"
+```
+
+---
+
+## Version Control for Collaborations
+
+### Setting Up a Shared Repository
+
+```bash
+claude "Help me set up a GitHub repository for our collaborative project:
+
+1. Create a good .gitignore for R/Python data analysis
+2. Set up branch protection rules (explain why)
+3. Create a CONTRIBUTING.md with our workflow:
+   - How to claim tasks
+   - Branch naming conventions
+   - PR review process
+4. Create issue templates for:
+   - Bug reports
+   - Analysis requests
+   - Data questions
+
+Make this appropriate for a team where some members are Git beginners."
+```
+
+### Resolving Merge Conflicts
+
+```bash
+claude "We have a merge conflict in analysis/results.py.
+The conflict is between:
+- My version: Added bootstrap analysis
+- Co-author's version: Added sensitivity analysis
+
+Help me:
+1. Understand both changes
+2. Merge them without losing either contribution
+3. Test that the merged version works"
+```
+
+---
+
+## Communication Templates
+
+### Requesting Data From Collaborators
+
+```bash
+claude "Draft an email to my collaborator requesting their data contribution.
+I need:
+- The processed survey responses
+- Their cleaning code (so I can document it)
+- A brief methods description
+
+Make it polite but specific about exactly what format I need.
+We have a paper deadline in 3 weeks."
+```
+
+### Explaining Your Analysis to Non-Coders
+
+```bash
+claude "My co-author (a field ecologist) wants to understand what my Python analysis does.
+
+Read analysis/statistical_model.py and create an explanation that:
+- Uses domain language, not programming jargon
+- Includes analogies to familiar concepts
+- Shows the logic flow visually (ASCII diagram is fine)
+- Explains what we'd conclude from different results
+
+Assume expertise in ecology but not statistics or programming."
+```
+
+---
+
+## Handoff Checklists
+
+### Before You Leave a Project
+
+```bash
+claude "I'm wrapping up my involvement in this project. Create a handoff document:
+
+1. Current status of all analyses
+2. What's done vs. what's still needed
+3. Known issues and workarounds
+4. Key decisions made and why
+5. Files that are important vs. temporary
+6. Who to contact for what questions
+7. Upcoming deadlines
+
+Make this comprehensive—I won't be available for questions."
+```
+
+### Onboarding a New Team Member
+
+```bash
+claude "A new postdoc is joining this project. Create an onboarding guide:
+
+1. Project overview (1 paragraph)
+2. Key papers to read
+3. Important files and what they do
+4. How to set up their environment
+5. First tasks they should try
+6. Who to ask for what
+7. Common gotchas to avoid
+
+Make this warm and welcoming but efficient."
+```
+
+---
+
+## Key Principles
+
+### 1. Document Decisions, Not Just Code
+
+```bash
+claude "Add a DECISIONS.md file documenting:
+- Why we chose this statistical method over alternatives
+- How we handled missing data and why
+- What sensitivity analyses we ran
+- Reviewer comments that shaped our approach"
+```
+
+### 2. Make Dependencies Explicit
+
+```bash
+claude "Create a dependency diagram showing:
+- Which scripts depend on which data files
+- Which outputs feed into which analyses
+- Where manual steps are required
+
+Export as a Mermaid diagram I can add to the README."
+```
+
+### 3. Plan for Your Future Self
+
+```bash
+claude "Add documentation that answers:
+'Why did we do it this way?'
+
+For every non-obvious decision in analysis/main.py, add a comment explaining the reasoning."
+```
+
+---
+
+## Next Steps
+
+- [Research Limitations](/start-here/research-limitations) — When not to use Claude Code
+- [First 30 Minutes Exercise](/start-here/quick-start-exercise) — Try it with your own data
+- [Research Case Studies](/start-here/research-case-studies) — Complete workflow examples
+

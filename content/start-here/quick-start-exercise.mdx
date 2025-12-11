@@ -1,0 +1,436 @@
+---
+title: "First 30 Minutes: Guided Exercise"
+description: "Try Claude Code with your own data in a structured hands-on session"
+order: 9
+duration: "30 min"
+---
+
+# First 30 Minutes: Guided Exercise
+
+Stop reading, start doing. This guided exercise uses **your own data** to demonstrate Claude Code's value in under 30 minutes.
+
+## Before You Start
+
+### What You Need
+- [ ] Claude Code installed and working ([Setup Guide](/start-here))
+- [ ] VS Code open
+- [ ] A dataset you know well (any format: CSV, Excel, R data, etc.)
+- [ ] 30 uninterrupted minutes
+
+### Choose Your Dataset
+
+Pick something:
+- **Not sensitive** (no PII, no IRB-protected data)
+- **Familiar** to you (you know what the values should look like)
+- **Messy enough** to be realistic (perfect data won't show Claude's value)
+- **Moderate size** (100-10,000 rows is ideal for this exercise)
+
+**Good choices:**
+- Old project data you know well
+- Public dataset from your field
+- Preliminary data from a current project (if shareable)
+- A teaching dataset you use with students
+
+---
+
+## Minute 0-5: Setup
+
+### Create a Working Directory
+
+```bash
+mkdir claude-code-test
+cd claude-code-test
+```
+
+### Copy Your Data
+
+Put your dataset file in this directory. We'll call it `my_data.csv` in examples, but use your actual filename.
+
+### Start Claude Code
+
+```bash
+claude
+```
+
+### Set Context
+
+Tell Claude what you're working with:
+
+```bash
+"I'm testing Claude Code with my own research data.
+The file is my_data.csv.
+This is [briefly describe: survey data, field observations, experimental results, etc.]
+from my research on [topic].
+
+Read the file and give me an overview."
+```
+
+---
+
+## Minute 5-10: Data Quality Assessment
+
+### Ask for a Quality Report
+
+Type this prompt:
+
+```
+Give me a data quality report for my_data.csv:
+1. Dimensions (rows, columns)
+2. Column names and data types
+3. Missing values by column
+4. Obvious outliers or anomalies
+5. Any apparent data entry issues
+
+Be specific about what you find.
+```
+
+### What to Look For
+
+Claude should return something like:
+
+```
+DATA QUALITY REPORT: my_data.csv
+
+DIMENSIONS: 847 rows × 12 columns
+
+COLUMNS:
+- site_id (string): 12 unique values
+- date (string): mixed formats detected...
+- temperature (float): range 12.3-89.4°C ← possible outlier
+...
+
+MISSING VALUES:
+- species_count: 45 missing (5.3%)
+- salinity: 8 missing (0.9%)
+...
+
+POTENTIAL ISSUES:
+1. Row 234: temperature = 89.4°C (unit error?)
+2. Dates in two formats: MM/DD/YYYY and YYYY-MM-DD
+...
+```
+
+### Checkpoint ✓
+
+At this point, you should:
+- See a summary that matches your expectations
+- Notice some issues you already knew about
+- Possibly discover issues you didn't know about
+
+**If Claude found something you didn't know:** Good! That's the point.
+
+**If Claude made an error about your data:** Correct it. This teaches you how to guide it.
+
+---
+
+## Minute 10-15: Quick Fix
+
+### Pick One Issue to Fix
+
+From the quality report, choose something specific:
+
+```
+Fix the date format inconsistency you identified.
+Convert all dates to YYYY-MM-DD format.
+Show me what you're changing before you do it.
+```
+
+### Review Before Approving
+
+Claude should show you:
+- Which rows are affected
+- What the changes will be
+- Ask for confirmation before modifying
+
+**Important:** Always review changes before accepting them.
+
+### Create the Cleaned File
+
+```
+Apply that fix and save as my_data_cleaned.csv.
+Also create a log file (cleaning_log.txt) documenting what was changed.
+```
+
+### Checkpoint ✓
+
+You now have:
+- A cleaned data file
+- A log of changes (for reproducibility)
+- Experience reviewing Claude's proposed changes
+
+---
+
+## Minute 15-20: Simple Analysis
+
+### Run an Appropriate Test
+
+Ask for an analysis that makes sense for your data:
+
+**For continuous data:**
+```
+Calculate descriptive statistics for [your main variable]
+grouped by [your grouping variable].
+Include: mean, SD, n, SE, 95% CI.
+Format as a table.
+```
+
+**For categorical data:**
+```
+Create a frequency table for [your categorical variable]
+cross-tabulated by [another variable].
+Include row and column percentages.
+Run a chi-square test if appropriate.
+```
+
+**For temporal data:**
+```
+Show me the trend in [your variable] over time.
+Calculate summary by [month/year/season].
+Flag any notable patterns.
+```
+
+### Verify the Results
+
+Here's the crucial step:
+
+```
+I want to verify this result.
+Show me how to calculate [one specific statistic]
+manually from the raw data.
+Walk me through the calculation.
+```
+
+This isn't about distrust—it's about understanding.
+
+### Checkpoint ✓
+
+You've:
+- Run a real analysis on your own data
+- Learned how to verify Claude's calculations
+- Seen how fast this can be
+
+---
+
+## Minute 20-25: Quick Visualization
+
+### Request a Figure
+
+```
+Create a figure showing [the relationship you just analyzed].
+Make it publication-quality:
+- Clear axis labels with units
+- Appropriate font sizes
+- Colorblind-friendly colors
+- High resolution (300 DPI)
+
+Save as figure1.png
+```
+
+### Iterate on the Design
+
+Ask for one change:
+
+```
+Make the title more descriptive and add error bars.
+```
+
+Or:
+
+```
+Change the color scheme to match Nature style.
+```
+
+Or:
+
+```
+Add a trend line with 95% CI shading.
+```
+
+### Checkpoint ✓
+
+You have:
+- A real figure from your data
+- Experience iterating on visualizations
+- A sense of how quickly you can refine output
+
+---
+
+## Minute 25-30: Documentation
+
+### Generate a README
+
+```
+Create a README.md for this analysis:
+1. What data this is (keep it general—no sensitive details)
+2. What cleaning steps were applied
+3. What analysis was performed
+4. What the figure shows
+5. How to reproduce this analysis
+
+Make it suitable for including in a repository.
+```
+
+### Create a CLAUDE.md for Future Work
+
+```
+Based on this session, create a CLAUDE.md file for this project type.
+Include:
+- Common commands I'd need
+- Data format expectations
+- Analysis conventions for my field
+- Quality checks to always run
+
+This is for [R/Python] analysis of [your data type].
+```
+
+### Checkpoint ✓
+
+You've:
+- Documented your work
+- Created a template for future projects
+- Completed a full mini-workflow
+
+---
+
+## What You've Done in 30 Minutes
+
+1. **Data assessment** — Quality report identifying issues
+2. **Data cleaning** — Fixed a real problem with audit trail
+3. **Analysis** — Ran statistics appropriate for your data
+4. **Visualization** — Created a publication-ready figure
+5. **Documentation** — Generated reproducible records
+
+This is the core loop. Every project is variations on this.
+
+---
+
+## Now Try These Extensions
+
+### Next 30 Minutes (Optional)
+
+**If you found data issues:**
+```
+Create a comprehensive cleaning script that fixes
+all the issues you identified in the quality report.
+Run it and show me the before/after comparison.
+```
+
+**If your analysis worked well:**
+```
+Now run [a more complex analysis appropriate to your data].
+Explain the assumptions and check if my data meets them.
+```
+
+**If you want to explore visualization:**
+```
+Create three different ways to visualize this relationship.
+Explain the pros and cons of each for a journal submission.
+```
+
+---
+
+## Common Questions After First Use
+
+### "It made a mistake about my data"
+
+This happens. Fix it:
+
+```
+Actually, [explain the domain context].
+Given that, revise your analysis/recommendation.
+```
+
+Claude doesn't know your field's conventions—teach it.
+
+### "How do I know the statistics are right?"
+
+Always verify critical results:
+
+```
+Show me the formula you used for [statistic].
+Now calculate it step-by-step so I can verify.
+```
+
+For publication, run final analyses in validated software.
+
+### "This seems too easy"
+
+It is easy for routine tasks. That's the point.
+
+The value is:
+- Fast iteration on exploration
+- Less time on boilerplate
+- More time on thinking about your science
+
+### "What about my more complex workflows?"
+
+See [Research Case Studies](/start-here/research-case-studies) for complete examples of:
+- Publication pipelines
+- Reviewer responses
+- Multi-author coordination
+- Legacy code rescue
+
+---
+
+## Red Flags to Watch For
+
+If during this exercise you noticed:
+
+- **Claude made statistical errors** → Always verify before publishing
+- **It didn't understand your domain conventions** → Add context, use CLAUDE.md
+- **The code didn't run** → Specify your environment (R version, packages)
+- **It assumed things about your data** → Be more explicit in prompts
+
+These aren't dealbreakers—they're the learning curve.
+
+---
+
+## Your First CLAUDE.md
+
+Based on this exercise, here's a starter template:
+
+```markdown
+# [Your Project Name]
+
+## About This Data
+- Type: [survey/experimental/observational/etc.]
+- Format: [CSV/Excel/R data]
+- Size: [approximate rows]
+- Key variables: [list main ones]
+
+## Common Tasks
+- `python clean_data.py` - Apply standard cleaning
+- `Rscript run_analysis.R` - Run main analysis
+
+## Data Conventions
+- Missing values coded as: [NA/-999/blank/etc.]
+- Date format: [YYYY-MM-DD]
+- [Other conventions specific to your field]
+
+## Quality Checks to Always Run
+1. Check for duplicate IDs
+2. Verify date ranges are plausible
+3. Check [variable] is within [expected range]
+
+## Notes
+- [Any quirks about this dataset]
+- [Field-specific terminology Claude might not know]
+```
+
+---
+
+## Next Steps
+
+Now that you've experienced the basics:
+
+- [Research Case Studies](/start-here/research-case-studies) — Complete workflow examples
+- [Collaboration Workflows](/start-here/collaboration-workflows) — Working with teams
+- [Limitations](/start-here/research-limitations) — When not to use Claude Code
+- [CLAUDE.md Generator](/tools/claude-md-generator) — Create project-specific configs
+
+---
+
+**You did it.** You went from "what is this tool?" to "I used my own data" in 30 minutes.
+
+That's the pitch: real work, faster, with appropriate caution.
+

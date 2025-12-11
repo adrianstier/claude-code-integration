@@ -10,6 +10,8 @@ import {
   Database,
   Zap,
   Printer,
+  FlaskConical,
+  BarChart3,
 } from 'lucide-react'
 
 interface CheatSheet {
@@ -253,6 +255,95 @@ const cheatsheets: CheatSheet[] = [
           { command: 'npm outdated', description: 'Check for updates' },
           { command: 'npm update', description: 'Update packages' },
           { command: 'npm audit', description: 'Check for vulnerabilities' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'research',
+    title: 'Research Workflows',
+    description: 'Claude Code prompts for academic research and data analysis',
+    icon: <FlaskConical className="h-5 w-5" />,
+    sections: [
+      {
+        title: 'Data Quality',
+        items: [
+          { command: '"Give me a data quality report for [file]"', description: 'Assess missing values, outliers, types' },
+          { command: '"Check date format consistency"', description: 'Find date formatting issues' },
+          { command: '"Flag potential data entry errors"', description: 'Identify anomalies' },
+          { command: '"Create a cleaning log"', description: 'Document all data changes' },
+        ],
+      },
+      {
+        title: 'Analysis',
+        items: [
+          { command: '"Run descriptive statistics by [group]"', description: 'Grouped summaries' },
+          { command: '"Check assumptions for [test]"', description: 'Verify test requirements' },
+          { command: '"Show me the formula you used"', description: 'Verify calculations' },
+          { command: '"Compare to [software] output"', description: 'Cross-validate results' },
+        ],
+      },
+      {
+        title: 'Publication',
+        items: [
+          { command: '"Create publication-ready figure"', description: 'Journal-quality output' },
+          { command: '"Format for [journal] style"', description: 'Match specific guidelines' },
+          { command: '"Export as LaTeX table"', description: 'Manuscript-ready tables' },
+          { command: '"Write figure caption"', description: 'Generate proper captions' },
+        ],
+      },
+      {
+        title: 'Reviewer Response',
+        items: [
+          { command: '"Parse reviewer comments into list"', description: 'Organize feedback' },
+          { command: '"Draft response to: [comment]"', description: 'Generate diplomatic reply' },
+          { command: '"Run sensitivity analysis"', description: 'Address robustness concerns' },
+          { command: '"Create comparison table"', description: 'Before/after results' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'r-tidyverse',
+    title: 'R / Tidyverse',
+    description: 'R and tidyverse commands for data analysis',
+    icon: <BarChart3 className="h-5 w-5" />,
+    sections: [
+      {
+        title: 'Data Import',
+        items: [
+          { command: 'read_csv("file.csv")', description: 'Read CSV file' },
+          { command: 'read_excel("file.xlsx")', description: 'Read Excel file' },
+          { command: 'read_rds("file.rds")', description: 'Read R data file' },
+          { command: 'glimpse(df)', description: 'Quick data overview' },
+        ],
+      },
+      {
+        title: 'Data Wrangling',
+        items: [
+          { command: 'df %>% filter(col > 5)', description: 'Filter rows' },
+          { command: 'df %>% select(col1, col2)', description: 'Select columns' },
+          { command: 'df %>% mutate(new = col * 2)', description: 'Create new column' },
+          { command: 'df %>% arrange(desc(col))', description: 'Sort data' },
+          { command: 'df %>% rename(new = old)', description: 'Rename column' },
+        ],
+      },
+      {
+        title: 'Summarization',
+        items: [
+          { command: 'df %>% group_by(cat) %>% summarise(m = mean(x))', description: 'Group and summarize' },
+          { command: 'df %>% count(category)', description: 'Count by group' },
+          { command: 'df %>% summarise(across(everything(), mean))', description: 'Summarize all columns' },
+        ],
+      },
+      {
+        title: 'ggplot2 Basics',
+        items: [
+          { command: 'ggplot(df, aes(x, y)) + geom_point()', description: 'Scatter plot' },
+          { command: 'ggplot(df, aes(x)) + geom_histogram()', description: 'Histogram' },
+          { command: 'ggplot(df, aes(cat, y)) + geom_boxplot()', description: 'Box plot' },
+          { command: '+ theme_minimal()', description: 'Clean theme' },
+          { command: 'ggsave("plot.png", dpi = 300)', description: 'Save high-res' },
         ],
       },
     ],

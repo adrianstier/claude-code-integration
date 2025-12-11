@@ -21,6 +21,10 @@ const projectTypes = [
   { value: 'web-app', label: 'Web Application' },
   { value: 'api', label: 'REST API' },
   { value: 'data-analysis', label: 'Data Analysis' },
+  { value: 'r-tidyverse', label: 'R/Tidyverse Analysis' },
+  { value: 'python-research', label: 'Python Research Project' },
+  { value: 'mixed-methods', label: 'Mixed Methods Study' },
+  { value: 'ecological-modeling', label: 'Ecological Modeling' },
   { value: 'cli-tool', label: 'CLI Tool' },
   { value: 'library', label: 'Library/Package' },
   { value: 'mobile', label: 'Mobile App' },
@@ -41,12 +45,12 @@ const languages = [
 const frameworks = {
   typescript: ['Next.js', 'React', 'Express', 'NestJS', 'Remix'],
   javascript: ['Next.js', 'React', 'Vue', 'Express', 'Svelte'],
-  python: ['Django', 'FastAPI', 'Flask', 'Pandas', 'Streamlit'],
-  r: ['Shiny', 'Plumber', 'Tidyverse', 'None'],
+  python: ['Django', 'FastAPI', 'Flask', 'Pandas/NumPy', 'Streamlit', 'Scikit-learn', 'PyTorch', 'Jupyter', 'None'],
+  r: ['Tidyverse', 'Shiny', 'Plumber', 'ggplot2', 'RMarkdown', 'Quarto', 'lme4/Mixed Models', 'sf/Spatial', 'None'],
   go: ['Gin', 'Echo', 'Fiber', 'None'],
   rust: ['Actix', 'Rocket', 'Axum', 'None'],
   java: ['Spring Boot', 'Quarkus', 'Micronaut', 'None'],
-  other: ['None'],
+  other: ['MATLAB', 'Stata', 'SAS', 'Julia', 'None'],
 }
 
 export default function ClaudeMdGenerator() {

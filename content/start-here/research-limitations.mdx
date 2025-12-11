@@ -1,0 +1,315 @@
+---
+title: "Limitations & When Not to Use Claude Code"
+description: "Honest assessment of what Claude Code can't do - for skeptical PIs"
+order: 7
+duration: "15 min"
+---
+
+# Limitations & When Not to Use Claude Code
+
+If you're a skeptical PI (and you should be), this page is for you. Here's an honest assessment of where Claude Code falls short.
+
+## The Hard Limits
+
+### 1. Data Privacy and IRB Considerations
+
+**Critical:** Claude Code sends your prompts and relevant file contents to Anthropic's servers.
+
+**Do NOT use with:**
+- Protected Health Information (PHI/HIPAA data)
+- Personally identifiable information (PII)
+- Data under restrictive DUAs
+- Anything your IRB protocol classifies as sensitive
+- Student records (FERPA)
+- Unpublished genomic data (check your consent forms)
+
+**What to do instead:**
+
+```bash
+# Work with anonymized/synthetic data for development
+claude "Generate synthetic data matching this structure for testing:
+[describe your real data's structure without including it]"
+
+# Then apply developed code to real data offline
+```
+
+**Questions to ask before using:**
+1. Would it be a problem if this data leaked publicly?
+2. Does your IRB protocol allow cloud-based processing?
+3. Does your data use agreement permit third-party processing?
+4. Have participants consented to AI-assisted analysis?
+
+---
+
+### 2. Statistical Verification Required
+
+**Claude Code can make statistical mistakes.** It might:
+
+- Choose inappropriate tests for your data structure
+- Miss violations of assumptions
+- Implement formulas incorrectly
+- Misinterpret what you're asking for
+- Produce plausible-looking but wrong results
+
+**Always verify:**
+
+```bash
+# After Claude generates analysis
+claude "Explain the statistical assumptions of this test and
+show me how to verify each one with my data."
+
+# Cross-check with established software
+"Compare these results to what I'd get running the same test in
+[SPSS/SAS/Stata]. Are there differences? Why?"
+```
+
+**Red flags to watch for:**
+- Results that seem "too clean"
+- p-values of exactly 0.05 or 0.01
+- Effect sizes that don't make domain sense
+- Confidence intervals that seem too narrow
+
+**Best practice:** Run critical analyses in validated statistical software before publication. Use Claude Code for exploration and iteration, not final results.
+
+---
+
+### 3. When to Hire an RA Instead
+
+Claude Code is fast but not free (your time has value). Sometimes an RA is better:
+
+| Task | Claude Code | Research Assistant |
+|------|-------------|-------------------|
+| One-off quick analysis | **Better** | Overkill |
+| Repetitive manual coding | **Better** | More expensive |
+| Data entry/transcription | Comparable | **Better** for quality |
+| Literature synthesis | Good start | **Better** for depth |
+| Participant recruitment | Can't do | **Required** |
+| Lab management | Can't do | **Required** |
+| Ongoing project support | Limited | **Better** |
+| Training/mentorship | Can't replace | **Essential** |
+
+**Hire an RA when:**
+- The task requires human judgment on ambiguous cases
+- You need someone to own a project long-term
+- The work involves participant interaction
+- Training a student is part of your mission
+- You need institutional memory
+
+---
+
+### 4. Domain Expertise It Lacks
+
+Claude Code has broad but shallow knowledge. It doesn't:
+
+**Know your specific field's conventions:**
+- How your subfield interprets certain statistics
+- Which journals prefer which methods
+- Ongoing debates in your area
+- Unpublished norms and practices
+
+**Understand your data's context:**
+- Why certain outliers make scientific sense
+- What field conditions explain anomalies
+- How your sampling design affects interpretation
+- Domain-specific quality control criteria
+
+**Example failure mode:**
+
+```bash
+# Claude might suggest
+"Remove the two outliers at 89°C as data entry errors"
+
+# But you know
+"Those are from the thermal vent site—they're real and scientifically important"
+```
+
+**Mitigation:**
+
+```bash
+claude "Before making any decisions about outliers or data quality,
+flag them for my review. For each flag, tell me what makes it unusual
+and ask me whether it should be kept or removed."
+```
+
+---
+
+## The Soft Limits
+
+### 5. Complex Multi-Step Reasoning
+
+Claude Code works best on focused, well-defined tasks. It struggles with:
+
+- Analyses requiring judgment calls at multiple points
+- Tasks where earlier decisions affect later options
+- Problems requiring deep integration of domain knowledge
+- Novel methodological innovations
+
+**Works well:**
+```bash
+"Clean this dataset and run a mixed-effects model with site as random effect."
+```
+
+**Works less well:**
+```bash
+"Figure out the best analysis approach for my complex longitudinal data
+with missing values, nested structure, and potential selection bias."
+```
+
+**Better approach:** Break complex problems into steps, review at each stage.
+
+---
+
+### 6. Cutting-Edge Methods
+
+Claude's training has a knowledge cutoff. It may not know:
+
+- Methods published in the last year
+- Your field's latest innovations
+- Packages released recently
+- Best practices that evolved post-training
+
+**Check freshness on:**
+- New R/Python packages (ask for version numbers)
+- Statistical methods from recent papers
+- Software tool integrations
+- Current API endpoints and formats
+
+**Mitigation:**
+```bash
+claude "Here's the documentation for [new_package]:
+[paste relevant documentation]
+
+Now help me implement this approach."
+```
+
+---
+
+### 7. Large-Scale Computation
+
+Claude Code runs on your local machine with limited resources. Poor fit for:
+
+- Training large ML models
+- Processing massive datasets (>10GB)
+- Long-running simulations
+- GPU-intensive computation
+
+**Better alternatives:**
+- HPC clusters for heavy computation
+- Cloud services (AWS, GCP) for scalability
+- Specialized platforms for specific tasks
+
+**Use Claude Code for:**
+- Prototyping on data subsets
+- Writing code that runs elsewhere
+- Setting up HPC job scripts
+
+---
+
+## IRB and Compliance Checklist
+
+Before using Claude Code on research data, verify:
+
+### Data Classification
+- [ ] Data does not contain PHI
+- [ ] No PII or data is properly de-identified
+- [ ] Not subject to restrictive data use agreements
+- [ ] Not under export control restrictions
+
+### Protocol Compliance
+- [ ] IRB protocol permits cloud processing
+- [ ] Consent forms allow AI-assisted analysis (if applicable)
+- [ ] Sponsor agreements don't prohibit AI tools
+- [ ] Institution doesn't have AI tool restrictions
+
+### Documentation
+- [ ] You can explain your analysis without mentioning AI
+- [ ] Critical results are verified in validated software
+- [ ] Analysis code is reproducible without Claude Code
+- [ ] You've documented which parts used AI assistance
+
+---
+
+## When Claude Code Shines vs. Struggles
+
+### High-Value Uses
+
+1. **Boilerplate code generation** — Standard pipelines, reformatting, file conversion
+2. **Code debugging** — Finding errors in your or others' code
+3. **Documentation** — Adding comments, creating READMEs, explaining code
+4. **Exploration** — Quick "what if" analyses before committing to an approach
+5. **Translation** — Converting between R, Python, Stata formats
+6. **Visualization iteration** — Rapid refinement of figures
+
+### Proceed With Caution
+
+1. **Final statistical results** — Always verify in validated software
+2. **Methodological innovation** — It recombines existing approaches
+3. **Sensitive data analysis** — Privacy concerns apply
+4. **Publication-critical decisions** — Your judgment is required
+
+### Avoid Entirely
+
+1. **Any task involving identifiable human subjects data**
+2. **Regulatory submissions (FDA, etc.)** — Traceability requirements
+3. **Safety-critical analyses** — Verify, verify, verify
+4. **Tasks requiring real-time data access** — Claude can't reach external systems
+
+---
+
+## A Framework for Decision-Making
+
+**Ask yourself:**
+
+1. **Would I trust a smart grad student with this?**
+   - Yes → Claude Code is probably fine
+   - No → Requires your direct oversight
+
+2. **Would I be comfortable if this analysis appeared in Methods?**
+   - Yes → Appropriate use
+   - "I used AI to..." feels awkward → Reconsider
+
+3. **What's the cost of an error?**
+   - Low (exploratory work) → Good Claude Code use case
+   - High (publication, policy) → Verify independently
+
+4. **Can I explain this result without AI?**
+   - Yes → You understand it well enough
+   - No → You don't understand it well enough to publish
+
+---
+
+## Acknowledging AI Use in Publications
+
+Current norms are evolving, but consider:
+
+### Methods Section
+> "Data cleaning scripts were developed with assistance from Claude Code (Anthropic), then reviewed and validated by [author]. All statistical analyses were verified using [validated software]."
+
+### Author Contributions
+> "JS: Conceptualization, Methodology, Analysis, Writing. Claude Code (AI tool): Code generation assistance under author supervision."
+
+### Supplementary Materials
+> "Analysis code, including AI-assisted portions, is available at [repository]. A log of AI interactions is available upon request."
+
+---
+
+## The Bottom Line
+
+Claude Code is a power tool, not a replacement for:
+- Your domain expertise
+- Statistical training
+- Ethical judgment
+- Scientific reasoning
+
+Use it to **accelerate** work you understand, not to **do** work you don't.
+
+The skeptical PI's test: If you couldn't explain and defend every analytical decision Claude helped with, you're over-relying on it.
+
+---
+
+## Next Steps
+
+- [First 30 Minutes Exercise](/start-here/quick-start-exercise) — Try it with safe, non-sensitive data
+- [Research Case Studies](/start-here/research-case-studies) — See appropriate use cases
+- [Collaboration Workflows](/start-here/collaboration-workflows) — Working with teams
+
