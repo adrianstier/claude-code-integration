@@ -42,6 +42,7 @@ export async function generateStaticParams() {
     { track: 'automation' },
     { track: 'git-github' },
     { track: 'agents' },
+    { track: 'advanced-topics' },
   ]
 }
 
@@ -64,7 +65,7 @@ export default async function TrackPage({ params }: TrackPageProps) {
         </Link>
         <span>/</span>
         <span className="capitalize text-gray-900 dark:text-white">
-          {track.replace('-', ' ')}
+          {track.replaceAll('-', ' ')}
         </span>
       </nav>
 

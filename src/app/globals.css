@@ -58,6 +58,45 @@
   .skip-to-main {
     @apply sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-tooltip focus:rounded-lg focus:bg-claude-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg;
   }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100 dark:bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400 dark:bg-gray-500;
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @layer components {
@@ -65,37 +104,65 @@
     @apply max-w-none;
   }
 
-  /* Enhanced prose typography */
+  /* Enhanced prose typography with better rhythm */
   .prose h1 {
-    @apply mb-6 mt-8 text-4xl font-bold text-gray-900 dark:text-gray-100;
+    @apply mb-6 mt-12 text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100;
+    @apply first:mt-0;
   }
 
   .prose h2 {
-    @apply mb-4 mt-8 border-b border-gray-200 dark:border-gray-700 pb-2 text-3xl font-bold text-gray-900 dark:text-gray-100;
+    @apply mb-4 mt-12 pb-3 text-2xl font-bold text-gray-900 dark:text-gray-100;
+    @apply border-b border-gray-200 dark:border-gray-700;
+    @apply scroll-mt-24;
   }
 
   .prose h3 {
-    @apply mb-3 mt-6 text-2xl font-semibold text-gray-800 dark:text-gray-200;
+    @apply mb-3 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-200;
+    @apply scroll-mt-24;
   }
 
   .prose h4 {
-    @apply mb-2 mt-4 text-xl font-semibold text-gray-800 dark:text-gray-200;
+    @apply mb-2 mt-6 text-lg font-semibold text-gray-800 dark:text-gray-200;
+    @apply scroll-mt-24;
   }
 
   .prose p {
-    @apply mb-4 leading-7 text-gray-700 dark:text-gray-300;
+    @apply mb-5 leading-relaxed text-gray-700 dark:text-gray-300;
   }
 
   .prose ul {
-    @apply mb-4 space-y-2;
+    @apply mb-5 space-y-2 pl-0;
   }
 
   .prose ol {
-    @apply mb-4 space-y-2;
+    @apply mb-5 space-y-2 pl-0;
   }
 
   .prose li {
-    @apply leading-7 text-gray-700 dark:text-gray-300;
+    @apply leading-relaxed text-gray-700 dark:text-gray-300 pl-0;
+  }
+
+  .prose ul > li {
+    @apply relative pl-6;
+  }
+
+  .prose ul > li::before {
+    content: '';
+    @apply absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-claude-500;
+  }
+
+  .prose ol {
+    counter-reset: list-counter;
+  }
+
+  .prose ol > li {
+    @apply relative pl-8;
+    counter-increment: list-counter;
+  }
+
+  .prose ol > li::before {
+    content: counter(list-counter) '.';
+    @apply absolute left-0 top-0 font-semibold text-claude-600 dark:text-claude-400;
   }
 
   .prose strong {
@@ -103,33 +170,130 @@
   }
 
   .prose a {
-    @apply text-claude-600 dark:text-claude-400 underline decoration-claude-200 dark:decoration-claude-700 underline-offset-2 transition-colors hover:text-claude-700 dark:hover:text-claude-300 hover:decoration-claude-400 dark:hover:decoration-claude-500;
+    @apply text-claude-600 dark:text-claude-400 font-medium;
+    @apply underline decoration-claude-300 dark:decoration-claude-700 underline-offset-2;
+    @apply transition-colors hover:text-claude-700 dark:hover:text-claude-300;
+    @apply hover:decoration-claude-500 dark:hover:decoration-claude-500;
   }
 
   .prose blockquote {
-    @apply border-l-4 border-claude-500 bg-claude-50 dark:bg-claude-900/30 py-3 pl-4 pr-3 italic text-gray-700 dark:text-gray-300;
+    @apply my-6 border-l-4 border-claude-500 bg-claude-50 dark:bg-claude-900/20;
+    @apply rounded-r-lg py-4 pl-5 pr-4 italic;
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  .prose blockquote p {
+    @apply mb-0;
   }
 
   .prose hr {
-    @apply my-8 border-gray-200 dark:border-gray-700;
+    @apply my-10 border-gray-200 dark:border-gray-700;
   }
 
-  /* Code blocks are handled by our custom CodeBlock component */
-  /* Only style inline code in prose */
+  /* Inline code styling */
   .prose :not(pre) > code {
-    @apply rounded bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 text-sm font-mono text-gray-800 dark:text-gray-200;
+    @apply rounded-md bg-gray-100 dark:bg-gray-800;
+    @apply px-1.5 py-0.5 text-sm font-mono;
+    @apply text-claude-700 dark:text-claude-300;
+    @apply border border-gray-200 dark:border-gray-700;
   }
 
   /* Tables */
   .prose table {
-    @apply w-full border-collapse;
+    @apply w-full border-collapse my-6 text-sm;
+  }
+
+  .prose thead {
+    @apply border-b-2 border-gray-200 dark:border-gray-700;
   }
 
   .prose th {
-    @apply bg-gray-100 dark:bg-gray-800 px-4 py-2 text-left font-semibold text-gray-900 dark:text-gray-100;
+    @apply bg-gray-50 dark:bg-gray-800/50 px-4 py-3 text-left;
+    @apply font-semibold text-gray-900 dark:text-gray-100;
   }
 
   .prose td {
-    @apply border-t border-gray-200 dark:border-gray-700 px-4 py-2 text-gray-700 dark:text-gray-300;
+    @apply border-b border-gray-100 dark:border-gray-800 px-4 py-3;
+    @apply text-gray-700 dark:text-gray-300;
+  }
+
+  .prose tbody tr:hover {
+    @apply bg-gray-50 dark:bg-gray-800/30;
+  }
+
+  /* Images */
+  .prose img {
+    @apply rounded-xl shadow-md my-6;
+  }
+
+  .prose figure {
+    @apply my-8;
+  }
+
+  .prose figcaption {
+    @apply mt-3 text-center text-sm text-gray-500 dark:text-gray-400;
+  }
+
+  /* Definition lists */
+  .prose dl {
+    @apply my-6 space-y-4;
+  }
+
+  .prose dt {
+    @apply font-semibold text-gray-900 dark:text-gray-100;
+  }
+
+  .prose dd {
+    @apply mt-1 pl-4 text-gray-700 dark:text-gray-300;
+  }
+
+  /* Keyboard shortcuts in prose */
+  .prose kbd {
+    @apply inline-flex items-center justify-center rounded-md border;
+    @apply bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-600;
+    @apply px-1.5 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-300;
+    @apply font-mono shadow-sm;
+  }
+}
+
+@layer utilities {
+  /* Fade in animation */
+  .animate-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .fade-in-50 {
+    --tw-enter-opacity: 0.5;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: var(--tw-enter-opacity, 0);
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent;
+  }
+
+  /* Glass effect */
+  .glass {
+    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg;
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
   }
 }

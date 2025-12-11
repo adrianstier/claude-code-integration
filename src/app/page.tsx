@@ -505,7 +505,7 @@ tests/         # Jest tests`}</pre>
                 Get Started Now
               </Link>
               <Link
-                href="/git-github"
+                href="/#tracks"
                 className="rounded-lg border-2 border-white px-8 py-3.5 text-base font-semibold text-white transition hover:bg-white/10"
               >
                 View All Tracks
