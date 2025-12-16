@@ -154,7 +154,7 @@ export default async function Image() {
             color: '#64748b',
           }}
         >
-          claudecodelearning.com
+          codewithclaude.net
         </div>
       </div>
     ),
