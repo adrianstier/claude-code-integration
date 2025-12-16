@@ -9,6 +9,10 @@ duration: '8-10 hours'
 
 Build intelligent agents that can reason, plan, and take actions autonomously! This track teaches you everything from understanding what agents are to building production-ready agent systems.
 
+<Callout type="info" title="What Makes This Track Different">
+Agents are not just chatbots. They can work independently, use tools, and accomplish complex multi-step tasks. This track teaches you to harness this powerful capability.
+</Callout>
+
 ## What Are AI Agents?
 
 AI agents are autonomous systems that can:
@@ -97,6 +101,85 @@ Multiple agents working together:
 - **Collaborative**: Agents with different expertise
 - **Competitive**: Agents that debate or verify
 - **Hierarchical**: Manager agents directing worker agents
+
+---
+
+## Sub-Agents: Specialized Delegation
+
+Sub-agents are specialized AI assistants that can be orchestrated by the main agent. They enable powerful context management and parallelization patterns.
+
+### Why Use Sub-Agents?
+
+| Benefit | Description |
+|---------|-------------|
+| **Context Isolation** | Sub-agents maintain separate context, preventing information overload |
+| **Parallelization** | Multiple sub-agents can run concurrently for faster workflows |
+| **Specialized Knowledge** | Each sub-agent has tailored prompts and expertise |
+| **Tool Restrictions** | Limit sub-agents to specific tools for safety |
+
+### Built-in Sub-Agents
+
+Claude Code includes specialized built-in sub-agents:
+
+- **Plan Sub-Agent** - Dedicated planning with task breakdown
+- **Explore Sub-Agent** - Fast, read-only codebase search and analysis
+
+### Creating Custom Sub-Agents
+
+Define sub-agents as markdown files in `.claude/agents/`:
+
+```markdown
+---
+name: code-reviewer
+description: Expert code review specialist. Use for quality, security, and maintainability reviews.
+tools: Read, Grep, Glob
+---
+
+You are a code review specialist with expertise in security, performance, and best practices.
+
+When reviewing code:
+- Identify security vulnerabilities
+- Check for performance issues
+- Verify adherence to coding standards
+- Suggest specific improvements
+```
+
+### Programmatic Sub-Agents (SDK)
+
+When using the Claude Agent SDK, define sub-agents in code:
+
+```typescript
+import { query } from '@anthropic-ai/claude-agent-sdk';
+
+const result = query({
+  prompt: "Review the authentication module",
+  options: {
+    agents: {
+      'code-reviewer': {
+        description: 'Expert code review specialist',
+        prompt: 'You are a security-focused code reviewer...',
+        tools: ['Read', 'Grep', 'Glob'],
+        model: 'sonnet'
+      },
+      'test-runner': {
+        description: 'Runs and analyzes test suites',
+        prompt: 'You are a test execution specialist...',
+        tools: ['Bash', 'Read', 'Grep']
+      }
+    }
+  }
+});
+```
+
+### Common Tool Combinations
+
+| Agent Type | Tools | Use Case |
+|------------|-------|----------|
+| Read-only | `Read, Grep, Glob` | Analysis, review |
+| Test runner | `Bash, Read, Grep` | Test execution |
+| Code modifier | `Read, Edit, Write, Grep, Glob` | Refactoring |
+
+For detailed sub-agent documentation, see the [official Sub-Agents guide](https://docs.claude.com/en/docs/agent-sdk/subagents).
 
 ---
 
@@ -380,4 +463,6 @@ Or jump to specific topics:
 
 ---
 
-**Let's build intelligent agents!** Start with the fundamentals and work your way up to production-ready systems. Remember: the best agents start simple and evolve based on real-world feedback.
+<Callout type="success" title="Let's Build Intelligent Agents!">
+Start with the fundamentals and work your way up to production-ready systems. Remember: the best agents start simple and evolve based on real-world feedback.
+</Callout>

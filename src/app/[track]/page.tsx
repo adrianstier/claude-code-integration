@@ -4,6 +4,21 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import Card from '@/components/Card'
 import CodeBlock from '@/components/CodeBlock'
 import Link from 'next/link'
+import {
+  Callout,
+  Steps,
+  Step,
+  Checklist,
+  ChecklistItem,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  FileTree,
+  FolderNode,
+  FileNode,
+  Kbd,
+} from '@/components/mdx'
 
 interface TrackPageProps {
   params: {
@@ -15,6 +30,20 @@ const components = {
   Card,
   CodeBlock,
   Link,
+  // MDX Components
+  Callout,
+  Steps,
+  Step,
+  Checklist,
+  ChecklistItem,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanel,
+  FileTree,
+  FolderNode,
+  FileNode,
+  Kbd,
   // Map MDX code blocks to our CodeBlock component
   pre: ({ children }: { children?: React.ReactNode }) => {
     // Extract code content and language from children
