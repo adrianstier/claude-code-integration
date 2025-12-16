@@ -37,7 +37,12 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const parsed = JSON.parse(stored)
-        setProgress(parsed)
+        // Validate parsed data has expected structure
+        if (parsed && Array.isArray(parsed.completedModules)) {
+          setProgress(parsed)
+        } else {
+          throw new Error('Invalid progress data structure')
+        }
       } else {
         // First visit - set startedAt
         const initial = {
@@ -48,7 +53,19 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(initial))
       }
     } catch (error) {
-      console.error('Error loading progress:', error)
+      // Log error and reset to defaults on corruption
+      console.error('Error loading progress, resetting to defaults:', error instanceof Error ? error.message : error)
+      const initial = {
+        ...defaultProgress,
+        startedAt: new Date().toISOString(),
+      }
+      setProgress(initial)
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(initial))
+      } catch {
+        // localStorage may be unavailable (private browsing, etc)
+        console.warn('localStorage unavailable, progress will not persist')
+      }
     }
     setIsLoaded(true)
   }, [])
@@ -178,6 +195,7 @@ export function CompletionCheckbox({
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={3}
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"

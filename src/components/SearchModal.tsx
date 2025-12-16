@@ -278,6 +278,18 @@ export default function SearchModal() {
     setIsOpen(false)
   }
 
+  // Pre-compute item indices for keyboard navigation (must be before early return)
+  const itemIndices = useMemo(() => {
+    const indices: Map<string, number> = new Map()
+    let idx = 0
+    Object.values(groupedItems).forEach((items) => {
+      items.forEach((item) => {
+        indices.set(item.href, idx++)
+      })
+    })
+    return indices
+  }, [groupedItems])
+
   if (!isOpen) {
     return (
       <button
@@ -294,18 +306,21 @@ export default function SearchModal() {
     )
   }
 
-  let itemIndex = 0
-
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 z-modal bg-black/50 backdrop-blur-sm"
+        className="fixed inset-0 z-[300] bg-black/50 backdrop-blur-sm"
         onClick={() => setIsOpen(false)}
+        aria-hidden="true"
       />
 
       {/* Modal */}
-      <div className="fixed left-1/2 top-[20%] z-modal w-full max-w-xl -translate-x-1/2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl">
+      <div
+        className="fixed left-1/2 top-[20%] z-[300] w-full max-w-xl -translate-x-1/2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Search documentation">
         {/* Search Input */}
         <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-700 px-4 py-3">
           <Search className="h-5 w-5 text-gray-400" />
@@ -321,6 +336,7 @@ export default function SearchModal() {
           <button
             onClick={() => setIsOpen(false)}
             className="rounded p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300"
+            aria-label="Close search"
           >
             <X className="h-4 w-4" />
           </button>
@@ -339,7 +355,7 @@ export default function SearchModal() {
                   {category}
                 </div>
                 {items.map((item) => {
-                  const currentIndex = itemIndex++
+                  const currentIndex = itemIndices.get(item.href) ?? 0
                   const isSelected = currentIndex === selectedIndex
                   return (
                     <button
