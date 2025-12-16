@@ -131,11 +131,11 @@
   }
 
   .prose ul {
-    @apply mb-5 space-y-2 pl-0;
+    @apply mb-5 space-y-2 pl-0 list-none;
   }
 
   .prose ol {
-    @apply mb-5 space-y-2 pl-0;
+    @apply mb-5 space-y-2 pl-0 list-none;
   }
 
   .prose li {
