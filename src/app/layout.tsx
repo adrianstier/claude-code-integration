@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
   },
   other: {
-    'google-site-verification': process.env.GOOGLE_SITE_VERIFICATION || '',
+    'google-site-verification': 'CQhdFkuB-aPgF3irSWBz5UwZEe7kHb3BxpSfAR0h0WA',
     'msvalidate.01': process.env.BING_SITE_VERIFICATION || '',
   },
 }
