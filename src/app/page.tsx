@@ -20,7 +20,8 @@ import {
 import { siteConfig, generateFAQSchema } from '@/lib/metadata'
 
 // Homepage-specific metadata with full OG image support for social sharing
-const ogImageUrl = `${siteConfig.url}/opengraph-image`
+// Using static image for LinkedIn compatibility (LinkedIn doesn't handle dynamic images well)
+const staticOgImageUrl = `${siteConfig.url}/og-image.png`
 const twitterImageUrl = `${siteConfig.url}/twitter-image`
 
 export const metadata: Metadata = {
@@ -52,8 +53,8 @@ export const metadata: Metadata = {
     locale: 'en_US',
     images: [
       {
-        url: ogImageUrl,
-        secureUrl: ogImageUrl,
+        url: staticOgImageUrl,
+        secureUrl: staticOgImageUrl,
         width: 1200,
         height: 630,
         alt: 'Claude Code Learning Hub - Master AI-Powered Development',
