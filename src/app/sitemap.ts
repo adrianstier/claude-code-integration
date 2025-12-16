@@ -1,0 +1,86 @@
+import { MetadataRoute } from 'next'
+import { getAllTracks, getAllContent } from '@/lib/mdx'
+import { siteConfig } from '@/lib/metadata'
+
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = siteConfig.url
+
+  // Static pages
+  const staticPages: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/resources`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/tools/claude-md-generator`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/slash-commands`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/mcp-explorer`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/templates`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/cheatsheets`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/tools/snippets`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+  ]
+
+  // Track pages
+  const tracks = getAllTracks()
+  const trackPages: MetadataRoute.Sitemap = tracks.map((track) => ({
+    url: `${baseUrl}/${track}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.9,
+  }))
+
+  // Content pages
+  const contentPages: MetadataRoute.Sitemap = []
+  for (const track of tracks) {
+    const content = getAllContent(track)
+    for (const item of content) {
+      if (item.slug !== 'index') {
+        contentPages.push({
+          url: `${baseUrl}/${track}/${item.slug}`,
+          lastModified: new Date(),
+          changeFrequency: 'weekly',
+          priority: 0.7,
+        })
+      }
+    }
+  }
+
+  return [...staticPages, ...trackPages, ...contentPages]
+}

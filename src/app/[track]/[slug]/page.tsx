@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import { getContentBySlug, getAllContent } from '@/lib/mdx'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import CodeBlock from '@/components/CodeBlock'
@@ -23,12 +24,32 @@ import {
   Kbd,
 } from '@/components/mdx'
 import { Clock, BookOpen, Monitor, ChevronRight } from 'lucide-react'
+import {
+  getContentPageMetadata,
+  generateArticleSchema,
+  generateBreadcrumbSchema,
+  siteConfig,
+  trackMetadata as trackSeoMetadata,
+} from '@/lib/metadata'
+import SocialShare, { FloatingShareBar } from '@/components/SocialShare'
+import NewsletterSignup from '@/components/NewsletterSignup'
 
 interface PageProps {
   params: {
     track: string
     slug: string
   }
+}
+
+// Generate dynamic metadata for each content page
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const content = getContentBySlug(params.track, params.slug)
+  if (!content) {
+    return {}
+  }
+  return getContentPageMetadata(params.track, params.slug, content.frontmatter)
 }
 
 // Apple icon component (lucide-react doesn't have Apple)
@@ -133,8 +154,40 @@ export default async function ContentPage({ params }: PageProps) {
 
   const PlatformIcon = frontmatter.platform === 'mac' ? AppleIcon : Monitor
 
+  // Track display name for structured data
+  const trackDisplayName =
+    trackSeoMetadata[track]?.title || trackNames[track] || track.replace(/-/g, ' ')
+
+  // Generate structured data for breadcrumbs
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteConfig.url },
+    { name: trackDisplayName, url: `${siteConfig.url}/${track}` },
+    { name: frontmatter.title, url: `${siteConfig.url}/${track}/${slug}` },
+  ])
+
+  // Generate article schema for SEO and AI recognition
+  const articleSchema = generateArticleSchema(
+    frontmatter.title,
+    frontmatter.description || '',
+    `${siteConfig.url}/${track}/${slug}`
+  )
+
   return (
     <>
+      {/* JSON-LD Structured Data for SEO and AI */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema),
+        }}
+      />
+
       <ReadingProgress />
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -226,8 +279,23 @@ export default async function ContentPage({ params }: PageProps) {
               />
             </div>
 
+            {/* Share & Newsletter Section */}
+            <div className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="grid gap-8 sm:grid-cols-2">
+                {/* Social Share */}
+                <SocialShare
+                  title={frontmatter.title}
+                  url={`${siteConfig.url}/${track}/${slug}`}
+                  description={frontmatter.description}
+                />
+
+                {/* Newsletter Signup */}
+                <NewsletterSignup variant="compact" />
+              </div>
+            </div>
+
             {/* Back to track link */}
-            <nav className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-700">
+            <nav className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
               <Link
                 href={`/${track}`}
                 className="inline-flex items-center gap-2 text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300 font-medium transition-colors"
@@ -294,6 +362,12 @@ export default async function ContentPage({ params }: PageProps) {
           </aside>
         </div>
       </div>
+
+      {/* Floating Share Bar for Mobile */}
+      <FloatingShareBar
+        title={frontmatter.title}
+        url={`${siteConfig.url}/${track}/${slug}`}
+      />
     </>
   )
 }

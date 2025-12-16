@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { Metadata } from 'next'
 import { getTrackMetadata, getAllContent } from '@/lib/mdx'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import Card from '@/components/Card'
@@ -19,11 +20,25 @@ import {
   FileNode,
   Kbd,
 } from '@/components/mdx'
+import {
+  getTrackPageMetadata,
+  generateBreadcrumbSchema,
+  generateCourseSchema,
+  siteConfig,
+  trackMetadata as trackSeoMetadata,
+} from '@/lib/metadata'
 
 interface TrackPageProps {
   params: {
     track: string
   }
+}
+
+// Generate dynamic metadata for each track
+export async function generateMetadata({
+  params,
+}: TrackPageProps): Promise<Metadata> {
+  return getTrackPageMetadata(params.track)
 }
 
 const components = {
@@ -85,18 +100,57 @@ export default async function TrackPage({ params }: TrackPageProps) {
 
   const allContent = getAllContent(track).filter((item) => item.slug !== 'index')
 
+  // Track display name
+  const trackDisplayName =
+    trackSeoMetadata[track]?.title || track.replace(/-/g, ' ')
+
+  // Generate structured data for breadcrumbs
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: 'Home', url: siteConfig.url },
+    { name: trackDisplayName, url: `${siteConfig.url}/${track}` },
+  ])
+
+  // Generate course schema for the track
+  const courseSchema = generateCourseSchema(
+    trackDisplayName,
+    trackSeoMetadata[track]?.description || metadata.frontmatter.description,
+    `${siteConfig.url}/${track}`,
+    allContent.map((item) => ({
+      name: item.frontmatter.title,
+      description: item.frontmatter.description || '',
+    }))
+  )
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      {/* Breadcrumbs */}
-      <nav className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-        <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
-          Home
-        </Link>
-        <span>/</span>
-        <span className="capitalize text-gray-900 dark:text-white">
-          {track.replaceAll('-', ' ')}
-        </span>
-      </nav>
+    <>
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(courseSchema),
+        }}
+      />
+
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        {/* Breadcrumbs */}
+        <nav
+          className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400"
+          aria-label="Breadcrumb"
+        >
+          <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
+            Home
+          </Link>
+          <span aria-hidden="true">/</span>
+          <span className="capitalize text-gray-900 dark:text-white" aria-current="page">
+            {track.replaceAll('-', ' ')}
+          </span>
+        </nav>
 
       {/* Track Overview from index.mdx */}
       <div className="mb-12 rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -143,6 +197,7 @@ export default async function TrackPage({ params }: TrackPageProps) {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

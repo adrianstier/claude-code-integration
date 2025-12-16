@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Metadata } from 'next'
 import {
   Rocket,
   BarChart3,
@@ -16,10 +17,112 @@ import {
   Sparkles,
   Brain
 } from 'lucide-react'
+import { siteConfig, generateFAQSchema } from '@/lib/metadata'
+
+// Homepage-specific metadata with full OG image support for social sharing
+const ogImageUrl = `${siteConfig.url}/opengraph-image`
+const twitterImageUrl = `${siteConfig.url}/twitter-image`
+
+export const metadata: Metadata = {
+  title: 'Claude Code Learning Hub - Master AI-Powered Development',
+  description:
+    'Learn Claude Code, VS Code, Git/GitHub, Python, and R with hands-on tutorials. Build real-world projects with AI assistance. Free comprehensive guides for beginners to advanced developers.',
+  keywords: [
+    'Claude Code tutorial',
+    'learn Claude Code',
+    'AI coding assistant',
+    'VS Code setup',
+    'Git tutorial',
+    'GitHub for beginners',
+    'Python tutorial',
+    'R programming',
+    'AI development',
+    'coding with AI',
+    'Anthropic Claude',
+    'free programming course',
+  ],
+  // Open Graph for Facebook, LinkedIn, Discord, Slack
+  openGraph: {
+    title: 'Claude Code Learning Hub - Master AI-Powered Development',
+    description:
+      'Learn Claude Code, VS Code, Git/GitHub, Python, and R with hands-on tutorials. Build real-world projects with AI assistance.',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    type: 'website',
+    locale: 'en_US',
+    images: [
+      {
+        url: ogImageUrl,
+        secureUrl: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: 'Claude Code Learning Hub - Master AI-Powered Development',
+        type: 'image/png',
+      },
+    ],
+  },
+  // Twitter Card
+  twitter: {
+    card: 'summary_large_image',
+    site: siteConfig.twitterHandle,
+    creator: siteConfig.twitterHandle,
+    title: 'Claude Code Learning Hub - Master AI-Powered Development',
+    description:
+      'Learn Claude Code, VS Code, Git/GitHub, Python, and R with hands-on tutorials. Build real-world projects with AI assistance.',
+    images: {
+      url: twitterImageUrl,
+      alt: 'Claude Code Learning Hub',
+    },
+  },
+  alternates: {
+    canonical: siteConfig.url,
+  },
+}
+
+// FAQ data for structured data
+const faqs = [
+  {
+    question: 'What is Claude Code?',
+    answer:
+      'Claude Code is an AI-powered coding assistant by Anthropic that helps you write, debug, and understand code directly in your terminal or IDE. It can assist with various programming languages and frameworks.',
+  },
+  {
+    question: 'Is Claude Code Learning Hub free?',
+    answer:
+      'Yes, all tutorials and learning materials on Claude Code Learning Hub are completely free. We provide comprehensive guides for Claude Code, VS Code, Git/GitHub, Python, and R.',
+  },
+  {
+    question: 'Do I need programming experience to start?',
+    answer:
+      'No prior programming experience is required. Our Start Here track guides you through setting up your development environment from scratch, including VS Code, Claude Code, and Git.',
+  },
+  {
+    question: 'What can I build with Claude Code?',
+    answer:
+      'With Claude Code, you can build web applications, automate repetitive tasks, analyze data with Python or R, create AI agents, and much more. Our learning tracks cover practical projects you can add to your portfolio.',
+  },
+  {
+    question: 'Does Claude Code work on Mac and Windows?',
+    answer:
+      'Yes, Claude Code works on both Mac and Windows. Our tutorials include platform-specific setup guides to ensure a smooth installation regardless of your operating system.',
+  },
+]
 
 export default function Home() {
+  // Generate FAQ schema for search engines
+  const faqSchema = generateFAQSchema(faqs)
+
   return (
-    <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <>
+      {/* FAQ Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
+
+      <main className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Hero Section */}
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
         <div className="text-center">
@@ -516,6 +619,7 @@ print(df.groupby("sentiment").size())`}</pre>
           </div>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   )
 }

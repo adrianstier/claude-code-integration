@@ -1,9 +1,15 @@
 import Link from 'next/link'
 import { Rocket, BarChart3, Hammer, Zap, Bot } from 'lucide-react'
+import NewsletterSignup from './NewsletterSignup'
 
 export default function Footer() {
   return (
     <footer className="border-t border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+      {/* Newsletter Section */}
+      <div className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+        <NewsletterSignup variant="hero" />
+      </div>
+
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">

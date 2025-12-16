@@ -12,7 +12,7 @@ const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> =
   { name: 'Start Here', href: '/start-here', icon: Rocket },
   { name: 'Learning Tracks', href: '/#tracks', icon: GraduationCap },
   { name: 'Tools', href: '/tools/templates', icon: Wrench },
-  { name: 'Resources', href: '/git-github', icon: BookOpen },
+  { name: 'Resources', href: '/resources', icon: BookOpen },
 ]
 
 export default function Navigation() {

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
@@ -6,15 +6,46 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { ProgressProvider } from '@/components/ProgressTracker'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import {
+  getBaseMetadata,
+  generateWebsiteSchema,
+  generateOrganizationSchema,
+} from '@/lib/metadata'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
+// Comprehensive SEO metadata
 export const metadata: Metadata = {
-  title: 'Claude Code Learning',
-  description:
-    'Learn Claude Code, VS Code, Git/GitHub, Python, and R for real-world projects',
+  ...getBaseMetadata(),
+  manifest: '/manifest.json',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  other: {
+    'google-site-verification': process.env.GOOGLE_SITE_VERIFICATION || '',
+    'msvalidate.01': process.env.BING_SITE_VERIFICATION || '',
+  },
+}
+
+// Viewport configuration for mobile optimization
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 }
 
 export default function RootLayout({
@@ -22,9 +53,39 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Generate JSON-LD structured data for the entire site
+  const websiteSchema = generateWebsiteSchema()
+  const organizationSchema = generateOrganizationSchema()
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
       <head>
+        {/* JSON-LD Structured Data for AI and Search Engines */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
         {/* Google Analytics */}
         {GA_MEASUREMENT_ID && (
           <>

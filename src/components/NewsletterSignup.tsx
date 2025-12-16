@@ -1,0 +1,219 @@
+'use client'
+
+import { useState } from 'react'
+import { Mail, CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
+
+interface NewsletterSignupProps {
+  variant?: 'default' | 'compact' | 'hero'
+  className?: string
+}
+
+export default function NewsletterSignup({
+  variant = 'default',
+  className = '',
+}: NewsletterSignupProps) {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [message, setMessage] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!email || !email.includes('@')) {
+      setStatus('error')
+      setMessage('Please enter a valid email address')
+      return
+    }
+
+    setStatus('loading')
+
+    // Simulate API call - replace with your actual newsletter API
+    // Examples: ConvertKit, Mailchimp, Buttondown, Resend
+    try {
+      // For now, we'll store in localStorage as a demo
+      // Replace this with your actual newsletter signup API
+      const subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]')
+      if (subscribers.includes(email)) {
+        setStatus('error')
+        setMessage('You are already subscribed!')
+        return
+      }
+      subscribers.push(email)
+      localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers))
+
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 800))
+
+      setStatus('success')
+      setMessage('Thanks for subscribing! Check your inbox for confirmation.')
+      setEmail('')
+    } catch {
+      setStatus('error')
+      setMessage('Something went wrong. Please try again.')
+    }
+  }
+
+  if (variant === 'compact') {
+    return (
+      <div className={`${className}`}>
+        {status === 'success' ? (
+          <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+            <CheckCircle2 className="h-5 w-5" />
+            <span className="text-sm font-medium">{message}</span>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <div className="relative flex-1">
+              <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your@email.com"
+                className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-2 pl-10 pr-4 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:border-claude-500 focus:outline-none focus:ring-1 focus:ring-claude-500"
+                disabled={status === 'loading'}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="inline-flex items-center justify-center rounded-lg bg-claude-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-claude-500 disabled:opacity-50"
+            >
+              {status === 'loading' ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                'Subscribe'
+              )}
+            </button>
+          </form>
+        )}
+        {status === 'error' && (
+          <p className="mt-2 text-sm text-red-600 dark:text-red-400">{message}</p>
+        )}
+      </div>
+    )
+  }
+
+  if (variant === 'hero') {
+    return (
+      <div
+        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-claude-600 via-claude-500 to-orange-500 p-8 md:p-12 ${className}`}
+      >
+        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
+        <div className="relative">
+          <h3 className="text-2xl font-bold text-white md:text-3xl">
+            Stay Updated with Claude Code
+          </h3>
+          <p className="mt-3 max-w-xl text-claude-100">
+            Get weekly tips, new tutorials, and Claude Code updates delivered to your inbox.
+            No spam, unsubscribe anytime.
+          </p>
+
+          {status === 'success' ? (
+            <div className="mt-6 flex items-center gap-3 rounded-lg bg-white/20 p-4 backdrop-blur">
+              <CheckCircle2 className="h-6 w-6 text-white" />
+              <span className="font-medium text-white">{message}</span>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="relative flex-1">
+                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full rounded-lg border-0 bg-white py-3.5 pl-12 pr-4 text-gray-900 placeholder-gray-500 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/50"
+                  disabled={status === 'loading'}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-8 py-3.5 font-semibold text-white shadow-lg transition-all hover:bg-gray-800 hover:scale-105 disabled:opacity-50"
+              >
+                {status === 'loading' ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    Subscribe
+                    <ArrowRight className="h-5 w-5" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+          {status === 'error' && (
+            <p className="mt-3 text-sm text-red-200">{message}</p>
+          )}
+
+          <p className="mt-4 text-sm text-claude-200">
+            Join 1,000+ developers learning with Claude Code
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  // Default variant
+  return (
+    <div
+      className={`rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 ${className}`}
+    >
+      <div className="flex items-center gap-3 mb-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-claude-100 dark:bg-claude-900/50">
+          <Mail className="h-5 w-5 text-claude-600 dark:text-claude-400" />
+        </div>
+        <div>
+          <h4 className="font-semibold text-gray-900 dark:text-white">
+            Subscribe to Updates
+          </h4>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            New tutorials & tips weekly
+          </p>
+        </div>
+      </div>
+
+      {status === 'success' ? (
+        <div className="flex items-center gap-2 rounded-lg bg-green-50 dark:bg-green-900/20 p-4 text-green-700 dark:text-green-400">
+          <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+          <span className="text-sm font-medium">{message}</span>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="relative">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 py-2.5 px-4 text-gray-900 dark:text-white placeholder-gray-500 focus:border-claude-500 focus:outline-none focus:ring-1 focus:ring-claude-500"
+              disabled={status === 'loading'}
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={status === 'loading'}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-claude-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-claude-500 disabled:opacity-50"
+          >
+            {status === 'loading' ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <>
+                Subscribe
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
+        </form>
+      )}
+      {status === 'error' && (
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400">{message}</p>
+      )}
+
+      <p className="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+        No spam. Unsubscribe anytime.
+      </p>
+    </div>
+  )
+}
