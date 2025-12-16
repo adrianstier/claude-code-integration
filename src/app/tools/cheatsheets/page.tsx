@@ -292,15 +292,6 @@ const cheatsheets: CheatSheet[] = [
           { command: '"Write figure caption"', description: 'Generate proper captions' },
         ],
       },
-      {
-        title: 'Reviewer Response',
-        items: [
-          { command: '"Parse reviewer comments into list"', description: 'Organize feedback' },
-          { command: '"Draft response to: [comment]"', description: 'Generate diplomatic reply' },
-          { command: '"Run sensitivity analysis"', description: 'Address robustness concerns' },
-          { command: '"Create comparison table"', description: 'Before/after results' },
-        ],
-      },
     ],
   },
   {

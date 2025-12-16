@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Twitter, Linkedin, Link2, Check, MessageCircle } from 'lucide-react'
+import { trackSocialShare } from '@/lib/analytics'
 
 interface SocialShareProps {
   title: string
@@ -22,10 +23,15 @@ export default function SocialShare({ title, url }: SocialShareProps) {
     hackernews: `https://news.ycombinator.com/submitlink?u=${encodedUrl}&t=${encodedTitle}`,
   }
 
+  const handleShare = (platform: 'twitter' | 'linkedin' | 'reddit' | 'hackernews') => {
+    trackSocialShare(platform, title, url)
+  }
+
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
+      trackSocialShare('copy_link', title, url)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
@@ -43,10 +49,11 @@ export default function SocialShare({ title, url }: SocialShareProps) {
           href={shareLinks.twitter}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShare('twitter')}
           className="group flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-[#1DA1F2] hover:text-white"
           aria-label="Share on Twitter"
         >
-          <Twitter className="h-5 w-5" />
+          <Twitter className="h-5 w-5" aria-hidden="true" />
         </a>
 
         {/* LinkedIn */}
@@ -54,10 +61,11 @@ export default function SocialShare({ title, url }: SocialShareProps) {
           href={shareLinks.linkedin}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShare('linkedin')}
           className="group flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-[#0A66C2] hover:text-white"
           aria-label="Share on LinkedIn"
         >
-          <Linkedin className="h-5 w-5" />
+          <Linkedin className="h-5 w-5" aria-hidden="true" />
         </a>
 
         {/* Reddit */}
@@ -65,10 +73,11 @@ export default function SocialShare({ title, url }: SocialShareProps) {
           href={shareLinks.reddit}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShare('reddit')}
           className="group flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-[#FF4500] hover:text-white"
           aria-label="Share on Reddit"
         >
-          <MessageCircle className="h-5 w-5" />
+          <MessageCircle className="h-5 w-5" aria-hidden="true" />
         </a>
 
         {/* Hacker News */}
@@ -76,10 +85,11 @@ export default function SocialShare({ title, url }: SocialShareProps) {
           href={shareLinks.hackernews}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => handleShare('hackernews')}
           className="group flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-[#FF6600] hover:text-white"
           aria-label="Share on Hacker News"
         >
-          <span className="text-sm font-bold">Y</span>
+          <span className="text-sm font-bold" aria-hidden="true">Y</span>
         </a>
 
         {/* Copy Link */}

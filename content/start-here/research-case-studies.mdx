@@ -18,7 +18,7 @@ See Claude Code in action with complete academic workflows. These aren't toy exa
 ```
 Raw data: 847 observations across 12 sites
 Issues: Mixed date formats, missing values coded differently, outliers
-Deadline: Reviewer comments due in 3 days
+Deadline: Journal submission due in 3 days
 ```
 
 ### The Workflow
@@ -100,80 +100,7 @@ Save as both PNG and PDF."
 
 ---
 
-## Case Study 2: Responding to Reviewer 2
-
-**Scenario:** Reviewer 2 wants a sensitivity analysis you didn't plan for. Your co-author's original analysis code is... creative.
-
-### The Problem
-
-> "The authors should test whether their results are robust to excluding the three sites with incomplete temporal coverage. Additionally, a bootstrap analysis would strengthen confidence in the reported effect sizes."
-
-Your co-author's code: 847 lines of R with variable names like `temp2`, `df_final_FINAL`, and `# TODO: fix this later`.
-
-### The Workflow
-
-**Step 1: Understand the existing analysis**
-
-```bash
-claude "Read analysis/main_analysis.R and explain:
-1. What statistical tests are being performed
-2. What the key results are
-3. Where I would need to modify to exclude specific sites
-4. Any concerns about the current approach
-
-Be specific about line numbers."
-```
-
-**Step 2: Create the sensitivity analysis**
-
-```bash
-claude "Based on your understanding of main_analysis.R, create a new script sensitivity_analysis.R that:
-
-1. Runs the original analysis (baseline)
-2. Re-runs excluding sites 3, 7, and 11 (incomplete temporal coverage)
-3. Performs bootstrap analysis (1000 iterations) on the main effect
-4. Generates a comparison table showing:
-   - Original effect size and CI
-   - Sensitivity analysis effect size and CI
-   - Bootstrap effect size and CI
-
-Format the output table for easy copy-paste into Word.
-Add comments explaining each step for the reviewer."
-```
-
-**Step 3: Generate reviewer response**
-
-```bash
-claude "Based on the sensitivity analysis results, draft a response to Reviewer 2:
-- Acknowledge their valid concern
-- Describe the sensitivity analysis approach
-- Present the results (effect sizes remained significant)
-- Reference the new supplementary table
-
-Use academic tone but be concise."
-```
-
-### Result
-
-```markdown
-**Response to Reviewer 2, Comment 3:**
-
-We thank the reviewer for this suggestion to test robustness. We conducted
-a sensitivity analysis excluding sites 3, 7, and 11 (those with <80% temporal
-coverage). The main effect remained significant (β = 0.34, 95% CI [0.21, 0.47],
-p < 0.001), compared to the full dataset (β = 0.31, 95% CI [0.19, 0.43]).
-
-Additionally, we performed bootstrap analysis (n = 1,000 iterations) which
-yielded consistent estimates (β = 0.32, 95% CI [0.20, 0.44]). These results
-are presented in new Supplementary Table S4.
-
-We have added a statement regarding robustness to the Results section
-(lines 234-238).
-```
-
----
-
-## Case Study 3: Inheriting a Grad Student's Code
+## Case Study 2: Inheriting a Grad Student's Code
 
 **Scenario:** Your grad student defended and left. Now you need to re-run their analysis for a follow-up paper. The code "worked on their laptop."
 
@@ -226,7 +153,7 @@ This needs to be understandable by the next grad student."
 
 ---
 
-## Case Study 4: Multi-Author Analysis Integration
+## Case Study 3: Multi-Author Analysis Integration
 
 **Scenario:** Three co-authors analyzed different aspects of the same dataset. One used R, one used Python, one used Stata. You need to integrate their results.
 
@@ -285,7 +212,7 @@ claude "Cross-check the three analyses:
 
 ---
 
-## Case Study 5: BCO-DMO Data Documentation
+## Case Study 4: BCO-DMO Data Documentation
 
 **Scenario:** NSF requires you to submit your data to BCO-DMO. You need comprehensive metadata documentation.
 
@@ -339,16 +266,11 @@ Format everything in their required template structure."
 "Add documentation to [file] that would let a new grad student understand and modify it. Include example usage."
 ```
 
-### Reviewer Response
-```
-"Based on [analysis results], draft a response to this reviewer comment: [paste comment]. Be diplomatic but defend our approach where appropriate."
-```
-
 ---
 
 ## What These Cases Have in Common
 
-1. **Real deadlines** — Not "exploring data for fun" but "reviewer response due Friday"
+1. **Real deadlines** — Not "exploring data for fun" but "paper submission due Friday"
 2. **Messy inputs** — Data and code are never as clean as tutorials assume
 3. **Audit trails** — Academic work requires documentation of every decision
 4. **Multiple formats** — Journals want LaTeX, co-authors want Word, repos want Markdown

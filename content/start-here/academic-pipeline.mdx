@@ -1,6 +1,6 @@
 ---
 title: "Grant & Manuscript Pipeline"
-description: "Claude Code for the full academic production cycle - from BCO-DMO documentation to reviewer responses"
+description: "Claude Code for the full academic production cycle - from BCO-DMO documentation to grant proposals"
 order: 8
 duration: "25 min"
 ---
@@ -114,80 +114,6 @@ My co-author needs Word and won't learn LaTeX."
 
 ---
 
-## Reviewer Response Management
-
-### Organizing Comments
-
-```bash
-claude "Parse this reviewer response document and create a structured response template:
-
-REVIEWER COMMENTS:
-[paste the full reviewer letter]
-
-CREATE:
-1. A numbered list of every distinct comment/request
-2. Categorize each as:
-   - Minor: Quick fix
-   - Moderate: Some work needed
-   - Major: Significant revision
-   - Disagree: We should push back
-
-3. For each comment, create response skeleton:
-   - Our response: [to fill]
-   - Changes made: [to fill]
-   - Location in manuscript: [to fill]
-
-4. Track which analyses/figures need updating
-
-Export as Word table I can fill in with co-authors."
-```
-
-### Drafting Responses
-
-```bash
-claude "Draft a response to this reviewer comment:
-
-COMMENT: 'The authors should justify their choice of mixed-effects
-model over a simpler repeated-measures ANOVA. The sample size
-(n=47) may be insufficient for the complexity of their model.'
-
-CONTEXT:
-- We chose mixed-effects because we have unbalanced data
-- Random slopes are needed due to site-specific variation
-- We did run power analysis during design phase
-
-Draft a response that:
-1. Acknowledges the valid concern
-2. Explains our rationale clearly
-3. Cites methodological literature supporting our choice
-4. Describes any additional analyses we'll add to address this
-5. Is diplomatic but defends our approach
-
-Tone: Respectful but confident. Don't be obsequious."
-```
-
-### Response Letter Assembly
-
-```bash
-claude "Compile our individual responses into a formatted response letter:
-
-Include:
-1. Cover letter to editor (brief, professional)
-2. Point-by-point responses organized by reviewer
-3. Summary of major changes
-4. Track changes reference guide
-
-Format conventions:
-- Reviewer comments in italic
-- Our responses in regular text
-- Changed manuscript text in quotes with line numbers
-- New analyses/figures highlighted
-
-Generate both Word and PDF versions."
-```
-
----
-
 ## Manuscript Preparation
 
 ### Methods Section Drafting
@@ -270,7 +196,7 @@ Help me strengthen them:
 2. Is each aim achievable in the timeline?
 3. Do they build on each other or are they independent?
 4. Suggest how to make the impact statement stronger
-5. Flag any red flags a reviewer might raise
+5. Flag any potential weaknesses or gaps
 
 Be critical—I'd rather fix problems now than get triaged."
 ```

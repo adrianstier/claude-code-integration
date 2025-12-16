@@ -1,11 +1,11 @@
 # Claude Code Learning Hub - robots.txt
-# https://claudecodelearning.com
+# https://codewithclaude.net
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://claudecodelearning.com/sitemap.xml
+Sitemap: https://codewithclaude.net/sitemap.xml
 
 # Crawl delay (optional, be nice to servers)
 Crawl-delay: 1

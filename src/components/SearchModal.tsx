@@ -57,7 +57,7 @@ const searchItems: SearchItem[] = [
   },
   {
     title: 'Grant & Manuscript Pipeline',
-    description: 'BCO-DMO documentation, supplementary materials, reviewer responses',
+    description: 'BCO-DMO documentation, supplementary materials, grant proposals',
     href: '/start-here/academic-pipeline',
     category: 'Learning Tracks',
     icon: <Rocket className="h-4 w-4" />,
