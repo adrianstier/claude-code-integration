@@ -141,6 +141,19 @@ const config: Config = {
         DEFAULT: {
           css: {
             maxWidth: 'none',
+            // Disable default list styling - we use custom ::before bullets
+            'ul': {
+              listStyleType: 'none',
+            },
+            'ol': {
+              listStyleType: 'none',
+            },
+            'ul > li::marker': {
+              content: 'none',
+            },
+            'ol > li::marker': {
+              content: 'none',
+            },
             code: {
               backgroundColor: '#f3f4f6',
               padding: '0.2em 0.4em',
