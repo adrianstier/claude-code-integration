@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next'
 import { getAllTracks, getAllContent } from '@/lib/mdx'
+import { getAllBlogPosts } from '@/lib/blog'
 import { siteConfig } from '@/lib/metadata'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url
 
   // Static pages
@@ -12,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/resources`,
@@ -82,5 +89,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }
   }
 
-  return [...staticPages, ...trackPages, ...contentPages]
+  // Blog posts
+  const blogPosts = await getAllBlogPosts()
+  const blogPages: MetadataRoute.Sitemap = blogPosts.map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+
+  return [...staticPages, ...trackPages, ...contentPages, ...blogPages]
 }

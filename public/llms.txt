@@ -1,0 +1,107 @@
+# Claude Code Learning Hub
+# https://codewithclaude.net
+
+> A free, open-source learning platform for mastering AI-powered development with Claude Code.
+
+## About This Site
+
+Claude Code Learning Hub teaches developers and researchers how to:
+- Install and configure Claude Code effectively
+- Work in VS Code on real projects
+- Use Python and R for data analysis
+- Master Git & GitHub workflows
+- Build and ship apps & automations
+- Create AI agents with MCP servers
+
+## Target Audience
+
+- Beginners with no coding experience
+- Academic researchers learning to code
+- Data analysts transitioning to Python/R
+- Developers wanting to leverage AI assistance
+- Anyone curious about AI-powered development
+
+## Learning Tracks
+
+### Start Here (Beginners)
+/start-here - Complete setup guide for Mac and Windows
+/start-here/what-is-claude-code - Introduction to Claude Code
+/start-here/installation-setup - Step-by-step installation
+/start-here/vs-code-setup - VS Code configuration
+/start-here/claude-code-for-researchers - Guide for academic researchers
+
+### Data Analysis
+/data-analysis - Python and R for data analysis
+/data-analysis/python-basics - Python fundamentals
+/data-analysis/pandas-intro - Data manipulation with pandas
+/data-analysis/data-visualization - Creating charts and graphs
+/data-analysis/r-basics - R programming basics
+
+### App Builder
+/app-builder - Build web applications
+/app-builder/react-basics - React fundamentals
+/app-builder/nextjs-intro - Next.js framework
+/app-builder/full-stack-app - Full-stack development
+
+### Automation
+/automation - Automate repetitive tasks
+/automation/shell-scripting - Shell scripting basics
+/automation/python-automation - Python automation scripts
+/automation/workflow-optimization - Optimize your workflow
+
+### Git & GitHub
+/git-github - Version control mastery
+/git-github/git-basics - Git fundamentals
+/git-github/github-workflow - GitHub collaboration
+/git-github/branching-merging - Advanced Git techniques
+
+### AI Agents
+/agents - Build AI agents
+/agents/mcp-servers - MCP server development
+/agents/autonomous-agents - Creating autonomous systems
+
+### Advanced Topics
+/advanced-topics - Expert-level techniques
+/advanced-topics/best-practices - Claude Code best practices
+/advanced-topics/custom-configurations - Advanced configuration
+
+## Tools & Resources
+
+/tools/templates - Project starter templates
+/tools/snippets - Reusable code snippets
+/tools/cheatsheets - Quick reference guides
+/tools/mcp-explorer - MCP server directory
+/tools/claude-md-generator - CLAUDE.md file generator
+/tools/slash-commands - Custom slash commands
+
+/resources - External resources and links
+
+## Blog & Updates
+
+/blog - Latest tutorials, announcements, and tips
+
+## Key Features
+
+- Hands-on tutorials with real code examples
+- Platform-specific guides (Mac & Windows)
+- Interactive code blocks with copy functionality
+- Progress tracking for learning modules
+- Dark/light mode support
+- Mobile-responsive design
+
+## Technology Stack
+
+- Next.js 14 (React)
+- TypeScript
+- Tailwind CSS
+- MDX for content
+- Deployed on Render
+
+## Contact
+
+Website: https://codewithclaude.net
+GitHub: https://github.com/anthropics/claude-code
+
+## License
+
+MIT License - Free to use and learn from

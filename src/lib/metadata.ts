@@ -361,7 +361,13 @@ export function generateArticleSchema(
   description: string,
   url: string,
   datePublished?: string,
-  dateModified?: string
+  dateModified?: string,
+  options?: {
+    wordCount?: number
+    readingTime?: number
+    keywords?: string[]
+    author?: string
+  }
 ) {
   return {
     '@context': 'https://schema.org',
@@ -389,7 +395,72 @@ export function generateArticleSchema(
       '@type': 'WebPage',
       '@id': url,
     },
-    image: `${siteConfig.url}${siteConfig.ogImage}`,
+    image: {
+      '@type': 'ImageObject',
+      url: `${siteConfig.url}/og-image.png`,
+      width: 1200,
+      height: 630,
+    },
+    inLanguage: 'en-US',
+    ...(options?.wordCount && { wordCount: options.wordCount }),
+    ...(options?.readingTime && { timeRequired: `PT${options.readingTime}M` }),
+    ...(options?.keywords && { keywords: options.keywords.join(', ') }),
+  }
+}
+
+// Video schema for future video content
+export function generateVideoSchema(
+  name: string,
+  description: string,
+  thumbnailUrl: string,
+  uploadDate: string,
+  duration: string,
+  contentUrl?: string,
+  embedUrl?: string
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'VideoObject',
+    name,
+    description,
+    thumbnailUrl,
+    uploadDate,
+    duration,
+    ...(contentUrl && { contentUrl }),
+    ...(embedUrl && { embedUrl }),
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteConfig.url}/logo.png`,
+      },
+    },
+  }
+}
+
+// Person schema for author pages
+export function generatePersonSchema(
+  name: string,
+  url: string,
+  image?: string,
+  description?: string,
+  sameAs?: string[]
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name,
+    url,
+    ...(image && { image }),
+    ...(description && { description }),
+    ...(sameAs && { sameAs }),
+    worksFor: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
   }
 }
 
@@ -471,5 +542,73 @@ export function generateFAQSchema(faqs: { question: string; answer: string }[]) 
         text: faq.answer,
       },
     })),
+  }
+}
+
+export function generateLearningResourceSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'LearningResource',
+    name: siteConfig.name,
+    description: siteConfig.description,
+    url: siteConfig.url,
+    provider: {
+      '@type': 'Organization',
+      name: 'Claude Code Learning Hub',
+      url: siteConfig.url,
+    },
+    educationalLevel: 'Beginner to Advanced',
+    learningResourceType: ['Tutorial', 'Guide', 'Course'],
+    teaches: [
+      'Claude Code',
+      'VS Code',
+      'Git',
+      'GitHub',
+      'Python',
+      'R',
+      'Data Analysis',
+      'Web Development',
+      'Automation',
+      'AI Agents',
+    ],
+    inLanguage: 'en-US',
+    isAccessibleForFree: true,
+    license: 'https://opensource.org/licenses/MIT',
+    audience: {
+      '@type': 'EducationalAudience',
+      educationalRole: ['student', 'researcher', 'developer'],
+    },
+  }
+}
+
+export function generateSoftwareApplicationSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Claude Code',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: ['Windows', 'macOS', 'Linux'],
+    description:
+      'AI-powered coding assistant that helps you write, debug, and understand code directly in your terminal or IDE.',
+    url: 'https://docs.claude.com/en/docs/claude-code/overview',
+    author: {
+      '@type': 'Organization',
+      name: 'Anthropic',
+      url: 'https://anthropic.com',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      description: 'Free to use with Claude subscription',
+    },
+    featureList: [
+      'Code generation',
+      'Code debugging',
+      'Code explanation',
+      'File system access',
+      'Git integration',
+      'Multi-language support',
+    ],
   }
 }

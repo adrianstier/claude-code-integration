@@ -108,6 +108,14 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <Link
+                  href="/blog"
+                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
+                >
+                  Blog & Updates
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/git-github"
                   className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
                 >

@@ -10,6 +10,9 @@ import {
   getBaseMetadata,
   generateWebsiteSchema,
   generateOrganizationSchema,
+  generateLearningResourceSchema,
+  generateSoftwareApplicationSchema,
+  siteConfig,
 } from '@/lib/metadata'
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
@@ -56,6 +59,8 @@ export default function RootLayout({
   // Generate JSON-LD structured data for the entire site
   const websiteSchema = generateWebsiteSchema()
   const organizationSchema = generateOrganizationSchema()
+  const learningResourceSchema = generateLearningResourceSchema()
+  const softwareApplicationSchema = generateSoftwareApplicationSchema()
 
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
@@ -73,6 +78,18 @@ export default function RootLayout({
             __html: JSON.stringify(organizationSchema),
           }}
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(learningResourceSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(softwareApplicationSchema),
+          }}
+        />
 
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -85,6 +102,17 @@ export default function RootLayout({
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+        {/* RSS Feed */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${siteConfig.name} RSS Feed`}
+          href={`${siteConfig.url}/blog/feed.xml`}
+        />
+
+        {/* Preload critical assets */}
+        <link rel="preload" as="image" href="/og-image.png" />
 
         {/* Google Analytics */}
         {GA_MEASUREMENT_ID && (

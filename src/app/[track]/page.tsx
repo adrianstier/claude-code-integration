@@ -24,9 +24,103 @@ import {
   getTrackPageMetadata,
   generateBreadcrumbSchema,
   generateCourseSchema,
+  generateFAQSchema,
   siteConfig,
   trackMetadata as trackSeoMetadata,
 } from '@/lib/metadata'
+
+// Track-specific FAQs for rich snippets
+const trackFaqs: Record<string, { question: string; answer: string }[]> = {
+  'start-here': [
+    {
+      question: 'How long does it take to set up Claude Code?',
+      answer:
+        'Setting up Claude Code typically takes 15-30 minutes. Our guide walks you through installing Node.js, VS Code, and Claude Code itself with step-by-step instructions for both Mac and Windows.',
+    },
+    {
+      question: 'Do I need to know how to code to use Claude Code?',
+      answer:
+        'No prior coding experience is required. Claude Code helps you write and understand code, making it an excellent tool for beginners learning to program.',
+    },
+    {
+      question: 'Is Claude Code free to use?',
+      answer:
+        'Claude Code requires a Claude subscription (Pro, Team, or Enterprise). Check the Anthropic website for current pricing. This learning hub is completely free.',
+    },
+  ],
+  'data-analysis': [
+    {
+      question: 'Should I learn Python or R for data analysis?',
+      answer:
+        'Both are excellent choices. Python is more versatile and widely used in industry, while R excels in statistical analysis and academic research. Our tutorials cover both.',
+    },
+    {
+      question: 'Can Claude Code help with statistical analysis?',
+      answer:
+        'Yes, Claude Code can help you write statistical analysis code, explain statistical concepts, debug data analysis scripts, and create visualizations in Python or R.',
+    },
+  ],
+  'git-github': [
+    {
+      question: 'What is the difference between Git and GitHub?',
+      answer:
+        'Git is a version control system that tracks changes in your code locally. GitHub is a cloud platform that hosts Git repositories and enables collaboration with others.',
+    },
+    {
+      question: 'Do I need to know command line to use Git?',
+      answer:
+        'While command line Git is powerful, you can also use VS Code integrated Git tools or GitHub Desktop. Our tutorials cover both approaches for beginners.',
+    },
+  ],
+  'app-builder': [
+    {
+      question: 'What frameworks does the App Builder track cover?',
+      answer:
+        'We cover modern web development including React, Next.js, and full-stack development. You will learn to build real web applications with Claude Code as your coding partner.',
+    },
+    {
+      question: 'Can I build mobile apps with Claude Code?',
+      answer:
+        'Yes, you can use Claude Code to help build mobile apps with frameworks like React Native. While our current focus is web apps, the skills transfer to mobile development.',
+    },
+  ],
+  automation: [
+    {
+      question: 'What tasks can I automate with Claude Code?',
+      answer:
+        'You can automate file operations, data processing, API interactions, report generation, email sending, web scraping, and many other repetitive tasks using Python or shell scripts.',
+    },
+    {
+      question: 'Is automation safe for production use?',
+      answer:
+        'Yes, but always test thoroughly and implement proper error handling. Our tutorials cover best practices for building reliable automation scripts.',
+    },
+  ],
+  agents: [
+    {
+      question: 'What are MCP servers?',
+      answer:
+        'MCP (Model Context Protocol) servers extend Claude capabilities by connecting it to external tools and data sources, enabling more powerful AI agent behaviors.',
+    },
+    {
+      question: 'Do I need advanced coding skills to build AI agents?',
+      answer:
+        'Basic programming knowledge helps, but our tutorials start from fundamentals. Claude Code assists with the complex parts, making agent development accessible.',
+    },
+  ],
+  'advanced-topics': [
+    {
+      question: 'What are Claude Code best practices?',
+      answer:
+        'Best practices include using CLAUDE.md files, writing clear prompts, understanding context limits, structuring projects well, and leveraging slash commands and hooks.',
+    },
+    {
+      question: 'How do I customize Claude Code for my workflow?',
+      answer:
+        'You can customize Claude Code through CLAUDE.md project files, global settings, custom slash commands, hooks, and MCP server configurations.',
+    },
+  ],
+}
 
 interface TrackPageProps {
   params: {
@@ -121,6 +215,10 @@ export default async function TrackPage({ params }: TrackPageProps) {
     }))
   )
 
+  // Generate FAQ schema if FAQs exist for this track
+  const faqs = trackFaqs[track] || []
+  const faqSchema = faqs.length > 0 ? generateFAQSchema(faqs) : null
+
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -136,6 +234,14 @@ export default async function TrackPage({ params }: TrackPageProps) {
           __html: JSON.stringify(courseSchema),
         }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema),
+          }}
+        />
+      )}
 
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 import { getContentBySlug, getAllContent } from '@/lib/mdx'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import Image from 'next/image'
 import CodeBlock from '@/components/CodeBlock'
 import Card from '@/components/Card'
 import Link from 'next/link'
@@ -23,11 +24,13 @@ import {
   FileNode,
   Kbd,
 } from '@/components/mdx'
-import { Clock, BookOpen, Monitor, ChevronRight } from 'lucide-react'
+import { Clock, BookOpen, Monitor, ChevronRight, Calendar } from 'lucide-react'
+import { formatDate, getWordCount } from '@/lib/utils'
 import {
   getContentPageMetadata,
   generateArticleSchema,
   generateBreadcrumbSchema,
+  generateHowToSchema,
   siteConfig,
   trackMetadata as trackSeoMetadata,
 } from '@/lib/metadata'
@@ -98,6 +101,35 @@ const components = {
     }
     return <code className={className}>{children}</code>
   },
+  // Optimized image component for MDX
+  img: ({ src, alt, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
+    if (!src) return null
+    // For external images, use regular img tag
+    if (src.startsWith('http')) {
+      return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={src}
+          alt={alt || 'Article image'}
+          loading="lazy"
+          className="rounded-lg my-4"
+          {...props}
+        />
+      )
+    }
+    // For local images, use Next.js Image
+    return (
+      <Image
+        src={src}
+        alt={alt || 'Article image'}
+        width={800}
+        height={450}
+        className="rounded-lg my-4"
+        loading="lazy"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 728px"
+      />
+    )
+  },
 }
 
 export async function generateStaticParams() {
@@ -149,7 +181,7 @@ export default async function ContentPage({ params }: PageProps) {
     notFound()
   }
 
-  const { frontmatter, content: mdxContent, readingTime } = content
+  const { frontmatter, content: mdxContent, readingTime, lastModified } = content
   const { previous, next } = getAdjacentContent(track, slug)
 
   const PlatformIcon = frontmatter.platform === 'mac' ? AppleIcon : Monitor
@@ -165,12 +197,40 @@ export default async function ContentPage({ params }: PageProps) {
     { name: frontmatter.title, url: `${siteConfig.url}/${track}/${slug}` },
   ])
 
-  // Generate article schema for SEO and AI recognition
+  // Calculate word count for enhanced schema
+  const wordCount = getWordCount(mdxContent)
+
+  // Get keywords from track metadata
+  const trackKeywords = trackSeoMetadata[track]?.keywords || []
+
+  // Generate article schema for SEO and AI recognition with enhanced properties
   const articleSchema = generateArticleSchema(
     frontmatter.title,
     frontmatter.description || '',
-    `${siteConfig.url}/${track}/${slug}`
+    `${siteConfig.url}/${track}/${slug}`,
+    lastModified,
+    lastModified,
+    {
+      wordCount,
+      readingTime,
+      keywords: trackKeywords,
+    }
   )
+
+  // Generate HowTo schema for tutorial pages (start-here, data-analysis tracks)
+  const isTutorial = ['start-here', 'data-analysis', 'app-builder', 'automation', 'git-github'].includes(track)
+  const howToSchema = isTutorial
+    ? generateHowToSchema(
+        `How to ${frontmatter.title}`,
+        frontmatter.description || `Learn ${frontmatter.title} with step-by-step guidance`,
+        [
+          { name: 'Read the guide', text: 'Follow along with the comprehensive tutorial content' },
+          { name: 'Practice with examples', text: 'Try the code examples and exercises provided' },
+          { name: 'Apply your knowledge', text: 'Use what you learned in your own projects' },
+        ],
+        frontmatter.duration || `PT${readingTime}M`
+      )
+    : null
 
   return (
     <>
@@ -187,6 +247,14 @@ export default async function ContentPage({ params }: PageProps) {
           __html: JSON.stringify(articleSchema),
         }}
       />
+      {howToSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(howToSchema),
+          }}
+        />
+      )}
 
       <ReadingProgress />
 
@@ -239,6 +307,12 @@ export default async function ContentPage({ params }: PageProps) {
                   <BookOpen className="h-4 w-4" />
                   <span>{readingTime} min read</span>
                 </div>
+                {lastModified && (
+                  <div className="flex items-center gap-1.5">
+                    <Calendar className="h-4 w-4" />
+                    <span>Updated {formatDate(lastModified)}</span>
+                  </div>
+                )}
                 {frontmatter.platform && (
                   <div className="flex items-center gap-1.5 rounded-full bg-claude-100 dark:bg-claude-900/40 px-3 py-1 text-claude-700 dark:text-claude-300">
                     <PlatformIcon className="h-4 w-4" />

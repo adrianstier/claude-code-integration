@@ -33,11 +33,27 @@ export function slugify(text: string): string {
 }
 
 /**
+ * Get word count from text (strips markdown/code)
+ */
+export function getWordCount(text: string): number {
+  // Remove code blocks
+  const withoutCode = text.replace(/```[\s\S]*?```/g, '')
+  // Remove inline code
+  const withoutInlineCode = withoutCode.replace(/`[^`]+`/g, '')
+  // Remove markdown links but keep text
+  const withoutLinks = withoutInlineCode.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+  // Remove HTML tags
+  const withoutHtml = withoutLinks.replace(/<[^>]+>/g, '')
+  // Count words
+  return withoutHtml.split(/\s+/).filter((word) => word.length > 0).length
+}
+
+/**
  * Get reading time estimate in minutes
  */
 export function getReadingTime(text: string): number {
   const wordsPerMinute = 200
-  const wordCount = text.split(/\s+/).length
+  const wordCount = getWordCount(text)
   return Math.ceil(wordCount / wordsPerMinute)
 }
 

@@ -11,6 +11,7 @@ export interface Frontmatter {
   duration?: string
   prerequisites?: string[]
   platform?: 'mac' | 'windows' | 'both'
+  lastUpdated?: string
 }
 
 export interface ContentFile {
@@ -18,6 +19,7 @@ export interface ContentFile {
   frontmatter: Frontmatter
   content: string
   readingTime: number
+  lastModified: string
 }
 
 const contentDirectory = path.join(process.cwd(), 'content')
@@ -59,23 +61,27 @@ export function getContentBySlug(
       }
       const fileContents = fs.readFileSync(mdPath, 'utf8')
       const { data, content } = matter(fileContents)
+      const stats = fs.statSync(mdPath)
 
       return {
         slug,
         frontmatter: data as Frontmatter,
         content,
         readingTime: getReadingTime(content),
+        lastModified: (data as Frontmatter).lastUpdated || stats.mtime.toISOString(),
       }
     }
 
     const fileContents = fs.readFileSync(filePath, 'utf8')
     const { data, content } = matter(fileContents)
+    const stats = fs.statSync(filePath)
 
     return {
       slug,
       frontmatter: data as Frontmatter,
       content,
       readingTime: getReadingTime(content),
+      lastModified: (data as Frontmatter).lastUpdated || stats.mtime.toISOString(),
     }
   } catch (error) {
     console.error(`Error reading file ${directory}/${slug}:`, error)
