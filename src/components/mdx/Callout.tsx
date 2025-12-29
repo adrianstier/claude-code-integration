@@ -29,56 +29,64 @@ const calloutConfig: Record<
     bgColor: string
     borderColor: string
     titleColor: string
+    accentColor: string
   }
 > = {
   info: {
     icon: Info,
-    iconColor: 'text-blue-500 dark:text-blue-400',
-    bgColor: 'bg-blue-50 dark:bg-blue-950/50',
-    borderColor: 'border-blue-200 dark:border-blue-800',
-    titleColor: 'text-blue-900 dark:text-blue-100',
+    iconColor: 'text-cobalt-600 dark:text-cobalt-400',
+    bgColor: 'bg-cobalt-50/50 dark:bg-cobalt-950/30',
+    borderColor: 'border-l-cobalt-500',
+    titleColor: 'text-cobalt-900 dark:text-cobalt-100',
+    accentColor: 'bg-cobalt-500',
   },
   success: {
     icon: CheckCircle2,
-    iconColor: 'text-green-500 dark:text-green-400',
-    bgColor: 'bg-green-50 dark:bg-green-950/50',
-    borderColor: 'border-green-200 dark:border-green-800',
-    titleColor: 'text-green-900 dark:text-green-100',
+    iconColor: 'text-sage-600 dark:text-sage-400',
+    bgColor: 'bg-sage-50/50 dark:bg-sage-950/30',
+    borderColor: 'border-l-sage-500',
+    titleColor: 'text-sage-900 dark:text-sage-100',
+    accentColor: 'bg-sage-500',
   },
   warning: {
     icon: AlertTriangle,
-    iconColor: 'text-amber-500 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-950/50',
-    borderColor: 'border-amber-200 dark:border-amber-800',
+    iconColor: 'text-amber-600 dark:text-amber-400',
+    bgColor: 'bg-amber-50/50 dark:bg-amber-950/30',
+    borderColor: 'border-l-amber-500',
     titleColor: 'text-amber-900 dark:text-amber-100',
+    accentColor: 'bg-amber-500',
   },
   error: {
     icon: AlertCircle,
-    iconColor: 'text-red-500 dark:text-red-400',
-    bgColor: 'bg-red-50 dark:bg-red-950/50',
-    borderColor: 'border-red-200 dark:border-red-800',
+    iconColor: 'text-red-600 dark:text-red-400',
+    bgColor: 'bg-red-50/50 dark:bg-red-950/30',
+    borderColor: 'border-l-red-500',
     titleColor: 'text-red-900 dark:text-red-100',
+    accentColor: 'bg-red-500',
   },
   tip: {
     icon: Lightbulb,
-    iconColor: 'text-claude-500 dark:text-claude-400',
-    bgColor: 'bg-claude-50 dark:bg-claude-950/50',
-    borderColor: 'border-claude-200 dark:border-claude-800',
-    titleColor: 'text-claude-900 dark:text-claude-100',
+    iconColor: 'text-primary-600 dark:text-primary-400',
+    bgColor: 'bg-primary-50/50 dark:bg-primary-950/30',
+    borderColor: 'border-l-primary-500',
+    titleColor: 'text-primary-900 dark:text-primary-100',
+    accentColor: 'bg-primary-500',
   },
   terminal: {
     icon: Terminal,
-    iconColor: 'text-gray-500 dark:text-gray-400',
-    bgColor: 'bg-gray-50 dark:bg-gray-900/50',
-    borderColor: 'border-gray-200 dark:border-gray-700',
-    titleColor: 'text-gray-900 dark:text-gray-100',
+    iconColor: 'text-ink-600 dark:text-ink-300',
+    bgColor: 'bg-ink-50/50 dark:bg-ink-900/50',
+    borderColor: 'border-l-ink-500',
+    titleColor: 'text-ink-900 dark:text-ink-100',
+    accentColor: 'bg-ink-500',
   },
   note: {
     icon: Zap,
-    iconColor: 'text-purple-500 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-950/50',
-    borderColor: 'border-purple-200 dark:border-purple-800',
-    titleColor: 'text-purple-900 dark:text-purple-100',
+    iconColor: 'text-plum-600 dark:text-plum-400',
+    bgColor: 'bg-plum-50/50 dark:bg-plum-950/30',
+    borderColor: 'border-l-plum-500',
+    titleColor: 'text-plum-900 dark:text-plum-100',
+    accentColor: 'bg-plum-500',
   },
 }
 
@@ -105,24 +113,34 @@ export default function Callout({
   return (
     <div
       className={cn(
-        'my-6 rounded-xl border-l-4 p-4',
+        'my-6 relative overflow-hidden rounded-xl border-l-4 p-5',
         config.bgColor,
         config.borderColor,
+        'border border-ink-100 dark:border-ink-800 border-l-4',
         className
       )}
       role="alert"
     >
-      <div className="flex items-start gap-3">
-        <div className={cn('mt-0.5 flex-shrink-0', config.iconColor)}>
-          <Icon className="h-5 w-5" />
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/50 dark:to-ink-950/50 pointer-events-none" />
+
+      <div className="relative flex items-start gap-4">
+        {/* Icon container */}
+        <div className={cn(
+          'flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg',
+          config.bgColor
+        )}>
+          <Icon className={cn('h-5 w-5', config.iconColor)} />
         </div>
+
+        {/* Content */}
         <div className="flex-1 min-w-0">
           {displayTitle && (
-            <p className={cn('font-semibold mb-1', config.titleColor)}>
+            <p className={cn('font-display font-semibold text-sm mb-1.5', config.titleColor)}>
               {displayTitle}
             </p>
           )}
-          <div className="text-sm text-gray-700 dark:text-gray-300 [&>p]:mb-2 [&>p:last-child]:mb-0">
+          <div className="text-sm text-ink-700 dark:text-ink-200 leading-relaxed [&>p]:mb-2 [&>p:last-child]:mb-0 [&>ul]:mt-2 [&>ol]:mt-2">
             {children}
           </div>
         </div>

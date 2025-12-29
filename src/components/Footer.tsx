@@ -1,209 +1,181 @@
 import Link from 'next/link'
-import { Rocket, BarChart3, Hammer, Zap, Bot } from 'lucide-react'
+import { Rocket, BarChart3, Hammer, Zap, Terminal, Github, BookOpen, ExternalLink } from 'lucide-react'
 import NewsletterSignup from './NewsletterSignup'
+
+const footerLinks = {
+  learn: [
+    { name: 'Start Here', href: '/start-here', icon: Rocket },
+    { name: 'Data Analysis', href: '/data-analysis', icon: BarChart3 },
+    { name: 'App Builder', href: '/app-builder', icon: Hammer },
+    { name: 'Automation', href: '/automation', icon: Zap },
+  ],
+  resources: [
+    { name: 'Blog & Updates', href: '/blog' },
+    { name: 'Git & GitHub', href: '/git-github' },
+    { name: 'Claude Code Docs', href: 'https://docs.claude.com/en/docs/claude-code/overview', external: true },
+    { name: 'VS Code Docs', href: 'https://code.visualstudio.com/docs', external: true },
+  ],
+  community: [
+    { name: 'GitHub', href: 'https://github.com/anthropics/claude-code', external: true },
+    { name: 'Support', href: 'https://support.anthropic.com', external: true },
+    { name: 'Anthropic', href: 'https://www.anthropic.com', external: true },
+  ],
+}
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-700 bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900">
+    <footer className="relative border-t border-ink-100 dark:border-ink-800 bg-paper-50 dark:bg-ink-950">
       {/* Newsletter Section */}
       <div className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
         <NewsletterSignup variant="hero" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        {/* Main Footer Content */}
+        {/* Main Footer Grid */}
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 shadow-md">
-                <Bot className="h-6 w-6 text-white" />
+            <Link href="/" className="group flex items-center gap-3 mb-5">
+              <div className="relative flex h-10 w-10 items-center justify-center">
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-lg" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-ink-900 dark:bg-paper-100 shadow-md">
+                  <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
+                </div>
               </div>
               <div>
-                <span className="block text-lg font-bold bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
+                <span className="block font-display text-lg font-bold text-ink-900 dark:text-paper-50 tracking-tight">
                   Claude Code
                 </span>
-                <span className="block text-xs text-gray-500 dark:text-gray-400 font-medium">Learning Hub</span>
+                <span className="block text-xs font-medium text-ink-500 dark:text-ink-400 tracking-wide uppercase">
+                  Learning Hub
+                </span>
               </div>
-            </div>
-            <p className="mt-4 text-sm leading-6 text-gray-600 dark:text-gray-400 max-w-md">
+            </Link>
+
+            <p className="text-sm leading-relaxed text-ink-600 dark:text-ink-300 max-w-sm mb-6">
               Master AI-powered development with Claude Code. Learn to build real projects with VS Code, Git/GitHub, Python, and R.
             </p>
-            <div className="mt-6 flex gap-4">
+
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
               <a
                 href="https://github.com/anthropics/claude-code"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-claude-100 dark:hover:bg-claude-900/50 hover:text-claude-600 dark:hover:text-claude-400 hover:scale-110"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-all hover:bg-ink-200 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50 hover:scale-105"
                 aria-label="GitHub"
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                </svg>
+                <Github className="h-5 w-5" />
               </a>
               <a
                 href="https://docs.claude.com/en/docs/claude-code/overview"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-all hover:bg-claude-100 dark:hover:bg-claude-900/50 hover:text-claude-600 dark:hover:text-claude-400 hover:scale-110"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-all hover:bg-ink-200 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50 hover:scale-105"
                 aria-label="Documentation"
               >
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
+                <BookOpen className="h-5 w-5" />
               </a>
             </div>
           </div>
 
           {/* Learn Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-900 dark:text-paper-50 mb-4">
               Learn
             </h3>
             <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/start-here"
-                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  <Rocket className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  Start Here
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/data-analysis"
-                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  <BarChart3 className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  Data Analysis
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/app-builder"
-                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  <Hammer className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  App Builder
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/automation"
-                  className="group inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  <Zap className="mr-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  Automation
-                </Link>
-              </li>
+              {footerLinks.learn.map((link) => {
+                const Icon = link.icon
+                return (
+                  <li key={link.name}>
+                    <Link
+                      href={link.href}
+                      className="group inline-flex items-center gap-2 text-sm text-ink-600 dark:text-ink-300 transition-colors hover:text-primary-600 dark:hover:text-primary-400"
+                    >
+                      <Icon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
 
           {/* Resources Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-900 dark:text-paper-50 mb-4">
               Resources
             </h3>
             <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/blog"
-                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  Blog & Updates
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/git-github"
-                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  Git & GitHub
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="https://docs.claude.com/en/docs/claude-code/overview"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  Claude Code Docs
-                  <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://code.visualstudio.com/docs"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  VS Code Docs
-                  <svg className="ml-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </li>
+              {footerLinks.resources.map((link) => (
+                <li key={link.name}>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group inline-flex items-center gap-1 text-sm text-ink-600 dark:text-ink-300 transition-colors hover:text-primary-600 dark:hover:text-primary-400"
+                    >
+                      <span>{link.name}</span>
+                      <ExternalLink className="h-3 w-3 opacity-50" />
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-sm text-ink-600 dark:text-ink-300 transition-colors hover:text-primary-600 dark:hover:text-primary-400"
+                    >
+                      {link.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Community Section */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-900 dark:text-gray-100 mb-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-ink-900 dark:text-paper-50 mb-4">
               Community
             </h3>
             <ul className="space-y-3">
-              <li>
-                <a
-                  href="https://github.com/anthropics/claude-code"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  GitHub
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://support.anthropic.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  Support
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.anthropic.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-gray-600 dark:text-gray-400 transition-colors hover:text-claude-600 dark:hover:text-claude-400"
-                >
-                  Anthropic
-                </a>
-              </li>
+              {footerLinks.community.map((link) => (
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-1 text-sm text-ink-600 dark:text-ink-300 transition-colors hover:text-primary-600 dark:hover:text-primary-400"
+                  >
+                    <span>{link.name}</span>
+                    <ExternalLink className="h-3 w-3 opacity-50" />
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-12 pt-8 border-t border-ink-100 dark:border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-ink-500 dark:text-ink-400">
             &copy; {new Date().getFullYear()} Claude Code Learning.{' '}
-            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer" className="text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300">MIT License</a>
+            <a
+              href="https://opensource.org/licenses/MIT"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
+            >
+              MIT License
+            </a>
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-ink-400 dark:text-ink-500">
             Built with{' '}
             <a
               href="https://docs.claude.com/en/docs/claude-code/overview"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300"
+              className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
             >
               Claude Code
             </a>

@@ -1,23 +1,42 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
-import { Rocket, BookOpen, Bot, ArrowRight, Menu, X, Wrench, GraduationCap } from 'lucide-react'
+import {
+  Rocket,
+  BookOpen,
+  Wrench,
+  GraduationCap,
+  Menu,
+  X,
+  ChevronRight,
+  Sparkles,
+  Terminal
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import SearchModal from './SearchModal'
 import ThemeToggle from './ThemeToggle'
 
-const navigationItems: Array<{ name: string; href: string; icon: LucideIcon }> = [
-  { name: 'Start Here', href: '/start-here', icon: Rocket },
-  { name: 'Learning Tracks', href: '/#tracks', icon: GraduationCap },
-  { name: 'Tools', href: '/tools/templates', icon: Wrench },
-  { name: 'Resources', href: '/resources', icon: BookOpen },
+const navigationItems: Array<{ name: string; href: string; icon: LucideIcon; description?: string }> = [
+  { name: 'Start Here', href: '/start-here', icon: Rocket, description: 'Begin your journey' },
+  { name: 'Learning Tracks', href: '/#tracks', icon: GraduationCap, description: 'Structured paths' },
+  { name: 'Tools', href: '/tools/templates', icon: Wrench, description: 'Boost productivity' },
+  { name: 'Resources', href: '/resources', icon: BookOpen, description: 'Guides & references' },
 ]
 
 export default function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/'
@@ -26,26 +45,38 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
-      {/* Single SearchModal instance for the entire navigation */}
+    <nav
+      className={`sticky top-0 z-sticky transition-all duration-300 ${
+        scrolled
+          ? 'bg-paper-50/95 dark:bg-ink-950/95 backdrop-blur-xl shadow-nav border-b border-ink-100 dark:border-ink-800'
+          : 'bg-transparent'
+      }`}
+    >
       <SearchModal />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-18 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-claude-600 to-orange-500 shadow-md transition-transform group-hover:scale-110">
-              <Bot className="h-6 w-6 text-white" />
+          <Link href="/" className="group flex items-center gap-3 py-2">
+            <div className="relative flex h-10 w-10 items-center justify-center">
+              {/* Glow effect */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-lg transition-all group-hover:opacity-40 group-hover:blur-xl" />
+              {/* Icon container */}
+              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ink-900 to-ink-800 dark:from-paper-100 dark:to-paper-200 shadow-md transition-transform group-hover:scale-105">
+                <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
+              </div>
             </div>
             <div className="hidden sm:block">
-              <span className="text-lg font-bold bg-gradient-to-r from-claude-600 to-orange-500 bg-clip-text text-transparent">
+              <span className="font-display text-lg font-bold text-ink-900 dark:text-paper-50 tracking-tight">
                 Claude Code
               </span>
-              <span className="block text-xs text-gray-500 font-medium">Learning Hub</span>
+              <span className="block text-xs font-medium text-ink-500 dark:text-ink-400 tracking-wide uppercase">
+                Learning Hub
+              </span>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:gap-2">
+          <div className="hidden lg:flex lg:items-center lg:gap-1">
             {navigationItems.map((item) => {
               const active = isActive(item.href)
               const Icon = item.icon
@@ -53,59 +84,64 @@ export default function Navigation() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group relative inline-flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
+                  className={`group relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
                     active
-                      ? 'bg-claude-50 dark:bg-claude-900/30 text-claude-700 dark:text-claude-300 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-claude-600 dark:hover:text-claude-400'
+                      ? 'bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 shadow-sm'
+                      : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 hover:text-ink-900 dark:hover:text-paper-50'
                   }`}
                 >
-                  <Icon className="h-4 w-4 transition-transform group-hover:scale-110" />
+                  <Icon className={`h-4 w-4 transition-transform duration-200 ${!active && 'group-hover:scale-110'}`} />
                   <span>{item.name}</span>
-                  {active && (
-                    <div className="absolute bottom-0 left-1/2 h-0.5 w-12 -translate-x-1/2 rounded-full bg-gradient-to-r from-claude-600 to-orange-500"></div>
-                  )}
                 </Link>
               )
             })}
           </div>
 
-          {/* CTA Button (Desktop) */}
-          <div className="hidden lg:flex lg:items-center lg:gap-4">
+          {/* Right section */}
+          <div className="hidden lg:flex lg:items-center lg:gap-3">
+            {/* Researcher badge */}
             <Link
               href="/start-here/claude-code-for-researchers"
-              className="group relative inline-flex items-center gap-1.5 text-sm font-semibold text-claude-600 dark:text-claude-400 hover:text-claude-700 dark:hover:text-claude-300 transition-colors"
+              className="group flex items-center gap-2 rounded-full bg-primary-50 dark:bg-primary-950/50 px-3.5 py-1.5 text-sm font-medium text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-200 dark:ring-primary-800 transition-all hover:bg-primary-100 dark:hover:bg-primary-900/50 hover:ring-primary-300 dark:hover:ring-primary-700"
             >
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-claude-600"></span>
-              </span>
+              <Sparkles className="h-3.5 w-3.5 animate-pulse-soft" />
               <span>For Researchers</span>
             </Link>
+
+            {/* External docs link */}
             <a
               href="https://docs.claude.com/en/docs/claude-code/overview"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-claude-600 dark:hover:text-claude-400 transition-colors"
+              className="text-sm font-medium text-ink-500 dark:text-ink-400 hover:text-ink-900 dark:hover:text-paper-50 transition-colors"
             >
               Docs
             </a>
+
+            {/* Theme toggle */}
             <ThemeToggle />
+
+            {/* CTA Button */}
             <Link
               href="/start-here"
-              className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:shadow-lg hover:scale-105"
+              className="group relative inline-flex items-center gap-2 rounded-xl bg-ink-900 dark:bg-paper-50 px-5 py-2.5 text-sm font-semibold text-paper-50 dark:text-ink-900 shadow-md transition-all hover:shadow-lg active:scale-[0.98]"
             >
               <span>Get Started</span>
-              <ArrowRight className="h-4 w-4" />
+              <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              {/* Gradient border glow on hover */}
+              <div className="absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100">
+                <div className="absolute inset-[-1px] rounded-xl bg-gradient-to-r from-primary-500 to-amber-500 opacity-50 blur-sm" />
+              </div>
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex items-center gap-2 lg:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
             <ThemeToggle />
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex items-center justify-center rounded-lg p-2.5 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="inline-flex items-center justify-center rounded-xl p-2.5 text-ink-600 dark:text-ink-300 transition-colors hover:bg-ink-100 dark:hover:bg-ink-800"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
@@ -120,9 +156,13 @@ export default function Navigation() {
       </div>
 
       {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <div className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 lg:hidden">
-          <div className="space-y-1 px-4 pb-4 pt-2">
+      <div
+        className={`lg:hidden transition-all duration-300 ease-snappy overflow-hidden ${
+          mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="border-t border-ink-100 dark:border-ink-800 bg-paper-50 dark:bg-ink-950 px-4 pb-6 pt-4">
+          <div className="space-y-1">
             {navigationItems.map((item) => {
               const active = isActive(item.href)
               const Icon = item.icon
@@ -131,46 +171,50 @@ export default function Navigation() {
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-3 rounded-lg px-4 py-3 text-base font-medium transition-all ${
+                  className={`flex items-center gap-4 rounded-xl px-4 py-3.5 transition-all ${
                     active
-                      ? 'bg-claude-50 dark:bg-claude-900/30 text-claude-700 dark:text-claude-300 shadow-sm'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-claude-600 dark:hover:text-claude-400'
+                      ? 'bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 shadow-sm'
+                      : 'text-ink-700 dark:text-ink-200 hover:bg-ink-100 dark:hover:bg-ink-800'
                   }`}
                 >
-                  <Icon className="h-5 w-5" />
-                  <span>{item.name}</span>
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="font-medium">{item.name}</span>
+                    {item.description && (
+                      <span className={`block text-xs mt-0.5 ${active ? 'text-paper-200 dark:text-ink-600' : 'text-ink-500 dark:text-ink-400'}`}>
+                        {item.description}
+                      </span>
+                    )}
+                  </div>
                   {active && (
-                    <svg className="ml-auto h-5 w-5 text-claude-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
+                    <div className="h-2 w-2 rounded-full bg-primary-500" />
                   )}
                 </Link>
               )
             })}
-            <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
-              <Link
-                href="/start-here/claude-code-for-researchers"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-4 py-3 text-base font-semibold text-claude-600 dark:text-claude-400 bg-claude-50 dark:bg-claude-900/30 border border-claude-200 dark:border-claude-700 hover:bg-claude-100 dark:hover:bg-claude-900/50 transition-all"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-claude-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-claude-600"></span>
-                </span>
-                <span>For Researchers</span>
-              </Link>
-              <Link
-                href="/start-here"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-claude-600 to-orange-500 px-4 py-3 text-base font-semibold text-white shadow-md"
-              >
-                <span>Get Started</span>
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </div>
+          </div>
+
+          {/* Mobile CTAs */}
+          <div className="mt-6 space-y-3 border-t border-ink-100 dark:border-ink-800 pt-6">
+            <Link
+              href="/start-here/claude-code-for-researchers"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary-50 dark:bg-primary-950/50 px-4 py-3 text-sm font-semibold text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-200 dark:ring-primary-800"
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>For Researchers</span>
+            </Link>
+            <Link
+              href="/start-here"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-xl bg-ink-900 dark:bg-paper-50 px-4 py-3 text-sm font-semibold text-paper-50 dark:text-ink-900 shadow-md"
+            >
+              <span>Get Started</span>
+              <ChevronRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   )
 }

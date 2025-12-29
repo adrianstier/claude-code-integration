@@ -20,20 +20,25 @@ export function Steps({ children, className }: StepsProps) {
 
   return (
     <div className={cn('my-8', className)}>
-      <ol className="relative space-y-8">
+      <ol className="relative space-y-6">
         {steps.map((step, index) => {
           if (!isValidElement(step)) return null
 
           return (
-            <li key={index} className="relative pl-10">
+            <li key={index} className="relative pl-12">
               {/* Connector line */}
               {index < steps.length - 1 && (
-                <div className="absolute left-[15px] top-10 bottom-0 w-0.5 bg-gradient-to-b from-claude-300 to-gray-200 dark:from-claude-700 dark:to-gray-700" />
+                <div className="absolute left-[19px] top-12 bottom-0 w-px bg-gradient-to-b from-primary-300 via-ink-200 to-ink-100 dark:from-primary-700 dark:via-ink-700 dark:to-ink-800" />
               )}
 
               {/* Step number circle */}
-              <div className="absolute left-0 top-0 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-claude-500 to-orange-500 text-sm font-bold text-white shadow-md">
-                {index + 1}
+              <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center">
+                {/* Glow effect */}
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-md" />
+                {/* Circle */}
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ink-900 to-ink-800 dark:from-paper-100 dark:to-paper-200 text-sm font-bold text-paper-50 dark:text-ink-900 shadow-md">
+                  {index + 1}
+                </div>
               </div>
 
               {step}
@@ -48,17 +53,17 @@ export function Steps({ children, className }: StepsProps) {
 export function Step({ title, children, className }: StepProps) {
   return (
     <div className={cn('', className)}>
-      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+      <h4 className="font-display text-lg font-semibold text-ink-900 dark:text-paper-50 mb-3">
         {title}
       </h4>
-      <div className="text-gray-600 dark:text-gray-300 [&>p]:mb-3 [&>p:last-child]:mb-0 [&>ul]:mt-2 [&>ol]:mt-2">
+      <div className="text-ink-600 dark:text-ink-300 leading-relaxed [&>p]:mb-3 [&>p:last-child]:mb-0 [&>ul]:mt-2 [&>ol]:mt-2">
         {children}
       </div>
     </div>
   )
 }
 
-// Alternative numbered list with completion states
+// Checklist components
 interface ChecklistProps {
   children: ReactNode
   className?: string
@@ -83,18 +88,18 @@ export function ChecklistItem({ children, checked = false, className }: Checklis
     <li className={cn('flex items-start gap-3', className)}>
       <div
         className={cn(
-          'mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-md border-2 transition-colors',
+          'mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-200',
           checked
-            ? 'border-green-500 bg-green-500 text-white'
-            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
+            ? 'border-sage-500 bg-sage-500 text-white shadow-sm'
+            : 'border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900'
         )}
       >
-        {checked && <Check className="h-3 w-3" strokeWidth={3} />}
+        {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
       </div>
       <span
         className={cn(
-          'text-gray-700 dark:text-gray-300',
-          checked && 'line-through text-gray-400 dark:text-gray-500'
+          'text-ink-700 dark:text-ink-200 leading-relaxed',
+          checked && 'line-through text-ink-400 dark:text-ink-500'
         )}
       >
         {children}

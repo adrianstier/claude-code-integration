@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Navigation from '@/components/Navigation'
@@ -17,10 +17,28 @@ import {
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
-const inter = Inter({
+// Primary body font - clean, modern, friendly
+const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-plus-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
+})
+
+// Display font for headings - geometric, distinctive
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-space-grotesk',
+  weight: ['500', '600', '700'],
+})
+
+// Monospace font for code - developer-focused
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jetbrains-mono',
+  weight: ['400', '500', '600'],
 })
 
 // Comprehensive SEO metadata
@@ -43,8 +61,8 @@ export const metadata: Metadata = {
 // Viewport configuration for mobile optimization
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f172a' },
+    { media: '(prefers-color-scheme: light)', color: '#fefdfb' },
+    { media: '(prefers-color-scheme: dark)', color: '#22272f' },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -63,7 +81,11 @@ export default function RootLayout({
   const softwareApplicationSchema = generateSoftwareApplicationSchema()
 
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${plusJakarta.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         {/* JSON-LD Structured Data for AI and Search Engines */}
         <script
@@ -132,7 +154,7 @@ export default function RootLayout({
           </>
         )}
       </head>
-      <body className={inter.className}>
+      <body className="font-sans antialiased">
         <ThemeProvider>
           <ProgressProvider>
             <a href="#main-content" className="skip-to-main">
