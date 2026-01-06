@@ -61,6 +61,16 @@ Please help me:
 2. Create a .gitignore
 3. Make my first commit
 4. Push to GitHub`,
+
+  CREATE_SKILL: `Create a custom Claude Code skill for [describe task].
+
+The skill should:
+- Be saved in .claude/commands/[skill-name].md
+- Accept arguments via $ARGUMENTS placeholder
+- Include clear step-by-step instructions
+- Have safety checks for destructive actions
+
+Example usage: /[skill-name] [example args]`,
 } as const
 
 export const LEARNING_PATHS = [

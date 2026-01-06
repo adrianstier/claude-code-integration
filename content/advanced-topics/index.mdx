@@ -13,6 +13,7 @@ Take your Claude Code skills to the next level with advanced techniques, integra
 
 - Pro workflows and optimization strategies
 - CLAUDE.md customization and tool permissions
+- **Custom Skills** - slash commands and automations
 - MCP (Model Context Protocol) integrations
 - Multi-Claude workflows for complex tasks
 - Headless mode and automation patterns
@@ -42,6 +43,18 @@ Learn battle-tested workflows from Anthropic engineers:
 - Multi-Claude parallel verification
 
 [Read Best Practices →](./best-practices)
+
+### Claude Skills - Custom Commands
+
+Master Claude's powerful Skills system for reusable automations:
+
+- Built-in slash commands deep dive
+- Creating project-specific skills
+- User-level skills for personal workflows
+- Advanced skill patterns and templates
+- Real-world skill examples
+
+[Master Skills →](./skills)
 
 ### MCP and Cursor Integration
 
@@ -102,6 +115,22 @@ Use extended thinking for complex tasks:
 - `/clear` - Reset context
 - `#` - Update documentation
 
+### Custom Skills
+
+Create reusable commands in `.claude/commands/`:
+
+```markdown
+# File: .claude/commands/fix-issue.md
+
+Fix GitHub issue #$ARGUMENTS:
+1. Read the issue description
+2. Locate relevant code
+3. Implement the fix
+4. Create commit referencing issue
+```
+
+Then use: `/fix-issue 1234`
+
 ---
 
 ## Next Steps
@@ -109,6 +138,10 @@ Use extended thinking for complex tasks:
 Ready to level up? Start with the Best Practices guide:
 
 [Best Practices Guide →](./best-practices)
+
+Master custom commands and automations:
+
+[Claude Skills →](./skills)
 
 Or explore specific integrations:
 

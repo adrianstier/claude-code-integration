@@ -190,9 +190,9 @@ You: Use the deployment-checker tool and check if we're ready for production
 Claude: [Runs `deployment-checker --help` first to understand usage, then executes with correct flags]
 ```
 
-### Custom Slash Commands
+### Custom Slash Commands (Skills)
 
-Create reusable prompt templates in `.claude/commands/` as Markdown files.
+Create reusable prompt templates in `.claude/commands/` as Markdown files. These are called **Skills** - one of Claude Code's most powerful features.
 
 **Example: `.claude/commands/fix-github-issue.md`**
 
@@ -223,6 +223,10 @@ claude
 - `/optimize-component [file]` - Optimize React component
 - `/add-tests [file]` - Generate comprehensive tests
 - `/document [file]` - Add JSDoc comments
+
+<Callout type="tip" title="Deep Dive: Skills">
+For comprehensive coverage of Skills including advanced patterns, real-world examples, and best practices, see the dedicated [Claude Skills Guide](/advanced-topics/skills).
+</Callout>
 
 ---
 
