@@ -7,106 +7,200 @@ duration: '4-6 hours'
 
 # Data Analysis Track
 
-Master data analysis workflows using Python or R with Claude as your coding partner.
+You've got messy data. Maybe it's a CSV export from your CRM that looks like it was formatted by someone who hates you. Or survey results with inconsistent responses. Or sales numbers spread across 47 Excel files.
 
-<Callout type="tip" title="Choose Your Path">
-Pick Python for general-purpose analysis and machine learning, or R for statistical analysis and academic research. Both paths teach the same core concepts.
+By the end of this track, you'll turn that chaos into insights—and actually understand what you're doing along the way.
+
+<Diagram title="The Data Analysis Journey" type="flowchart" caption="From mess to insights">
+{`flowchart LR
+    A[📁 Raw Data] --> B[🧹 Clean]
+    B --> C[🔍 Explore]
+    C --> D[📊 Visualize]
+    D --> E[🧠 Model]
+    E --> F[📝 Report]
+`}
+</Diagram>
+
+## What Makes This Different
+
+This isn't "learn pandas methods" or "memorize ggplot syntax." You'll work on **real data problems** with Claude as your coding partner.
+
+<Callout type="tip">
+**Claude writes the code. You understand the data.** That's the workflow. You describe what you need, Claude generates it, and you learn by doing.
 </Callout>
 
-## What You'll Learn
+## Python vs R: Pick Your Tool
 
-- Set up reproducible data projects
-- Clean and transform data efficiently
-- Create visualizations and models
-- Version control your analyses with Git
-- Use Claude to write, debug, and explain code
+<Tabs>
+  <TabList>
+    <Tab>Python</Tab>
+    <Tab>R</Tab>
+  </TabList>
+  <TabPanel>
+**Python** is the Swiss Army knife of data analysis.
 
-## Prerequisites
+Best for: Machine learning, web scraping, automation, production systems, general-purpose programming.
 
-- Completed [Start Here](/start-here) setup
-- Basic familiarity with either Python or R (or willingness to learn!)
+You'll use: pandas, matplotlib, seaborn, scikit-learn, Jupyter notebooks.
 
-## Choose Your Language
+**Who chooses Python:**
+- Data scientists in tech companies
+- Anyone doing machine learning
+- People who want one language for everything
+- Developers who also need to build apps
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 not-prose">
-  <a href="/data-analysis/python-intro" className="block p-6 border-2 border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/50 rounded-xl hover:shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all no-underline">
-    <h3 className="text-xl font-bold mb-2 text-blue-900 dark:text-blue-100">Python Track</h3>
-    <p className="text-blue-800 dark:text-blue-200">Learn pandas, matplotlib, and scikit-learn for data analysis</p>
-    <div className="mt-4 text-sm text-blue-600 dark:text-blue-300">Best for: General-purpose analysis, machine learning, web scraping</div>
-  </a>
+[Start Python Track →](/data-analysis/python-intro)
+  </TabPanel>
+  <TabPanel>
+**R** was built by statisticians, for statisticians.
 
-  <a href="/data-analysis/r-intro" className="block p-6 border-2 border-indigo-200 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl hover:shadow-lg hover:border-indigo-400 dark:hover:border-indigo-500 transition-all no-underline">
-    <h3 className="text-xl font-bold mb-2 text-indigo-900 dark:text-indigo-100">R Track</h3>
-    <p className="text-indigo-800 dark:text-indigo-200">Learn tidyverse, ggplot2, and statistical modeling with R</p>
-    <div className="mt-4 text-sm text-indigo-600 dark:text-indigo-300">Best for: Statistical analysis, data visualization, reporting</div>
-  </a>
-</div>
+Best for: Statistical analysis, data visualization, academic research, reporting.
 
-## Track Outline
+You'll use: tidyverse, ggplot2, dplyr, RMarkdown.
 
-Both tracks follow the same structure:
+**Who chooses R:**
+- Researchers and academics
+- Anyone doing serious statistical analysis
+- Data journalists
+- People who love beautiful visualizations
 
-### 1. Project Setup
-- Create a new analysis project
-- Set up virtual environment (Python) or renv (R)
-- Configure VS Code for your language
-- Use CLAUDE.md to guide your session
+[Start R Track →](/data-analysis/r-intro)
+  </TabPanel>
+</Tabs>
 
-### 2. Data Cleaning
-- Import data from CSV/Excel
-- Handle missing values
-- Transform and reshape data
-- Use Claude to generate cleaning code
-
-### 3. Exploratory Analysis
-- Summary statistics
-- Grouping and aggregation
-- Data visualization basics
-- Interactive exploration with Claude
-
-### 4. Modeling & Insights
-- Build predictive models
-- Evaluate model performance
-- Create compelling visualizations
-- Document findings
-
-### 5. Reproducible Output
-- Generate reports (Jupyter/RMarkdown)
-- Save scripts and notebooks
-- Commit to Git with meaningful messages
-- Share your analysis
-
-## Sample Projects
-
-### Python Track
-- Sales data analysis with pandas
-- Customer segmentation with scikit-learn
-- Interactive dashboard with Streamlit
-
-### R Track
-- Survey data analysis with tidyverse
-- Time series forecasting
-- Statistical report with RMarkdown
-
-## Time Commitment
-
-- **Python Track**: ~4-6 hours
-- **R Track**: ~4-6 hours (Coming in V1.5)
-
-## What You'll Build
-
-By the end of this track, you'll have:
-- A complete, reproducible data analysis project
-- Scripts/notebooks you can reuse
-- Confidence using Claude for data work
-- Git history showing your analytical process
+<Callout type="note">
+**Can't decide?** Start with Python. It's more versatile, and the skills transfer to R easily. You can always learn R later for specialized statistical work.
+</Callout>
 
 ---
 
-## Ready to Start?
+## What You'll Learn
 
-Choose your language above and dive in!
+<Diagram title="Skills You'll Build" type="flowchart">
+{`flowchart TB
+    subgraph foundation["Foundation"]
+        A[Project Setup]
+        B[Data Import]
+    end
 
-<Callout type="success" title="Start Your Analysis Journey">
-Pick Python or R based on your goals. Don't worry about picking "wrong" - Claude can help you with either language, and the skills transfer between them.
+    subgraph core["Core Skills"]
+        C[Data Cleaning]
+        D[Transformation]
+        E[Visualization]
+    end
+
+    subgraph advanced["Advanced"]
+        F[Modeling]
+        G[Reporting]
+    end
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+`}
+</Diagram>
+
+### By the End, You'll Be Able To:
+
+1. **Set up reproducible projects** — No more "it worked on my machine"
+2. **Clean messy data** — Handle missing values, inconsistent formats, duplicates
+3. **Transform data** — Reshape, aggregate, join datasets
+4. **Create visualizations** — Charts that actually communicate insights
+5. **Build models** — Regression, classification, clustering basics
+6. **Generate reports** — Share findings with stakeholders
+
+---
+
+## The Workflow (Both Tracks)
+
+Every data project follows the same pattern:
+
+<Diagram title="Analysis Workflow" type="flowchart" caption="This cycle repeats constantly">
+{`flowchart TB
+    A[1. Ask a question] --> B[2. Get the data]
+    B --> C[3. Clean it]
+    C --> D[4. Explore]
+    D --> E{Found insight?}
+    E -->|No| A
+    E -->|Yes| F[5. Visualize]
+    F --> G[6. Document]
+    G --> H[7. Share]
+`}
+</Diagram>
+
+### How Claude Fits In
+
+At each step, Claude helps you:
+
+| Step | What Claude Does |
+|------|------------------|
+| **Get data** | Write import code, handle file formats |
+| **Clean** | Generate cleaning code, explain why |
+| **Explore** | Suggest analyses, write aggregations |
+| **Visualize** | Create charts, customize styling |
+| **Model** | Build models, explain results |
+| **Document** | Write reports, explain findings |
+
+---
+
+## Sample Projects
+
+These are the kinds of problems you'll solve:
+
+### Python Track Examples
+- **Sales Analysis**: Clean 12 months of messy exports, find seasonal patterns
+- **Customer Segmentation**: Cluster customers by behavior, identify high-value groups
+- **Churn Prediction**: Build a model to predict which users will leave
+
+### R Track Examples
+- **Survey Analysis**: Clean Likert-scale data, run statistical tests
+- **Time Series**: Forecast next quarter's revenue
+- **Research Report**: Publication-ready figures and tables
+
+---
+
+## Time Commitment
+
+| Track | Duration | Prerequisites |
+|-------|----------|---------------|
+| Python | 4-6 hours | [Start Here](/start-here) complete |
+| R | 4-6 hours | [Start Here](/start-here) complete |
+
+<Callout type="tip">
+**Work in chunks.** Each section is 30-60 minutes. You don't need to finish in one sitting.
 </Callout>
+
+---
+
+## What You'll Build
+
+By the end, you'll have:
+
+- A **complete analysis project** you can show employers
+- **Reusable scripts** for common tasks (cleaning, plotting, etc.)
+- **Git history** showing your analytical process
+- **Confidence** to tackle new data problems
+
+---
+
+## Ready?
+
+<Tabs>
+  <TabList>
+    <Tab>Python</Tab>
+    <Tab>R</Tab>
+  </TabList>
+  <TabPanel>
+Ready to wrangle data with Python? Let's go.
+
+[Start Python Track →](/data-analysis/python-intro)
+  </TabPanel>
+  <TabPanel>
+Ready for statistical analysis with R? Let's go.
+
+[Start R Track →](/data-analysis/r-intro)
+  </TabPanel>
+</Tabs>

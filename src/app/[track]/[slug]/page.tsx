@@ -23,6 +23,7 @@ import {
   FolderNode,
   FileNode,
   Kbd,
+  Diagram,
 } from '@/components/mdx'
 import { Clock, BookOpen, Monitor, ChevronRight, Calendar } from 'lucide-react'
 import { formatDate, getWordCount } from '@/lib/utils'
@@ -83,6 +84,7 @@ const components = {
   FolderNode,
   FileNode,
   Kbd,
+  Diagram,
   // Map MDX code blocks to our CodeBlock component
   pre: ({ children }: { children?: React.ReactNode }) => {
     const child = (children as { props?: { children?: string; className?: string } })?.props

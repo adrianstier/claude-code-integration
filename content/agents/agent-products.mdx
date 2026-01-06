@@ -1,68 +1,86 @@
 ---
 title: 'Building Agent Products'
-description: 'Learn to build, deploy, and monetize production-ready products powered by AI agents'
+description: 'Ship production-ready agent systems that users love and pay for'
 order: 3
 duration: '3-4 hours'
 ---
 
 # Building Agent Products
 
-Transform your agents into real products that users love and pay for. This guide covers architecture, deployment, user experience, and business considerations for agent-powered applications.
+You can build agents. Now let's ship products. This guide covers architecture, deployment, UX, and monetization for agent-powered applications.
 
-## Product Architecture
+<Diagram title="Product Architecture" type="flowchart" caption="The full stack">
+{`flowchart TB
+    subgraph frontend["Frontend"]
+        F1[User Interface]
+        F2[Real-time Updates]
+        F3[Settings]
+    end
 
-### Core Components
+    subgraph backend["Backend"]
+        B1[API Gateway]
+        B2[Agent Runtime]
+        B3[Tool Services]
+        B4[Database]
+    end
 
-Every agent product needs these building blocks:
+    subgraph infra["Infrastructure"]
+        I1[Queue]
+        I2[Cache]
+        I3[Storage]
+    end
 
-```
-┌─────────────────────────────────────────┐
-│              Your Product               │
-├─────────────────────────────────────────┤
-│  Frontend          │  Backend           │
-│  - User Interface  │  - API Gateway     │
-│  - Real-time UI    │  - Agent Runtime   │
-│  - Settings        │  - Tool Services   │
-│                    │  - Database        │
-├─────────────────────────────────────────┤
-│            Infrastructure               │
-│  - Queues  - Cache  - Storage  - CDN    │
-└─────────────────────────────────────────┘
-```
+    F1 --> B1
+    B1 --> B2
+    B2 --> B3
+    B2 --> I1
+    B3 --> I2
+    B4 --> I3
+`}
+</Diagram>
 
-### Architecture Patterns
+---
 
-#### 1. Synchronous (Simple)
-Best for quick tasks (< 30 seconds)
+## Architecture Patterns
+
+Choose based on your use case:
+
+### Synchronous (Simple)
+
+Best for quick tasks (< 30 seconds):
 
 ```python
-# User waits for complete response
 @app.post("/analyze")
 async def analyze(request: AnalyzeRequest):
     result = agent.run(request.query)
     return {"result": result}
 ```
 
-#### 2. Asynchronous (Scalable)
-Best for longer tasks
+**Pros**: Simple, easy to debug
+**Cons**: User waits, timeout risk
+
+### Asynchronous (Scalable)
+
+Best for longer tasks:
 
 ```python
-# Return job ID immediately
 @app.post("/analyze")
 async def start_analysis(request: AnalyzeRequest):
     job_id = create_job(request)
     queue.enqueue(run_agent_job, job_id)
     return {"job_id": job_id}
 
-# Poll for results
 @app.get("/jobs/{job_id}")
 async def get_job(job_id: str):
-    job = get_job_status(job_id)
-    return job
+    return get_job_status(job_id)
 ```
 
-#### 3. Streaming (Real-time)
-Best for interactive experiences
+**Pros**: Handles long tasks, scalable
+**Cons**: More complex, needs job management
+
+### Streaming (Real-time)
+
+Best for interactive experiences:
 
 ```python
 @app.post("/chat/stream")
@@ -74,6 +92,21 @@ async def stream_chat(request: ChatRequest):
     return StreamingResponse(generate(), media_type="text/event-stream")
 ```
 
+**Pros**: Great UX, immediate feedback
+**Cons**: Complex client handling
+
+<Diagram title="When to Use What" type="flowchart">
+{`flowchart TB
+    A{Task Duration?} -->|< 10s| B[Synchronous]
+    A -->|10s - 5min| C[Async with Polling]
+    A -->|Interactive| D[Streaming]
+
+    B --> E[Simple API]
+    C --> F[Job Queue + Status]
+    D --> G[SSE/WebSocket]
+`}
+</Diagram>
+
 ---
 
 ## Real-World Product Examples
@@ -82,120 +115,61 @@ async def stream_chat(request: ChatRequest):
 
 **Product**: Automated code review for GitHub PRs
 
-**Architecture**:
-```
-GitHub Webhook → Queue → Code Review Agent → GitHub API
-                              ↓
-                    Analysis Storage (for history)
-```
+<Diagram title="Code Review Flow" type="flowchart">
+{`flowchart LR
+    A[GitHub Webhook] --> B[Queue]
+    B --> C[Review Agent]
+    C --> D[GitHub API]
+    D --> E[PR Comments]
+`}
+</Diagram>
 
 **Key Features**:
 - Webhook receives PR events
-- Agent analyzes code changes
+- Agent analyzes diff for bugs, security, style
 - Posts inline comments on GitHub
-- Tracks issues found over time
-
-**Ask Claude Code**:
-```
-Build a GitHub code review bot that:
-1. Receives webhooks for new PRs
-2. Fetches the diff
-3. Analyzes code for issues, style, security
-4. Posts review comments on GitHub
-5. Approves or requests changes
-
-Include FastAPI backend, Redis queue, and GitHub integration.
-```
+- Approves or requests changes
 
 ### 2. Customer Support Agent
 
-**Product**: AI-powered support ticket handling
+**Product**: AI-powered ticket handling
 
-**Architecture**:
-```
-Support Channels → Ticket System → Support Agent → Response
-      ↓                                   ↓
-  (Email, Chat)              Knowledge Base + CRM
-```
+<Diagram title="Support Flow" type="flowchart">
+{`flowchart LR
+    A[Ticket] --> B[Support Agent]
+    B --> C{Confident?}
+    C -->|Yes| D[Auto-respond]
+    C -->|No| E[Human Queue]
+    B --> F[Knowledge Base]
+    B --> G[CRM]
+`}
+</Diagram>
 
 **Key Features**:
 - Multi-channel intake (email, chat, form)
 - Knowledge base search
 - CRM integration for context
 - Human escalation workflow
-- Response quality scoring
-
-**Ask Claude Code**:
-```
-Build a customer support agent that:
-1. Receives tickets from multiple channels
-2. Searches knowledge base for answers
-3. Drafts responses with tone matching
-4. Escalates complex issues to humans
-5. Tracks resolution metrics
-
-Include ticket queue, knowledge base RAG, and admin dashboard.
-```
 
 ### 3. Research Assistant
 
-**Product**: Automated research and report generation
-
-**Architecture**:
-```
-Research Query → Research Agent → Report Generator → Delivery
-                      ↓
-        Web Search + Document Analysis + Citations
-```
+**Product**: Automated research and reports
 
 **Key Features**:
 - Multi-source research
 - Fact verification
 - Citation management
 - Multiple output formats
-- Collaborative editing
-
-**Ask Claude Code**:
-```
-Build a research assistant product that:
-1. Takes research questions from users
-2. Searches web and academic sources
-3. Synthesizes findings with citations
-4. Generates reports in PDF/Markdown
-5. Allows users to ask follow-up questions
-
-Include user accounts, report history, and sharing.
-```
 
 ### 4. Data Analysis Platform
 
 **Product**: Natural language data exploration
-
-**Architecture**:
-```
-User Question → Data Agent → SQL/Analysis → Visualization
-                    ↓
-          Database Schema + Query History
-```
 
 **Key Features**:
 - Natural language to SQL
 - Chart generation
 - Dashboard builder
 - Scheduled reports
-- Data alerts
-
-**Ask Claude Code**:
-```
-Build a data analysis agent that:
-1. Connects to user databases
-2. Understands schema automatically
-3. Converts questions to SQL queries
-4. Generates visualizations
-5. Creates shareable dashboards
-
-Include database connectors, chart library, and permissions.
-```
 
 ---
 
@@ -210,13 +184,13 @@ Level 1: Simple Chat
 └── User asks, agent responds
 
 Level 2: Show Thinking
-└── Display agent's reasoning steps
+└── Display reasoning steps
 
 Level 3: Tool Visibility
-└── Show which tools are being used
+└── Show which tools are used
 
 Level 4: Full Control
-└── Let users guide agent decisions
+└── User guides decisions
 ```
 
 ### Real-time Feedback
@@ -224,21 +198,20 @@ Level 4: Full Control
 Keep users informed during long operations:
 
 ```typescript
-// Frontend component for agent status
 function AgentStatus({ jobId }) {
   const [status, setStatus] = useState('starting');
   const [steps, setSteps] = useState([]);
 
   useEffect(() => {
-    const eventSource = new EventSource(`/jobs/${jobId}/stream`);
+    const events = new EventSource(`/jobs/${jobId}/stream`);
 
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+    events.onmessage = (e) => {
+      const data = JSON.parse(e.data);
       setStatus(data.status);
       setSteps(data.steps);
     };
 
-    return () => eventSource.close();
+    return () => events.close();
   }, [jobId]);
 
   return (
@@ -253,37 +226,36 @@ function AgentStatus({ jobId }) {
 
 ### Error States
 
-Design for agent failures:
+Design for failures:
 
-- **Timeout**: "Taking longer than expected. [Wait] [Cancel]"
-- **Tool failure**: "Couldn't access X. Trying alternative..."
-- **Uncertain**: "I found conflicting information. Here are both perspectives..."
-- **Can't help**: "This is outside my capabilities. [Contact human]"
+| State | Message | Actions |
+|-------|---------|---------|
+| Timeout | "Taking longer than expected" | Wait, Cancel |
+| Tool failure | "Couldn't access X" | Retry, Skip |
+| Uncertain | "Found conflicting info" | Show both |
+| Can't help | "Outside my capabilities" | Contact human |
 
 ### Trust Building
 
 Help users trust agent outputs:
 
 1. **Show sources**: Link to where information came from
-2. **Confidence indicators**: Signal when agent is uncertain
-3. **Edit suggestions**: Let users modify agent outputs
-4. **Explain reasoning**: Show why agent made decisions
+2. **Confidence indicators**: Signal when uncertain
+3. **Edit suggestions**: Let users modify outputs
+4. **Explain reasoning**: Show why decisions were made
 
 ---
 
-## Deployment Strategies
+## Deployment
 
-### Container-based Deployment
+### Docker Setup
 
 ```dockerfile
-# Dockerfile for agent service
 FROM python:3.11-slim
 
 WORKDIR /app
-
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-
 COPY . .
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
@@ -303,7 +275,6 @@ services:
       - REDIS_URL=redis://redis:6379
     depends_on:
       - redis
-      - postgres
 
   worker:
     build: .
@@ -314,14 +285,9 @@ services:
 
   redis:
     image: redis:7-alpine
-
-  postgres:
-    image: postgres:15
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
 ```
 
-### Serverless Deployment
+### Serverless
 
 For variable workloads:
 
@@ -337,19 +303,17 @@ def handler(event, context):
     }
 ```
 
-### Kubernetes for Scale
+### Kubernetes
+
+For scale:
 
 ```yaml
-# k8s deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-service
 spec:
   replicas: 3
-  selector:
-    matchLabels:
-      app: agent-service
   template:
     spec:
       containers:
@@ -372,17 +336,17 @@ spec:
 
 ---
 
-## Monitoring and Observability
+## Monitoring
 
-### Key Metrics to Track
+### Key Metrics
 
-| Metric | Description | Alert Threshold |
-|--------|-------------|-----------------|
-| Task completion rate | % of tasks completed successfully | < 95% |
-| Average latency | Time from request to response | > 30s |
-| Tool failure rate | % of tool calls that fail | > 5% |
-| Token usage | Tokens consumed per task | > budget |
-| User satisfaction | Ratings/feedback scores | < 4/5 |
+| Metric | Description | Alert If |
+|--------|-------------|----------|
+| Completion rate | % tasks completed | < 95% |
+| Latency (p95) | Time to response | > 30s |
+| Tool failure rate | % tool calls failed | > 5% |
+| Token usage | Tokens per task | > budget |
+| User satisfaction | Ratings | < 4/5 |
 
 ### Structured Logging
 
@@ -391,45 +355,24 @@ import structlog
 
 logger = structlog.get_logger()
 
-def run_agent_with_logging(user_id: str, task: str):
+def run_with_logging(user_id: str, task: str):
     log = logger.bind(user_id=user_id, task_id=str(uuid4()))
-
-    log.info("agent_started", task=task)
+    log.info("agent_start", task=task)
 
     try:
         start = time.time()
         result = agent.run(task)
         duration = time.time() - start
 
-        log.info("agent_completed",
+        log.info("agent_done",
                  duration=duration,
-                 tokens_used=result.tokens,
-                 tools_used=result.tools)
-
+                 tokens=result.tokens,
+                 tools=result.tools)
         return result
 
     except Exception as e:
         log.error("agent_failed", error=str(e))
         raise
-```
-
-### Distributed Tracing
-
-```python
-from opentelemetry import trace
-
-tracer = trace.get_tracer(__name__)
-
-def run_agent(task: str):
-    with tracer.start_as_current_span("agent_run") as span:
-        span.set_attribute("task", task)
-
-        # Agent loop
-        for i, step in enumerate(agent_steps):
-            with tracer.start_as_current_span(f"step_{i}") as step_span:
-                step_span.set_attribute("tool", step.tool)
-                result = execute_step(step)
-                step_span.set_attribute("result_size", len(result))
 ```
 
 ### Alerting
@@ -439,16 +382,14 @@ def run_agent(task: str):
 groups:
 - name: agent-alerts
   rules:
-  - alert: HighAgentLatency
+  - alert: HighLatency
     expr: histogram_quantile(0.95, agent_duration_seconds) > 30
     for: 5m
     labels:
       severity: warning
-    annotations:
-      summary: "Agent latency is high"
 
-  - alert: HighToolFailureRate
-    expr: rate(tool_failures_total[5m]) / rate(tool_calls_total[5m]) > 0.05
+  - alert: HighToolFailures
+    expr: rate(tool_failures[5m]) / rate(tool_calls[5m]) > 0.05
     for: 5m
     labels:
       severity: critical
@@ -468,11 +409,10 @@ class BudgetedAgent:
 
     def run(self, task: str) -> str:
         if self.tokens_used >= self.max_tokens:
-            raise BudgetExceededError("Token budget exceeded")
+            raise BudgetExceededError()
 
         response = self._call_api(task)
         self.tokens_used += response.usage.total_tokens
-
         return response
 ```
 
@@ -480,42 +420,39 @@ class BudgetedAgent:
 
 ```python
 import hashlib
-from functools import lru_cache
 
 class CachedAgent:
     def __init__(self):
         self.cache = {}
 
     def run(self, task: str) -> str:
-        cache_key = hashlib.md5(task.encode()).hexdigest()
+        key = hashlib.md5(task.encode()).hexdigest()
 
-        if cache_key in self.cache:
-            return self.cache[cache_key]
+        if key in self.cache:
+            return self.cache[key]
 
-        result = self._run_agent(task)
-        self.cache[cache_key] = result
-
+        result = self._run(task)
+        self.cache[key] = result
         return result
 ```
 
 ### Usage Tiers
 
 ```python
-TIER_LIMITS = {
-    "free": {"tokens_per_day": 10000, "tasks_per_day": 10},
-    "pro": {"tokens_per_day": 100000, "tasks_per_day": 100},
-    "enterprise": {"tokens_per_day": None, "tasks_per_day": None}
+TIERS = {
+    "free": {"tokens_day": 10000, "tasks_day": 10},
+    "pro": {"tokens_day": 100000, "tasks_day": 100},
+    "enterprise": {"tokens_day": None, "tasks_day": None}
 }
 
 def check_usage(user_id: str, tier: str) -> bool:
     usage = get_daily_usage(user_id)
-    limits = TIER_LIMITS[tier]
+    limits = TIERS[tier]
 
-    if limits["tokens_per_day"] and usage.tokens > limits["tokens_per_day"]:
+    if limits["tokens_day"] and usage.tokens > limits["tokens_day"]:
         return False
-    if limits["tasks_per_day"] and usage.tasks > limits["tasks_per_day"]:
+    if limits["tasks_day"] and usage.tasks > limits["tasks_day"]:
         return False
-
     return True
 ```
 
@@ -537,13 +474,7 @@ class AgentRequest(BaseModel):
         if len(v) > 10000:
             raise ValueError("Task too long")
         if contains_pii(v):
-            raise ValueError("Please remove personal information")
-        return v
-
-    @validator('max_tokens')
-    def validate_tokens(cls, v):
-        if v > 100000:
-            raise ValueError("Token limit too high")
+            raise ValueError("Remove personal information")
         return v
 ```
 
@@ -551,15 +482,9 @@ class AgentRequest(BaseModel):
 
 ```python
 def filter_output(response: str) -> str:
-    """Filter agent output before returning to user."""
-
-    # Remove any leaked system information
     response = remove_system_paths(response)
-
-    # Redact sensitive patterns
     response = redact_secrets(response)
 
-    # Check for harmful content
     if contains_harmful_content(response):
         return "I cannot provide that information."
 
@@ -573,14 +498,11 @@ SENSITIVE_ACTIONS = ["delete_file", "send_email", "make_payment"]
 
 def execute_with_approval(tool: str, params: dict, user_id: str) -> str:
     if tool in SENSITIVE_ACTIONS:
-        # Create approval request
         request_id = create_approval_request(user_id, tool, params)
-
-        # Wait for approval (or timeout)
         approved = wait_for_approval(request_id, timeout=300)
 
         if not approved:
-            return "Action requires approval and was not approved."
+            return "Action not approved."
 
     return execute_tool(tool, params)
 ```
@@ -589,7 +511,6 @@ def execute_with_approval(tool: str, params: dict, user_id: str) -> str:
 
 ```python
 from slowapi import Limiter
-from slowapi.util import get_remote_address
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -603,7 +524,7 @@ async def run_agent(request: Request):
 
 ## Monetization Models
 
-### Usage-Based Pricing
+### Usage-Based
 
 ```
 Pay per task:
@@ -620,117 +541,26 @@ Pay per token:
 ```
 Free Tier:
 - 100 tasks/month
-- Basic tools only
+- Basic tools
 - Community support
 
-Pro Tier ($29/month):
+Pro ($29/month):
 - 1000 tasks/month
 - All tools
 - Priority support
-- Custom prompts
 
 Enterprise (Custom):
-- Unlimited tasks
+- Unlimited
 - Custom tools
 - SLA guarantee
-- Dedicated support
 ```
 
-### Value-Based Pricing
+### Value-Based
 
-Price based on outcomes:
-- **Research reports**: $5-50 per report
-- **Code reviews**: $1 per PR
-- **Support tickets**: $0.50 per resolution
-
-### Hybrid Model
-
-```python
-def calculate_price(user: User, task: Task) -> float:
-    base_price = TIER_PRICES[user.tier]
-
-    # Add usage overage
-    if task.tokens > user.tier_limit:
-        overage = task.tokens - user.tier_limit
-        base_price += overage * OVERAGE_RATE
-
-    # Add premium features
-    if task.uses_premium_tools:
-        base_price += PREMIUM_TOOL_FEE
-
-    return base_price
-```
-
----
-
-## Case Study: Building a Content Agent Product
-
-Let's walk through building a complete product.
-
-### Product Vision
-
-**ContentBot**: AI-powered content creation for marketers
-
-Features:
-- Blog post generation
-- Social media content
-- Email campaigns
-- SEO optimization
-- Brand voice matching
-
-### Technical Implementation
-
-**Ask Claude Code**:
-```
-Build a content creation agent product with:
-
-1. Backend (FastAPI):
-   - User authentication
-   - Content generation API
-   - Template management
-   - Usage tracking
-
-2. Agent:
-   - Web research for topics
-   - Brand voice analysis
-   - SEO keyword optimization
-   - Multiple content formats
-
-3. Database:
-   - User accounts and teams
-   - Content history
-   - Templates and prompts
-   - Usage analytics
-
-4. Frontend (Next.js):
-   - Dashboard
-   - Content editor
-   - Template library
-   - Settings
-
-Include deployment config for Railway or Vercel.
-```
-
-### MVP Timeline
-
-**Week 1**: Core agent
-- Basic content generation
-- Simple API
-
-**Week 2**: User system
-- Authentication
-- Usage tracking
-- Basic frontend
-
-**Week 3**: Polish
-- Brand voice
-- Templates
-- Multiple formats
-
-**Week 4**: Launch
-- Deployment
-- Monitoring
-- Documentation
+Price by outcome:
+- Research reports: $5-50/report
+- Code reviews: $1/PR
+- Support tickets: $0.50/resolution
 
 ---
 
@@ -762,28 +592,84 @@ Include deployment config for Railway or Vercel.
 
 ---
 
+## Case Study: Content Agent Product
+
+Let's walk through building a complete product.
+
+### Product: ContentBot
+
+AI content creation for marketers.
+
+**Features**:
+- Blog post generation
+- Social media content
+- Email campaigns
+- SEO optimization
+- Brand voice matching
+
+### MVP Timeline
+
+| Week | Focus |
+|------|-------|
+| 1 | Core agent + basic API |
+| 2 | User system + tracking |
+| 3 | Templates + formats |
+| 4 | Deploy + monitor |
+
+### Architecture
+
+```python
+# content_agent.py
+class ContentAgent:
+    def __init__(self, brand_voice: str = None):
+        self.client = Anthropic()
+        self.brand_voice = brand_voice
+
+    async def generate_blog(self, topic: str, keywords: list) -> str:
+        # Research topic
+        research = await self._research(topic)
+
+        # Generate outline
+        outline = await self._create_outline(topic, research)
+
+        # Write content
+        content = await self._write_content(outline, keywords)
+
+        # Apply brand voice
+        if self.brand_voice:
+            content = await self._apply_voice(content)
+
+        return content
+```
+
+---
+
 ## Next Steps
 
-### Continue Learning
-
-- Review [Building Agents](./building-agents) for implementation details
-- Study successful agent products in your domain
+- Review [Building Agents](./building-agents) for implementation
+- Study successful products in your domain
 - Join AI product communities for feedback
 
 ### Practice Projects
 
-1. **Build an MVP**: Take one of the examples and ship it
-2. **Add monetization**: Implement usage-based pricing
-3. **Scale it**: Handle 100+ concurrent users
-4. **Optimize costs**: Reduce token usage by 50%
-
-### Resources
-
-- [Anthropic API Pricing](https://www.anthropic.com/pricing)
-- [Vercel AI SDK](https://sdk.vercel.ai/)
-- [LangChain](https://langchain.com/) - Agent framework
-- [Modal](https://modal.com/) - Serverless compute for AI
+| Project | Goal |
+|---------|------|
+| Ship an MVP | Pick an idea, deploy in 4 weeks |
+| Add monetization | Implement usage-based pricing |
+| Scale to 100 users | Handle concurrent load |
+| Reduce costs 50% | Optimize token usage |
 
 ---
 
-**Start building your agent product!** The best products solve real problems for real users. Pick a problem you understand deeply and build an agent to solve it. Ship early, iterate based on feedback, and grow from there.
+## Resources
+
+- [Anthropic API Pricing](https://www.anthropic.com/pricing)
+- [Vercel AI SDK](https://sdk.vercel.ai/)
+- [LangChain](https://langchain.com/)
+- [Modal](https://modal.com/) — Serverless AI compute
+
+---
+
+<Callout type="success">
+**Start shipping!** The best products solve real problems for real users. Pick a problem you understand, build an agent to solve it, ship early, iterate on feedback.
+</Callout>

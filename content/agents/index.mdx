@@ -1,128 +1,130 @@
 ---
-title: 'AI Agents Track'
-description: 'Learn to build, use, and deploy autonomous AI agents that can reason and take actions'
+title: 'AI Agents'
+description: 'Build autonomous AI systems that can reason, plan, and take action'
 order: 6
 duration: '8-10 hours'
 ---
 
-# AI Agents Track
+# AI Agents
 
-Build intelligent agents that can reason, plan, and take actions autonomously! This track teaches you everything from understanding what agents are to building production-ready agent systems.
+Chatbots answer questions. Agents get things done.
 
-<Callout type="info" title="What Makes This Track Different">
-Agents are not just chatbots. They can work independently, use tools, and accomplish complex multi-step tasks. This track teaches you to harness this powerful capability.
+An agent can research a topic across dozens of sources, write a report, and email it to your team—all while you're in a meeting. This track teaches you to build autonomous systems that work independently on complex, multi-step tasks.
+
+<Diagram title="The Agent Difference" type="flowchart" caption="Chatbots wait for you. Agents work for you.">
+{`flowchart LR
+    subgraph chatbot["Chatbot"]
+        A1[You ask] --> A2[It answers]
+        A2 --> A3[You ask again]
+    end
+
+    subgraph agent["Agent"]
+        B1[You set goal] --> B2[It plans]
+        B2 --> B3[It acts]
+        B3 --> B4[It adapts]
+        B4 --> B5[Goal achieved]
+    end
+`}
+</Diagram>
+
+<Callout type="tip">
+**Already built chatbots?** Great—you're halfway there. Agents add planning, tool use, and autonomy on top of what you already know.
 </Callout>
-
-## What Are AI Agents?
-
-AI agents are autonomous systems that can:
-
-- **Perceive**: Understand context and gather information
-- **Reason**: Think through problems step-by-step
-- **Plan**: Break down complex tasks into actionable steps
-- **Act**: Execute actions using tools and APIs
-- **Learn**: Improve based on feedback and outcomes
-
-Unlike simple chatbots that just respond to prompts, agents can work independently on multi-step tasks, make decisions, and use tools to accomplish goals.
-
-## Why Agents Matter
-
-Agents represent the next evolution of AI capabilities:
-
-- **Automation at scale**: Handle complex workflows end-to-end
-- **24/7 operation**: Work continuously without human oversight
-- **Consistent quality**: Follow defined processes reliably
-- **Scalability**: Handle many tasks simultaneously
-- **Integration**: Connect to your existing tools and systems
-
-## What You'll Learn
-
-### 1. Agent Fundamentals
-- How agents differ from simple LLM calls
-- The perception-reasoning-action loop
-- Tool use and function calling
-- Memory and context management
-
-### 2. Building Agents
-- Designing agent architectures
-- Implementing tool systems
-- Managing agent state
-- Error handling and recovery
-
-### 3. Production Agents
-- Deployment strategies
-- Monitoring and observability
-- Safety and guardrails
-- Scaling considerations
-
-### 4. Agent Products
-- Building products powered by agents
-- User experience design
-- Business model considerations
-- Real-world case studies
-
-## Prerequisites
-
-- Completed [Start Here](/start-here) track
-- Basic Python knowledge
-- Familiarity with APIs
-- Understanding of LLMs (Claude, GPT, etc.)
-
-## Time Required
-
-8-10 hours to complete all sections
 
 ---
 
-## Agent Types
+## What Makes an Agent?
+
+Every agent follows the same loop:
+
+<Diagram title="The Agent Loop" type="flowchart">
+{`flowchart TB
+    A[Observe] --> B[Think]
+    B --> C[Plan]
+    C --> D[Act]
+    D --> E[Reflect]
+    E -->|Continue?| A
+    E -->|Done| F[Return Result]
+`}
+</Diagram>
+
+| Phase | What Happens | Example |
+|-------|--------------|---------|
+| **Observe** | Gather context | Read the user's question, check current data |
+| **Think** | Reason about the situation | "I need to search for recent data first" |
+| **Plan** | Break into steps | Search → Read → Analyze → Write |
+| **Act** | Execute using tools | Call search API, read documents |
+| **Reflect** | Evaluate results | "Do I have enough information?" |
+
+---
+
+## Types of Agents
 
 ### Task-Specific Agents
 
-Agents designed for particular domains:
+Built for one job, done exceptionally well:
 
-- **Code Agent**: Write, review, and debug code
-- **Research Agent**: Gather and synthesize information
-- **Data Agent**: Analyze datasets and generate insights
-- **Support Agent**: Handle customer inquiries
-- **Content Agent**: Create and edit content
+| Agent | What It Does | Tools It Uses |
+|-------|--------------|---------------|
+| **Code Reviewer** | Analyzes PRs for bugs, security, style | Read, Grep, Glob |
+| **Research Agent** | Gathers and synthesizes information | Web search, Document reader |
+| **Data Analyst** | Queries databases, generates insights | SQL, Python, Charts |
+| **Support Agent** | Handles tickets, searches knowledge base | KB search, CRM |
 
 ### General-Purpose Agents
 
-Flexible agents that can handle various tasks:
+Flexible assistants for varied tasks:
 
-- **Personal Assistant**: Manage tasks, calendar, emails
-- **Project Manager**: Coordinate workflows and tasks
-- **Problem Solver**: Tackle open-ended challenges
+- **Personal Assistant**: Calendar, email, task management
+- **Project Coordinator**: Track work, manage workflows
+- **Problem Solver**: Open-ended analysis and recommendations
 
 ### Multi-Agent Systems
 
 Multiple agents working together:
 
-- **Collaborative**: Agents with different expertise
-- **Competitive**: Agents that debate or verify
-- **Hierarchical**: Manager agents directing worker agents
+<Diagram title="Multi-Agent Patterns" type="flowchart">
+{`flowchart TB
+    subgraph collab["Collaborative"]
+        C1[Researcher] --> C2[Writer]
+        C2 --> C3[Editor]
+    end
+
+    subgraph hierarchy["Hierarchical"]
+        H1[Manager] --> H2[Worker 1]
+        H1 --> H3[Worker 2]
+        H1 --> H4[Worker 3]
+    end
+
+    subgraph debate["Debate"]
+        D1[Agent A] <--> D2[Agent B]
+        D1 --> D3[Consensus]
+        D2 --> D3
+    end
+`}
+</Diagram>
 
 ---
 
-## Sub-Agents: Specialized Delegation
+## Sub-Agents: Divide and Conquer
 
-Sub-agents are specialized AI assistants that can be orchestrated by the main agent. They enable powerful context management and parallelization patterns.
+Complex tasks need specialized workers. Sub-agents handle specific pieces of work with focused context and limited tools.
 
-### Why Use Sub-Agents?
+### Why Sub-Agents?
 
-| Benefit | Description |
-|---------|-------------|
-| **Context Isolation** | Sub-agents maintain separate context, preventing information overload |
-| **Parallelization** | Multiple sub-agents can run concurrently for faster workflows |
-| **Specialized Knowledge** | Each sub-agent has tailored prompts and expertise |
-| **Tool Restrictions** | Limit sub-agents to specific tools for safety |
+| Benefit | Why It Matters |
+|---------|----------------|
+| **Context Isolation** | Each sub-agent works with only relevant information—no overload |
+| **Parallelization** | Run multiple sub-agents simultaneously |
+| **Tool Restrictions** | Limit what each sub-agent can do for safety |
+| **Specialization** | Each sub-agent has tailored prompts for its domain |
 
 ### Built-in Sub-Agents
 
-Claude Code includes specialized built-in sub-agents:
+Claude Code includes ready-to-use sub-agents:
 
-- **Plan Sub-Agent** - Dedicated planning with task breakdown
-- **Explore Sub-Agent** - Fast, read-only codebase search and analysis
+- **Plan Sub-Agent**: Dedicated planning with task breakdown
+- **Explore Sub-Agent**: Fast, read-only codebase search
 
 ### Creating Custom Sub-Agents
 
@@ -131,197 +133,160 @@ Define sub-agents as markdown files in `.claude/agents/`:
 ```markdown
 ---
 name: code-reviewer
-description: Expert code review specialist. Use for quality, security, and maintainability reviews.
+description: Expert code review specialist for quality and security reviews.
 tools: Read, Grep, Glob
 ---
 
-You are a code review specialist with expertise in security, performance, and best practices.
+You are a code review specialist. When reviewing code:
 
-When reviewing code:
-- Identify security vulnerabilities
-- Check for performance issues
-- Verify adherence to coding standards
-- Suggest specific improvements
-```
+1. Identify security vulnerabilities (injection, auth issues)
+2. Check for performance problems (N+1 queries, memory leaks)
+3. Verify adherence to project coding standards
+4. Suggest specific, actionable improvements
 
-### Programmatic Sub-Agents (SDK)
-
-When using the Claude Agent SDK, define sub-agents in code:
-
-```typescript
-import { query } from '@anthropic-ai/claude-agent-sdk';
-
-const result = query({
-  prompt: "Review the authentication module",
-  options: {
-    agents: {
-      'code-reviewer': {
-        description: 'Expert code review specialist',
-        prompt: 'You are a security-focused code reviewer...',
-        tools: ['Read', 'Grep', 'Glob'],
-        model: 'sonnet'
-      },
-      'test-runner': {
-        description: 'Runs and analyzes test suites',
-        prompt: 'You are a test execution specialist...',
-        tools: ['Bash', 'Read', 'Grep']
-      }
-    }
-  }
-});
+Be thorough but constructive. Explain *why* something is a problem.
 ```
 
 ### Common Tool Combinations
 
-| Agent Type | Tools | Use Case |
+| Agent Type | Tools | Best For |
 |------------|-------|----------|
-| Read-only | `Read, Grep, Glob` | Analysis, review |
-| Test runner | `Bash, Read, Grep` | Test execution |
-| Code modifier | `Read, Edit, Write, Grep, Glob` | Refactoring |
-
-For detailed sub-agent documentation, see the [official Sub-Agents guide](https://docs.claude.com/en/docs/agent-sdk/subagents).
-
----
-
-## The Agent Loop
-
-At its core, every agent follows this pattern:
-
-```
-1. OBSERVE   - Gather context and information
-2. THINK     - Reason about what to do next
-3. PLAN      - Break task into steps
-4. ACT       - Execute using tools
-5. REFLECT   - Evaluate results
-6. REPEAT    - Continue until goal achieved
-```
-
-### Example: Research Agent
-
-```python
-# Pseudocode for a research agent
-
-while not research_complete:
-    # OBSERVE
-    query = understand_user_question()
-
-    # THINK
-    information_needed = identify_knowledge_gaps()
-
-    # PLAN
-    search_queries = generate_search_plan()
-
-    # ACT
-    for query in search_queries:
-        results = web_search(query)
-        notes = extract_key_information(results)
-
-    # REFLECT
-    if sufficient_information():
-        research_complete = True
-        synthesize_findings()
-    else:
-        refine_search_strategy()
-```
+| Read-only | `Read, Grep, Glob` | Analysis, review, research |
+| Test runner | `Bash, Read, Grep` | Test execution, CI tasks |
+| Code modifier | `Read, Edit, Write, Grep, Glob` | Refactoring, generation |
 
 ---
 
 ## Tools: The Agent's Hands
 
-Tools give agents the ability to interact with the world:
+Agents need tools to interact with the world. Without tools, they can only talk. With tools, they can *do*.
 
-### Common Tool Categories
+<Diagram title="Tool Categories" type="flowchart">
+{`flowchart TB
+    subgraph info["Information"]
+        I1[Web search]
+        I2[Document reader]
+        I3[API calls]
+    end
 
-| Category | Examples |
-|----------|----------|
-| **Information** | Web search, document reading, API calls |
-| **Computation** | Code execution, calculations, data analysis |
-| **Creation** | Writing files, generating images, sending messages |
-| **Control** | System commands, application control, device actions |
+    subgraph compute["Computation"]
+        C1[Code execution]
+        C2[Data analysis]
+        C3[Calculations]
+    end
 
-### Tool Design Principles
+    subgraph action["Action"]
+        A1[File operations]
+        A2[Send messages]
+        A3[System commands]
+    end
+`}
+</Diagram>
 
-1. **Clear purpose**: Each tool does one thing well
-2. **Defined inputs**: Specific parameters with types
-3. **Predictable outputs**: Consistent return format
-4. **Error handling**: Graceful failure modes
-5. **Documentation**: Clear descriptions for the agent
+### Designing Good Tools
+
+**Clear purpose**: Each tool does one thing well
+```python
+# Good: specific
+"search_company_docs" - searches internal documentation
+
+# Bad: vague
+"search" - search what? where?
+```
+
+**Defined inputs**: Specific parameters with types
+```python
+{
+    "name": "search_docs",
+    "input_schema": {
+        "properties": {
+            "query": {"type": "string", "description": "Search terms"},
+            "category": {"type": "string", "enum": ["policies", "products"]}
+        }
+    }
+}
+```
+
+**Predictable outputs**: Consistent return format so the agent can parse results reliably.
 
 ---
 
 ## Memory: The Agent's Mind
 
-Agents need memory to maintain context and learn:
+Agents need memory to maintain context across steps and conversations.
 
 ### Short-term Memory
+
 - Current conversation
-- Working context
-- Immediate task state
+- Working notes
+- Intermediate results
 
 ### Long-term Memory
+
 - Past interactions
 - Learned preferences
 - Domain knowledge
 
 ### Memory Strategies
 
-- **RAG (Retrieval)**: Search through stored information
-- **Summarization**: Condense long contexts
-- **Key-value store**: Quick access to facts
-- **Vector database**: Semantic similarity search
+| Strategy | Best For | How It Works |
+|----------|----------|--------------|
+| RAG | Knowledge bases | Search stored documents |
+| Summarization | Long conversations | Compress old context |
+| Key-value store | Facts and preferences | Quick lookup |
+| Vector database | Semantic search | Find similar past content |
 
 ---
 
-## Track Outline
+## Track Modules
 
-### Module 1: [Building Agents](./building-agents)
-Learn to build agents from scratch with the Claude Agent SDK.
+<Steps>
+<Step title="Building Agents">
 
-**Topics covered:**
-- Agent architecture design
+Learn to build agents from scratch using the Claude API.
+
+**You'll learn:**
+- Agent architecture patterns
 - Tool implementation
 - State management
-- Error handling
+- Error handling and recovery
 
-### Module 2: [Using Agents](./using-agents)
-Master effective agent usage and prompt engineering.
+[Start Building →](./building-agents)
 
-**Topics covered:**
-- Writing effective prompts
+</Step>
+<Step title="Using Agents">
+
+Master prompting and get reliable results from any agent.
+
+**You'll learn:**
+- Writing effective system prompts
 - Tool selection strategies
-- Output handling
-- Debugging agents
+- Debugging agent behavior
+- Advanced patterns (chain of thought, self-critique)
 
-### Module 3: [Agent Products](./agent-products)
-Build real products powered by autonomous agents.
+[Start Using →](./using-agents)
 
-**Topics covered:**
+</Step>
+<Step title="Agent Products">
+
+Ship production-ready agent systems that users pay for.
+
+**You'll learn:**
 - Product architecture
 - User experience design
-- Deployment strategies
+- Deployment and scaling
 - Monetization models
+
+[Start Shipping →](./agent-products)
+
+</Step>
+</Steps>
 
 ---
 
 ## Quick Start Example
 
-Here's a simple agent that can search the web and answer questions:
-
-**Ask Claude Code:**
-```
-Create a simple research agent that:
-1. Takes a question from the user
-2. Searches the web for relevant information
-3. Synthesizes the findings
-4. Provides a comprehensive answer with sources
-
-Use the Claude Agent SDK and include:
-- Web search tool
-- Note-taking for organizing information
-- Source citation
-```
-
-### Expected Output
+Here's a minimal research agent:
 
 ```python
 from anthropic import Anthropic
@@ -329,31 +294,27 @@ from anthropic import Anthropic
 client = Anthropic()
 
 def research_agent(question: str) -> str:
-    """Simple research agent that searches and synthesizes."""
+    """Agent that researches a question using web search."""
 
-    tools = [
-        {
-            "name": "web_search",
-            "description": "Search the web for information",
-            "input_schema": {
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string"}
-                },
-                "required": ["query"]
-            }
+    tools = [{
+        "name": "web_search",
+        "description": "Search the web for information",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"}
+            },
+            "required": ["query"]
         }
-    ]
+    }]
 
-    messages = [
-        {
-            "role": "user",
-            "content": f"""Research this question thoroughly: {question}
+    messages = [{
+        "role": "user",
+        "content": f"""Research this question: {question}
 
-            Use the web_search tool to find relevant information.
-            Cite your sources in the final answer."""
-        }
-    ]
+        Use web_search to find information.
+        Cite your sources in the final answer."""
+    }]
 
     # Agent loop
     while True:
@@ -364,14 +325,13 @@ def research_agent(question: str) -> str:
             messages=messages
         )
 
-        # Check for tool use
         if response.stop_reason == "tool_use":
-            # Execute tools and continue
+            # Execute tools, add results, continue
             tool_results = execute_tools(response.content)
             messages.append({"role": "assistant", "content": response.content})
             messages.append({"role": "user", "content": tool_results})
         else:
-            # Agent completed
+            # Done - extract final text
             return extract_text(response.content)
 ```
 
@@ -379,90 +339,75 @@ def research_agent(question: str) -> str:
 
 ## Best Practices
 
-### Design Principles
+### Start Simple
 
-1. **Start simple**: Begin with single-task agents
+<Diagram title="Agent Evolution" type="flowchart">
+{`flowchart LR
+    A[Single tool] --> B[Multiple tools]
+    B --> C[Memory]
+    C --> D[Sub-agents]
+    D --> E[Multi-agent]
+`}
+</Diagram>
+
+1. **One task, one tool**: Get that working first
 2. **Add tools gradually**: One capability at a time
-3. **Test extensively**: Agents can behave unexpectedly
-4. **Monitor closely**: Watch for loops and errors
-5. **Set boundaries**: Define what agents cannot do
+3. **Add memory when needed**: Not before
+4. **Split into sub-agents**: When context gets too complex
 
 ### Common Pitfalls
 
-- **Infinite loops**: Agent keeps trying same action
-- **Tool misuse**: Wrong tool for the task
-- **Context overflow**: Too much information
-- **Hallucination**: Making up tool results
-- **Cost explosion**: Uncontrolled API calls
+| Problem | Symptom | Fix |
+|---------|---------|-----|
+| Infinite loops | Same action repeated | Detect loops, add exit conditions |
+| Tool misuse | Wrong tool for task | Better tool descriptions |
+| Context overflow | Degraded performance | Summarize, use sub-agents |
+| Hallucination | Made-up tool results | Validate results, require citations |
+| Cost explosion | Huge API bills | Token budgets, caching |
 
-### Safety Considerations
+### Safety First
 
-- Always require human approval for sensitive actions
-- Implement rate limits and cost caps
-- Log all agent actions for audit
-- Use sandboxed environments for testing
-- Define clear boundaries and permissions
+- **Human approval** for sensitive actions (delete, send, pay)
+- **Rate limits** and cost caps
+- **Logging** all agent actions
+- **Sandboxed environments** for testing
+- **Clear boundaries** on what agents can/cannot do
 
 ---
 
 ## Real-World Applications
 
-### Software Development
-- Code review automation
-- Bug triage and fixing
-- Documentation generation
-- Test creation
-
-### Customer Support
-- Ticket routing and response
-- Knowledge base search
-- Issue escalation
-- Follow-up scheduling
-
-### Data Analysis
-- Report generation
-- Anomaly detection
-- Trend analysis
-- Visualization creation
-
-### Content Creation
-- Blog post drafting
-- Social media scheduling
-- Email campaigns
-- Translation workflows
+| Domain | Use Cases |
+|--------|-----------|
+| **Software** | Code review, bug triage, doc generation, test creation |
+| **Support** | Ticket routing, knowledge search, escalation, follow-up |
+| **Analysis** | Report generation, anomaly detection, trend analysis |
+| **Content** | Drafting, social scheduling, email campaigns, translation |
 
 ---
 
 ## Resources
 
-### Official Documentation
-- [Claude Agent SDK](https://docs.anthropic.com/en/docs/agents)
-- [Tool Use Guide](https://docs.anthropic.com/en/docs/tool-use)
-- [Claude API Reference](https://docs.anthropic.com/en/api)
-
-### Learning Resources
-- [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) - Anthropic Research
-- [Agent Protocol](https://agentprotocol.ai/) - Standardization effort
-- [LangChain Agents](https://python.langchain.com/docs/modules/agents/) - Popular framework
-
-### Community
-- [Discord: Claude Community](https://discord.gg/anthropic)
-- [GitHub: Agent Examples](https://github.com/anthropics/anthropic-cookbook)
+- [Claude Agent SDK](https://docs.anthropic.com/en/docs/agents) — Official documentation
+- [Building Effective Agents](https://www.anthropic.com/research/building-effective-agents) — Anthropic research
+- [Tool Use Guide](https://docs.anthropic.com/en/docs/tool-use) — API reference
+- [Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook) — Example implementations
 
 ---
 
-## Next Steps
+## Prerequisites
 
-Ready to start building agents? Begin with the first module:
+Before starting this track:
 
-[Building Agents](./building-agents) - Learn to architect and implement agents from scratch.
-
-Or jump to specific topics:
-- [Using Agents](./using-agents) - Master agent prompting and usage
-- [Agent Products](./agent-products) - Build production agent systems
+<Checklist>
+  <ChecklistItem>Completed [Start Here](/start-here) track</ChecklistItem>
+  <ChecklistItem>Basic Python knowledge</ChecklistItem>
+  <ChecklistItem>Familiarity with APIs (REST, HTTP)</ChecklistItem>
+  <ChecklistItem>Understanding of LLMs (Claude, ChatGPT)</ChecklistItem>
+</Checklist>
 
 ---
 
-<Callout type="success" title="Let's Build Intelligent Agents!">
-Start with the fundamentals and work your way up to production-ready systems. Remember: the best agents start simple and evolve based on real-world feedback.
+<Callout type="success">
+**Ready to build intelligent systems?** Start with [Building Agents](./building-agents) to create your first agent from scratch.
 </Callout>

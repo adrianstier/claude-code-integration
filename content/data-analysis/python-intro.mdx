@@ -6,213 +6,434 @@ duration: '120 minutes'
 prerequisites: ['start-here']
 ---
 
-Learn to analyze data with Python, pandas, and Claude as your coding partner.
+# Python for Data Analysis
 
-## What You'll Build
+You're about to learn the same tools used by data scientists at Netflix, Airbnb, and Google. By the end, you'll analyze real data, create visualizations, and actually understand what your code is doing.
 
-A complete data analysis project that:
-- Loads and explores a real dataset
-- Cleans and transforms data
-- Creates visualizations
-- Generates insights
-- Is version-controlled with Git
+<Diagram title="What You'll Build" type="flowchart" caption="A complete analysis pipeline">
+{`flowchart LR
+    A[Raw CSV] --> B[pandas]
+    B --> C[Clean Data]
+    C --> D[Analysis]
+    D --> E[Visualizations]
+    E --> F[Insights]
+`}
+</Diagram>
 
 ## Prerequisites
 
-- Python installed ([Mac setup](/start-here/mac-setup) or [Windows setup](/start-here/windows-setup))
-- Basic terminal/command line knowledge
-- Git configured
+Before starting, make sure you have:
+
+<Checklist>
+  <ChecklistItem>Python installed ([Mac](/start-here/mac-setup) or [Windows](/start-here/windows-setup))</ChecklistItem>
+  <ChecklistItem>VS Code with Claude Code extension</ChecklistItem>
+  <ChecklistItem>Basic terminal knowledge (cd, ls, mkdir)</ChecklistItem>
+</Checklist>
 
 ---
 
-## Project Setup
+## Part 1: Project Setup
 
-### 1. Create Your Project
+Every analysis starts with a clean, organized project. Let's build one.
+
+<Steps>
+<Step title="Create Project Folder">
 
 ```bash
-# Create project folder
 mkdir sales-analysis
 cd sales-analysis
+```
 
-# Initialize Git
+</Step>
+<Step title="Initialize Git">
+
+```bash
 git init
+```
 
-# Create virtual environment
-python -m venv venv
+Track your work from the start. You'll thank yourself later.
 
-# Activate it
-# Mac/Linux:
+</Step>
+<Step title="Create Virtual Environment">
+
+Virtual environments isolate your project's packages. No more "it works on my machine" problems.
+
+<Tabs>
+  <TabList>
+    <Tab>Mac/Linux</Tab>
+    <Tab>Windows</Tab>
+  </TabList>
+  <TabPanel>
+```bash
+python3 -m venv venv
 source venv/bin/activate
-# Windows:
+```
+  </TabPanel>
+  <TabPanel>
+```powershell
+python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
+  </TabPanel>
+</Tabs>
 
-### 2. Install Packages
+You'll see `(venv)` in your prompt—that means it's active.
+
+</Step>
+<Step title="Install the Data Science Stack">
 
 ```bash
-pip install pandas numpy matplotlib jupyter
+pip install pandas numpy matplotlib jupyter seaborn
 ```
 
-### 3. Create Project Structure
+| Package | What It Does |
+|---------|--------------|
+| pandas | Data manipulation (your main tool) |
+| numpy | Numerical operations |
+| matplotlib | Basic plotting |
+| seaborn | Beautiful statistical plots |
+| jupyter | Interactive notebooks |
+
+</Step>
+<Step title="Create Project Structure">
 
 ```bash
-# Create folders
 mkdir data notebooks scripts outputs
-
-# Create files
-touch README.md
-touch scripts/analysis.py
-touch .gitignore
+touch README.md CLAUDE.md .gitignore
 ```
 
-### 4. Set Up Git Ignore
+<FileTree>
+  <FolderNode name="sales-analysis" defaultOpen>
+    <FolderNode name="data">
+      <FileNode name="sales.csv" />
+    </FolderNode>
+    <FolderNode name="notebooks">
+      <FileNode name="exploration.ipynb" />
+    </FolderNode>
+    <FolderNode name="scripts">
+      <FileNode name="clean.py" />
+      <FileNode name="analyze.py" />
+    </FolderNode>
+    <FolderNode name="outputs">
+      <FileNode name="monthly_revenue.png" />
+    </FolderNode>
+    <FileNode name="README.md" />
+    <FileNode name="CLAUDE.md" highlight />
+    <FileNode name=".gitignore" />
+  </FolderNode>
+</FileTree>
 
-Add to `.gitignore`:
+</Step>
+<Step title="Set Up .gitignore">
+
+Don't commit things that shouldn't be committed:
+
 ```
 venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
-*.csv
+data/*.csv
 !data/sample.csv
-outputs/*.png
+outputs/
+.env
 ```
+
+</Step>
+</Steps>
+
+<Callout type="tip">
+**Ask Claude to generate your CLAUDE.md:**
+```
+Create a CLAUDE.md for a sales data analysis project using Python and pandas.
+Include common commands and example prompts.
+```
+</Callout>
 
 ---
 
-## Working with Claude
+## Part 2: Loading Data
 
-### Ask Claude to Create CLAUDE.md
+Let's load some data and see what we're working with.
 
-Open VS Code and ask Claude:
+### The Core Workflow
 
-```
-Create a CLAUDE.md file for this data analysis project.
+<Diagram title="Data Loading Flow" type="flowchart">
+{`flowchart LR
+    A[CSV File] --> B[pd.read_csv]
+    B --> C[DataFrame]
+    C --> D[.head/.info/.describe]
+    D --> E[Understand your data]
+`}
+</Diagram>
 
-Project: Sales data analysis
-Language: Python
-Libraries: pandas, matplotlib
-Goal: Analyze monthly sales trends
-
-Include:
-- Project context
-- Common commands
-- Example prompts for data analysis
-```
-
-Claude will generate a customized CLAUDE.md!
-
----
-
-## Your First Analysis
-
-### Load Data
+### Your First Script
 
 Create `scripts/load_data.py`:
-
-Ask Claude:
-```
-Write a Python script to:
-1. Load data/sales.csv using pandas
-2. Display basic info (shape, columns, data types)
-3. Show first few rows
-4. Check for missing values
-
-Include error handling.
-```
-
-Claude will generate something like:
 
 ```python
 import pandas as pd
 
-def load_and_inspect_data(filepath):
-    """Load and inspect CSV data"""
-    try:
-        df = pd.read_csv(filepath)
-        
-        print(f"Dataset shape: {df.shape}")
-        print(f"\nColumns: {df.columns.tolist()}")
-        print(f"\nData types:\n{df.dtypes}")
-        print(f"\nFirst 5 rows:\n{df.head()}")
-        print(f"\nMissing values:\n{df.isnull().sum()}")
-        
-        return df
-    except FileNotFoundError:
-        print(f"Error: {filepath} not found")
-        return None
+# Load the data
+df = pd.read_csv("data/sales.csv")
 
-if __name__ == "__main__":
-    df = load_and_inspect_data("data/sales.csv")
+# What do we have?
+print(f"Rows: {len(df):,}")
+print(f"Columns: {list(df.columns)}")
+print()
+
+# First look
+print(df.head())
+print()
+
+# Data types and missing values
+print(df.info())
 ```
 
-### Clean Data
+### Run It
 
-Ask Claude:
+```bash
+python scripts/load_data.py
+```
+
+<Callout type="tip">
+**No data yet?** Ask Claude:
+```
+Generate sample sales data with columns: date, product, category, quantity, price, region.
+Save it as a CSV I can use for practice.
+```
+</Callout>
+
+---
+
+## Part 3: Cleaning Data
+
+Real data is messy. Here's how to fix common problems.
+
+### Common Issues (And How to Fix Them)
+
+| Problem | Solution |
+|---------|----------|
+| Missing values | `df.dropna()` or `df.fillna(value)` |
+| Wrong data types | `pd.to_datetime(df['date'])` |
+| Duplicates | `df.drop_duplicates()` |
+| Inconsistent text | `df['name'].str.lower().str.strip()` |
+| Outliers | Filter or cap values |
+
+### Ask Claude to Clean Your Data
+
 ```
 I have sales data with these issues:
-- Some missing values in 'revenue' column
-- Date column is string, needs to be datetime
-- Some negative quantities (data errors)
+- Date column is a string like "Jan 15, 2024"
+- Some revenue values are missing
+- Product names have inconsistent capitalization
+- There are duplicate rows
 
-Write a function to clean this data.
+Write a cleaning function that fixes all of these.
 ```
 
-### Create Visualizations
+### Example Cleaning Script
 
-Ask Claude:
-```
-Create visualizations for sales data:
-1. Monthly revenue trend (line plot)
-2. Revenue by product category (bar chart)
-3. Sales distribution (histogram)
+```python
+import pandas as pd
 
-Save plots to outputs/ folder.
-Use clear labels and titles.
+def clean_sales_data(df):
+    """Clean the raw sales data."""
+    # Make a copy (don't modify original)
+    df = df.copy()
+
+    # Fix dates
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Handle missing revenue (fill with median)
+    df['revenue'] = df['revenue'].fillna(df['revenue'].median())
+
+    # Standardize product names
+    df['product'] = df['product'].str.lower().str.strip()
+
+    # Remove duplicates
+    df = df.drop_duplicates()
+
+    # Remove obvious errors (negative quantities)
+    df = df[df['quantity'] > 0]
+
+    return df
+
+# Usage
+df = pd.read_csv("data/sales.csv")
+df_clean = clean_sales_data(df)
+print(f"Rows before: {len(df)}, after: {len(df_clean)}")
 ```
 
 ---
 
-## Common Data Analysis Patterns
+## Part 4: Exploring Data
 
-### Explore Data
+Before you analyze, you need to understand. Here's the exploration toolkit.
+
+### Quick Summary
 
 ```python
-# Summary statistics
-df.describe()
+# Overview
+df.describe()           # Statistics for numeric columns
+df.info()               # Data types, missing values
+df.shape                # (rows, columns)
 
-# Value counts
-df['category'].value_counts()
+# Specific columns
+df['category'].value_counts()    # Count by category
+df['revenue'].mean()             # Average revenue
+df['date'].min(), df['date'].max()  # Date range
+```
 
-# Group by analysis
+### Grouping and Aggregation
+
+This is where pandas shines:
+
+```python
+# Total revenue by product
 df.groupby('product')['revenue'].sum()
 
-# Correlation
-df.corr()
+# Multiple aggregations
+df.groupby('category').agg({
+    'revenue': 'sum',
+    'quantity': 'mean',
+    'order_id': 'count'
+})
+
+# Monthly totals
+df.groupby(df['date'].dt.month)['revenue'].sum()
 ```
 
-### Transform Data
+### Ask Claude for Exploration Help
 
-```python
-# Create new columns
-df['profit'] = df['revenue'] - df['cost']
+```
+I have sales data with: date, product, category, quantity, price, region.
 
-# Filter rows
-high_value = df[df['revenue'] > 1000]
-
-# Sort
-df.sort_values('date', ascending=False)
-
-# Aggregate
-monthly_sales = df.groupby('month').agg({
-    'revenue': 'sum',
-    'quantity': 'sum'
-})
+What are the most important things to explore first?
+Write the pandas code for each.
 ```
 
 ---
 
-## Using Jupyter Notebooks
+## Part 5: Visualizations
+
+A good chart is worth a thousand `.head()` calls.
+
+<Diagram title="Choosing the Right Chart" type="flowchart">
+{`flowchart TB
+    A{What are you showing?}
+    A -->|Trend over time| B[Line Chart]
+    A -->|Compare categories| C[Bar Chart]
+    A -->|Distribution| D[Histogram]
+    A -->|Relationship| E[Scatter Plot]
+    A -->|Composition| F[Pie Chart]
+`}
+</Diagram>
+
+### Basic Plots
+
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set style
+plt.style.use('seaborn-v0_8-whitegrid')
+
+# Line chart (trends)
+df.groupby('date')['revenue'].sum().plot(kind='line')
+plt.title('Daily Revenue')
+plt.savefig('outputs/daily_revenue.png')
+plt.show()
+
+# Bar chart (comparisons)
+df.groupby('category')['revenue'].sum().plot(kind='bar')
+plt.title('Revenue by Category')
+plt.savefig('outputs/category_revenue.png')
+plt.show()
+
+# Histogram (distribution)
+df['revenue'].hist(bins=30)
+plt.title('Revenue Distribution')
+plt.savefig('outputs/revenue_dist.png')
+plt.show()
+```
+
+### Ask Claude for Better Charts
+
+```
+Create a visualization showing monthly revenue trends.
+
+Make it:
+- Easy to read (larger fonts)
+- Professional looking (clean style)
+- Saved as PNG at 300 DPI
+- Include a trend line
+```
+
+---
+
+## Part 6: Putting It Together
+
+Let's build a complete analysis workflow.
+
+### The Full Script
+
+```python
+"""
+Sales Analysis Pipeline
+Run with: python scripts/analyze.py
+"""
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1. Load
+print("Loading data...")
+df = pd.read_csv("data/sales.csv")
+
+# 2. Clean
+print("Cleaning data...")
+df['date'] = pd.to_datetime(df['date'])
+df = df.dropna()
+df = df[df['quantity'] > 0]
+
+# 3. Analyze
+print("Analyzing...")
+monthly = df.groupby(df['date'].dt.to_period('M')).agg({
+    'revenue': 'sum',
+    'quantity': 'sum',
+    'order_id': 'count'
+}).rename(columns={'order_id': 'num_orders'})
+
+# 4. Visualize
+print("Creating charts...")
+fig, ax = plt.subplots(figsize=(10, 6))
+monthly['revenue'].plot(ax=ax)
+ax.set_title('Monthly Revenue', fontsize=14)
+ax.set_xlabel('Month')
+ax.set_ylabel('Revenue ($)')
+plt.tight_layout()
+plt.savefig('outputs/monthly_revenue.png', dpi=300)
+
+# 5. Report
+print("\n=== KEY FINDINGS ===")
+print(f"Total Revenue: ${monthly['revenue'].sum():,.2f}")
+print(f"Best Month: {monthly['revenue'].idxmax()}")
+print(f"Average Monthly Revenue: ${monthly['revenue'].mean():,.2f}")
+print(f"\nChart saved to outputs/monthly_revenue.png")
+```
+
+### Commit Your Work
+
+```bash
+git add scripts/analyze.py outputs/
+git commit -m "feat: add complete sales analysis pipeline"
+```
+
+---
+
+## Part 7: Jupyter Notebooks
+
+For interactive exploration, Jupyter notebooks are your friend.
 
 ### Start Jupyter
 
@@ -220,226 +441,151 @@ monthly_sales = df.groupby('month').agg({
 jupyter notebook
 ```
 
-### Ask Claude for Notebook Structure
+This opens a browser. Create a new Python 3 notebook.
 
-```
-Create a Jupyter notebook structure for analyzing:
-- Customer purchase patterns
-- Seasonal trends
-- Product performance
+### Notebook Best Practices
 
-Include markdown sections and code cell placeholders.
+| Do | Don't |
+|----|-------|
+| Use markdown headers | Run cells out of order |
+| Keep cells small and focused | Put all code in one cell |
+| Restart and run all before sharing | Leave broken cells |
+| Include explanatory text | Assume code is self-explanatory |
+
+<Callout type="tip">
+**Ask Claude to structure your notebook:**
 ```
+Create a Jupyter notebook structure for analyzing customer purchase patterns.
+Include markdown sections and placeholder code cells.
+```
+</Callout>
 
 ---
 
-## Git Workflow for Analysis
+## Common Patterns
 
-### Commit Your Progress
+Keep these in your back pocket:
 
-```bash
-# After loading data
-git add scripts/load_data.py
-git commit -m "feat: add data loading script"
+### Filter Rows
 
-# After cleaning
-git add scripts/clean_data.py
-git commit -m "feat: add data cleaning pipeline"
+```python
+# Single condition
+high_revenue = df[df['revenue'] > 1000]
 
-# After visualization
-git add scripts/visualize.py outputs/
-git commit -m "feat: add sales visualizations"
+# Multiple conditions
+q4_big_sales = df[(df['date'].dt.quarter == 4) & (df['revenue'] > 500)]
 ```
 
-### Using Claude for Commits
+### Create New Columns
 
-```
-I made these changes to my analysis:
-[describe changes]
+```python
+# From calculation
+df['profit'] = df['revenue'] - df['cost']
+df['profit_margin'] = df['profit'] / df['revenue']
 
-Suggest a good commit message.
-```
+# From date
+df['month'] = df['date'].dt.month
+df['day_of_week'] = df['date'].dt.day_name()
 
----
-
-## Example: Complete Analysis
-
-### Full Workflow with Claude
-
-1. **Plan** (ask Claude):
-```
-I have sales data with: date, product, category, quantity, price.
-
-Help me plan an analysis to find:
-- Best-selling products
-- Revenue trends
-- Seasonal patterns
-
-What steps should I take?
+# From categories
+df['size'] = pd.cut(df['revenue'], bins=[0, 100, 500, float('inf')],
+                    labels=['small', 'medium', 'large'])
 ```
 
-2. **Implement** (with Claude's guidance):
-- Write loading script
-- Clean data
-- Perform calculations
-- Create visualizations
-- Document findings
+### Join DataFrames
 
-3. **Review** (ask Claude):
-```
-Review my analysis code:
-[paste code]
+```python
+# Merge on common column
+df_full = pd.merge(orders, customers, on='customer_id')
 
-Check for:
-- Correctness
-- Efficiency
-- Best practices
-- Missing edge cases
-```
-
-4. **Document** (ask Claude):
-```
-Write a README for this analysis project.
-
-Include:
-- What the project does
-- How to run it
-- Key findings
-- Required dependencies
-```
-
----
-
-## Best Practices
-
-### Code Organization
-
-```
-sales-analysis/
-├── data/              # Raw data (gitignored)
-├── notebooks/         # Jupyter notebooks
-├── scripts/           # Python scripts
-│   ├── load.py
-│   ├── clean.py
-│   └── analyze.py
-├── outputs/           # Generated plots/reports
-├── README.md
-├── CLAUDE.md
-├── .gitignore
-└── requirements.txt
-```
-
-### Requirements File
-
-Create `requirements.txt`:
-```
-pandas==2.1.0
-numpy==1.25.0
-matplotlib==3.7.0
-jupyter==1.0.0
-```
-
-Install from it:
-```bash
-pip install -r requirements.txt
-```
-
-### Document Your Analysis
-
-Ask Claude:
-```
-Document this analysis function:
-[paste function]
-
-Write a docstring explaining:
-- Purpose
-- Parameters
-- Returns
-- Example usage
+# Concatenate vertically
+all_months = pd.concat([jan_df, feb_df, mar_df])
 ```
 
 ---
 
 ## Troubleshooting
 
-### Virtual Environment Issues
+<Tabs>
+  <TabList>
+    <Tab>Import Errors</Tab>
+    <Tab>Data Type Issues</Tab>
+    <Tab>Memory Problems</Tab>
+  </TabList>
+  <TabPanel>
+**"ModuleNotFoundError: No module named 'pandas'"**
+
+Your virtual environment isn't active or packages aren't installed.
 
 ```bash
-# Can't activate venv
-# Mac: Add to ~/.zshrc
-export PATH="$HOME/.local/bin:$PATH"
+# Check if venv is active (should see (venv) in prompt)
+which python  # Should point to venv/bin/python
 
-# Windows: Change execution policy
-Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+# If not, activate it
+source venv/bin/activate  # Mac/Linux
+.\venv\Scripts\Activate.ps1  # Windows
+
+# Reinstall
+pip install pandas numpy matplotlib
 ```
+  </TabPanel>
+  <TabPanel>
+**Date/number parsing issues**
 
-### Import Errors
+```python
+# Force date parsing
+df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d')
 
-```bash
-# Wrong Python/pip
-which python
-which pip
+# Handle mixed formats
+df['date'] = pd.to_datetime(df['date'], infer_datetime_format=True)
 
-# Reinstall in venv
-deactivate
-rm -rf venv
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+# Convert to numeric (coerce errors to NaN)
+df['revenue'] = pd.to_numeric(df['revenue'], errors='coerce')
 ```
+  </TabPanel>
+  <TabPanel>
+**Working with large files**
 
-### Pandas Issues
+```python
+# Read in chunks
+chunks = pd.read_csv('huge_file.csv', chunksize=100000)
+for chunk in chunks:
+    process(chunk)
 
-Ask Claude:
+# Read only needed columns
+df = pd.read_csv('data.csv', usecols=['date', 'revenue', 'product'])
+
+# Use efficient data types
+df['category'] = df['category'].astype('category')
 ```
-I'm getting this pandas error:
-[paste error]
-
-From this code:
-[paste code]
-
-How do I fix it?
-```
+  </TabPanel>
+</Tabs>
 
 ---
 
 ## Next Steps
 
-### Expand Your Skills
+You've got the fundamentals. Here's where to go deeper:
 
-1. **More Complex Analysis**
-   - Time series forecasting
-   - Statistical testing
-   - Machine learning basics
-
-2. **Better Visualizations**
-   - Seaborn for statistical plots
-   - Plotly for interactive charts
-   - Dashboards with Streamlit
-
-3. **Automation**
-   - Schedule reports
-   - Process multiple files
-   - See [Automation track](/automation)
-
-### Sample Projects
-
-Try analyzing:
-- COVID-19 data
-- Stock prices
-- Sports statistics
-- Weather patterns
-- Your own data!
+| Want to... | Learn |
+|------------|-------|
+| Build dashboards | Streamlit, Dash |
+| More statistics | scipy, statsmodels |
+| Machine learning | scikit-learn |
+| Bigger data | Dask, PySpark |
+| Automate reports | See [Automation Track](/automation) |
 
 ---
 
 ## Resources
 
-- [pandas documentation](https://pandas.pydata.org/docs/)
-- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/)
-- [Kaggle Learn](https://www.kaggle.com/learn) - Free courses
-- [Real Python](https://realpython.com/) - Tutorials
+- [pandas documentation](https://pandas.pydata.org/docs/) — Official reference
+- [Python Data Science Handbook](https://jakevdp.github.io/PythonDataScienceHandbook/) — Free online book
+- [Kaggle](https://www.kaggle.com/) — Practice datasets and competitions
+- [Real Python](https://realpython.com/) — Quality tutorials
 
 ---
 
-**Ready to analyze!** Start with a simple dataset and let Claude guide you through the process.
+<Callout type="success">
+**You're ready!** Grab a dataset, open VS Code, and start exploring. When you get stuck, Claude is there to help.
+</Callout>

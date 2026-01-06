@@ -1,20 +1,33 @@
 ---
 title: 'Building Agents'
-description: 'Learn to architect and implement AI agents from scratch using the Claude Agent SDK'
+description: 'Create AI agents from scratch using the Claude API'
 order: 1
 duration: '3-4 hours'
 ---
 
 # Building Agents
 
-Learn to build powerful AI agents from the ground up. This guide takes you from simple single-tool agents to sophisticated multi-step autonomous systems.
+Time to get your hands dirty. This guide takes you from "hello world" to a working agent that can use tools, manage state, and handle errors gracefully.
 
-## Setting Up Your Environment
+<Diagram title="What We're Building" type="flowchart" caption="A complete agent system">
+{`flowchart LR
+    A[User Input] --> B[Agent Core]
+    B --> C{Need Tools?}
+    C -->|Yes| D[Execute Tool]
+    D --> E[Process Result]
+    E --> B
+    C -->|No| F[Return Answer]
+`}
+</Diagram>
+
+---
+
+## Setting Up
 
 ### Prerequisites
 
 ```bash
-# Python 3.9+
+# Check Python version (3.9+ required)
 python --version
 
 # Create project
@@ -28,20 +41,21 @@ pip install anthropic python-dotenv
 
 ### Project Structure
 
-```
-my-agent/
-├── agent.py           # Main agent logic
-├── tools.py           # Tool definitions
-├── memory.py          # Memory management
-├── config.py          # Configuration
-├── .env               # API keys
-└── requirements.txt   # Dependencies
-```
+<FileTree>
+  <FolderNode name="my-agent" defaultOpen>
+    <FileNode name="agent.py" />
+    <FileNode name="tools.py" />
+    <FileNode name="memory.py" />
+    <FileNode name="config.py" />
+    <FileNode name=".env" />
+    <FileNode name="requirements.txt" />
+  </FolderNode>
+</FileTree>
 
 ### Configuration
 
 Create `.env`:
-```
+```bash
 ANTHROPIC_API_KEY=your-api-key-here
 ```
 
@@ -61,9 +75,10 @@ MAX_TOKENS = 4096
 
 ## Your First Agent
 
-Let's build a simple agent that can do calculations.
+Let's build an agent that can do math. Simple, but it demonstrates all the core concepts.
 
-### Step 1: Define Tools
+<Steps>
+<Step title="Define a Tool">
 
 Create `tools.py`:
 
@@ -71,53 +86,44 @@ Create `tools.py`:
 import math
 from typing import Any
 
-# Tool definitions for Claude
-TOOLS = [
-    {
-        "name": "calculator",
-        "description": "Perform mathematical calculations. Supports basic arithmetic, powers, roots, and trigonometry.",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "expression": {
-                    "type": "string",
-                    "description": "Mathematical expression to evaluate, e.g., '2 + 2' or 'sqrt(16)'"
-                }
-            },
-            "required": ["expression"]
-        }
+TOOLS = [{
+    "name": "calculator",
+    "description": "Perform mathematical calculations. Supports arithmetic, powers, roots, trig.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "expression": {
+                "type": "string",
+                "description": "Math expression to evaluate, e.g., '2 + 2' or 'sqrt(16)'"
+            }
+        },
+        "required": ["expression"]
     }
-]
+}]
 
 def execute_tool(name: str, inputs: dict) -> Any:
-    """Execute a tool and return the result."""
+    """Route tool calls to implementations."""
     if name == "calculator":
         return calculate(inputs["expression"])
-    else:
-        return f"Unknown tool: {name}"
+    return f"Unknown tool: {name}"
 
 def calculate(expression: str) -> str:
-    """Safely evaluate a mathematical expression."""
+    """Safely evaluate a math expression."""
     try:
-        # Create safe math environment
         safe_dict = {
-            "abs": abs, "round": round,
-            "min": min, "max": max,
-            "sum": sum, "pow": pow,
-            "sqrt": math.sqrt, "log": math.log,
-            "sin": math.sin, "cos": math.cos,
-            "tan": math.tan, "pi": math.pi,
-            "e": math.e
+            "abs": abs, "round": round, "min": min, "max": max,
+            "sqrt": math.sqrt, "log": math.log, "pow": pow,
+            "sin": math.sin, "cos": math.cos, "tan": math.tan,
+            "pi": math.pi, "e": math.e
         }
-
-        # Evaluate expression
         result = eval(expression, {"__builtins__": {}}, safe_dict)
         return str(result)
     except Exception as e:
         return f"Error: {str(e)}"
 ```
 
-### Step 2: Build the Agent Loop
+</Step>
+<Step title="Build the Agent Loop">
 
 Create `agent.py`:
 
@@ -129,11 +135,9 @@ from config import ANTHROPIC_API_KEY, MODEL, MAX_TOKENS
 client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
 def run_agent(user_message: str) -> str:
-    """Run the agent with the given user message."""
-
+    """Run the agent with a user message."""
     messages = [{"role": "user", "content": user_message}]
 
-    # Agent loop
     while True:
         # Call Claude
         response = client.messages.create(
@@ -143,9 +147,8 @@ def run_agent(user_message: str) -> str:
             messages=messages
         )
 
-        # Check if we should use tools
+        # Check for tool use
         if response.stop_reason == "tool_use":
-            # Process tool calls
             tool_results = []
 
             for block in response.content:
@@ -157,25 +160,24 @@ def run_agent(user_message: str) -> str:
                         "content": result
                     })
 
-            # Add assistant message and tool results
+            # Add assistant response and tool results
             messages.append({"role": "assistant", "content": response.content})
             messages.append({"role": "user", "content": tool_results})
 
         else:
-            # Agent is done - extract final text
-            final_text = ""
-            for block in response.content:
-                if hasattr(block, "text"):
-                    final_text += block.text
-
-            return final_text
+            # Extract final text and return
+            return "".join(
+                block.text for block in response.content
+                if hasattr(block, "text")
+            )
 
 if __name__ == "__main__":
-    result = run_agent("What is the square root of 144 plus 5 to the power of 3?")
+    result = run_agent("What is sqrt(144) + 5^3?")
     print(result)
 ```
 
-### Step 3: Test Your Agent
+</Step>
+<Step title="Test It">
 
 ```bash
 python agent.py
@@ -185,43 +187,39 @@ Expected output:
 ```
 Let me calculate that for you.
 
-First, I'll find the square root of 144:
-sqrt(144) = 12
-
-Then I'll calculate 5 to the power of 3:
-5^3 = 125
-
-Finally, I'll add them together:
-12 + 125 = 137
+First, sqrt(144) = 12
+Then, 5^3 = 125
+Finally, 12 + 125 = 137
 
 The answer is 137.
 ```
+
+</Step>
+</Steps>
+
+<Callout type="success">
+**Congratulations!** You just built an agent. It observed (read your question), thought (decided to use calculator), acted (called the tool), and responded. That's the entire agent loop.
+</Callout>
 
 ---
 
 ## Adding More Tools
 
-Let's expand our agent with more capabilities.
+One tool is a start. Real agents need more capabilities.
 
 ### File Operations
-
-Add to `tools.py`:
 
 ```python
 import os
 
-# Add to TOOLS list
 FILE_TOOLS = [
     {
         "name": "read_file",
-        "description": "Read the contents of a file",
+        "description": "Read contents of a file",
         "input_schema": {
             "type": "object",
             "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Path to the file to read"
-                }
+                "path": {"type": "string", "description": "Path to file"}
             },
             "required": ["path"]
         }
@@ -232,28 +230,19 @@ FILE_TOOLS = [
         "input_schema": {
             "type": "object",
             "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Path to the file to write"
-                },
-                "content": {
-                    "type": "string",
-                    "description": "Content to write to the file"
-                }
+                "path": {"type": "string", "description": "Path to file"},
+                "content": {"type": "string", "description": "Content to write"}
             },
             "required": ["path", "content"]
         }
     },
     {
         "name": "list_directory",
-        "description": "List files and directories in a path",
+        "description": "List files in a directory",
         "input_schema": {
             "type": "object",
             "properties": {
-                "path": {
-                    "type": "string",
-                    "description": "Directory path to list"
-                }
+                "path": {"type": "string", "description": "Directory path"}
             },
             "required": ["path"]
         }
@@ -261,119 +250,77 @@ FILE_TOOLS = [
 ]
 
 def read_file(path: str) -> str:
-    """Read a file and return its contents."""
     try:
         with open(path, 'r') as f:
             return f.read()
     except Exception as e:
-        return f"Error reading file: {str(e)}"
+        return f"Error: {str(e)}"
 
 def write_file(path: str, content: str) -> str:
-    """Write content to a file."""
     try:
         with open(path, 'w') as f:
             f.write(content)
-        return f"Successfully wrote to {path}"
+        return f"Wrote {len(content)} characters to {path}"
     except Exception as e:
-        return f"Error writing file: {str(e)}"
+        return f"Error: {str(e)}"
 
 def list_directory(path: str) -> str:
-    """List contents of a directory."""
     try:
-        items = os.listdir(path)
-        return "\n".join(items)
+        return "\n".join(os.listdir(path))
     except Exception as e:
-        return f"Error listing directory: {str(e)}"
+        return f"Error: {str(e)}"
 ```
 
-### Web Search
-
-Add web search capability:
+### Web Fetching
 
 ```python
 import requests
 
-WEB_TOOLS = [
-    {
-        "name": "web_search",
-        "description": "Search the web for information",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "Search query"
-                }
-            },
-            "required": ["query"]
-        }
-    },
-    {
-        "name": "fetch_url",
-        "description": "Fetch the content of a web page",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "url": {
-                    "type": "string",
-                    "description": "URL to fetch"
-                }
-            },
-            "required": ["url"]
-        }
+WEB_TOOLS = [{
+    "name": "fetch_url",
+    "description": "Fetch content from a URL",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "url": {"type": "string", "description": "URL to fetch"}
+        },
+        "required": ["url"]
     }
-]
-
-def web_search(query: str) -> str:
-    """Search the web using a search API."""
-    # You'll need to implement with your preferred search API
-    # Options: SerpAPI, Brave Search, Tavily, etc.
-    pass
+}]
 
 def fetch_url(url: str) -> str:
-    """Fetch content from a URL."""
     try:
         response = requests.get(url, timeout=10)
         response.raise_for_status()
-        return response.text[:5000]  # Limit response size
+        return response.text[:5000]  # Limit size
     except Exception as e:
-        return f"Error fetching URL: {str(e)}"
+        return f"Error: {str(e)}"
 ```
 
 ### Code Execution
-
-Add safe code execution:
 
 ```python
 import subprocess
 import tempfile
 
-CODE_TOOLS = [
-    {
-        "name": "run_python",
-        "description": "Execute Python code and return the output",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "code": {
-                    "type": "string",
-                    "description": "Python code to execute"
-                }
-            },
-            "required": ["code"]
-        }
+CODE_TOOLS = [{
+    "name": "run_python",
+    "description": "Execute Python code and return output",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "code": {"type": "string", "description": "Python code"}
+        },
+        "required": ["code"]
     }
-]
+}]
 
 def run_python(code: str) -> str:
-    """Execute Python code safely."""
     try:
-        # Write code to temp file
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             f.write(code)
             temp_path = f.name
 
-        # Execute with timeout
         result = subprocess.run(
             ['python', temp_path],
             capture_output=True,
@@ -384,65 +331,80 @@ def run_python(code: str) -> str:
         output = result.stdout
         if result.stderr:
             output += f"\nErrors:\n{result.stderr}"
-
-        return output or "Code executed successfully (no output)"
+        return output or "Code executed (no output)"
 
     except subprocess.TimeoutExpired:
-        return "Error: Code execution timed out (30s limit)"
+        return "Error: Execution timed out (30s limit)"
     except Exception as e:
-        return f"Error executing code: {str(e)}"
+        return f"Error: {str(e)}"
 ```
 
 ---
 
-## Agent Architecture Patterns
+## Architecture Patterns
+
+Three patterns dominate agent design. Choose based on your use case.
+
+<Diagram title="Agent Patterns" type="flowchart">
+{`flowchart TB
+    subgraph react["ReAct"]
+        R1[Think] --> R2[Act]
+        R2 --> R3[Observe]
+        R3 --> R1
+    end
+
+    subgraph plan["Plan-Execute"]
+        P1[Make Plan] --> P2[Execute Step 1]
+        P2 --> P3[Execute Step 2]
+        P3 --> P4[Execute Step N]
+    end
+
+    subgraph tree["Tree of Thoughts"]
+        T1[Problem] --> T2[Approach A]
+        T1 --> T3[Approach B]
+        T1 --> T4[Approach C]
+        T2 --> T5[Best Result]
+    end
+`}
+</Diagram>
 
 ### Pattern 1: ReAct (Reason + Act)
 
-The agent explicitly reasons before each action:
+The agent explicitly thinks before each action:
 
 ```python
-SYSTEM_PROMPT = """You are a helpful assistant that solves problems step by step.
+SYSTEM_PROMPT = """You solve problems step by step.
 
 For each step:
-1. THOUGHT: Explain your reasoning
-2. ACTION: Choose a tool to use
-3. OBSERVATION: Analyze the result
-4. REPEAT until you have the answer
+1. THOUGHT: What do I need to do?
+2. ACTION: Use a tool
+3. OBSERVATION: What did I learn?
+4. REPEAT until done
 
 Always think before you act."""
 
-def react_agent(user_message: str) -> str:
-    messages = [
-        {"role": "user", "content": user_message}
-    ]
+def react_agent(task: str) -> str:
+    messages = [{"role": "user", "content": task}]
 
     response = client.messages.create(
         model=MODEL,
-        max_tokens=MAX_TOKENS,
         system=SYSTEM_PROMPT,
         tools=TOOLS,
         messages=messages
     )
-    # ... rest of agent loop
+    # ... continue agent loop
 ```
 
 ### Pattern 2: Plan and Execute
 
-The agent creates a plan, then executes it:
+Create a plan first, then execute it:
 
 ```python
-PLANNER_PROMPT = """Create a step-by-step plan to accomplish this task.
-Return a numbered list of specific actions."""
-
-EXECUTOR_PROMPT = """Execute this step of the plan using the available tools."""
-
 def plan_and_execute(task: str) -> str:
     # Step 1: Create plan
     plan_response = client.messages.create(
         model=MODEL,
-        max_tokens=1000,
-        system=PLANNER_PROMPT,
+        system="Create a step-by-step plan. Return numbered steps.",
         messages=[{"role": "user", "content": task}]
     )
     plan = extract_text(plan_response)
@@ -453,38 +415,32 @@ def plan_and_execute(task: str) -> str:
         result = execute_step(step)
         results.append(result)
 
-    # Step 3: Synthesize results
-    return synthesize(results)
+    # Step 3: Synthesize
+    return synthesize_results(results)
 ```
 
 ### Pattern 3: Tree of Thoughts
 
-Explore multiple approaches in parallel:
+Explore multiple approaches, pick the best:
 
 ```python
-def tree_of_thoughts(problem: str, num_branches: int = 3) -> str:
-    # Generate multiple approaches
-    approaches = []
-    for i in range(num_branches):
-        approach = generate_approach(problem)
-        approaches.append(approach)
+def tree_of_thoughts(problem: str, branches: int = 3) -> str:
+    # Generate approaches
+    approaches = [generate_approach(problem) for _ in range(branches)]
 
-    # Evaluate each approach
-    evaluations = []
-    for approach in approaches:
-        score = evaluate_approach(approach)
-        evaluations.append((approach, score))
+    # Evaluate each
+    scored = [(a, evaluate(a)) for a in approaches]
 
-    # Select best approach
-    best = max(evaluations, key=lambda x: x[1])
-
-    # Execute best approach
+    # Execute best
+    best = max(scored, key=lambda x: x[1])
     return execute_approach(best[0])
 ```
 
 ---
 
 ## Memory Management
+
+Agents need memory to work across steps and sessions.
 
 ### Short-term Memory
 
@@ -498,7 +454,6 @@ class ShortTermMemory:
 
     def add(self, role: str, content: str):
         self.messages.append({"role": role, "content": content})
-        # Trim old messages
         if len(self.messages) > self.max_messages:
             self.messages = self.messages[-self.max_messages:]
 
@@ -506,9 +461,9 @@ class ShortTermMemory:
         return self.messages.copy()
 ```
 
-### Long-term Memory with Vector Search
+### Long-term Memory with Vectors
 
-Store and retrieve relevant information:
+Store and retrieve by semantic similarity:
 
 ```python
 # pip install chromadb sentence-transformers
@@ -516,13 +471,12 @@ import chromadb
 from sentence_transformers import SentenceTransformer
 
 class LongTermMemory:
-    def __init__(self, collection_name: str = "agent_memory"):
+    def __init__(self):
         self.client = chromadb.Client()
-        self.collection = self.client.create_collection(collection_name)
+        self.collection = self.client.create_collection("agent_memory")
         self.encoder = SentenceTransformer('all-MiniLM-L6-v2')
 
     def store(self, text: str, metadata: dict = None):
-        """Store information in memory."""
         embedding = self.encoder.encode(text).tolist()
         self.collection.add(
             embeddings=[embedding],
@@ -531,12 +485,11 @@ class LongTermMemory:
             ids=[str(hash(text))]
         )
 
-    def search(self, query: str, n_results: int = 5) -> list:
-        """Search memory for relevant information."""
+    def search(self, query: str, n: int = 5) -> list:
         embedding = self.encoder.encode(query).tolist()
         results = self.collection.query(
             query_embeddings=[embedding],
-            n_results=n_results
+            n_results=n
         )
         return results["documents"][0]
 ```
@@ -549,24 +502,20 @@ class MemoryAgent:
         self.short_term = ShortTermMemory()
         self.long_term = LongTermMemory()
 
-    def run(self, user_message: str) -> str:
-        # Search long-term memory for relevant context
-        relevant_memories = self.long_term.search(user_message)
-        context = "\n".join(relevant_memories)
+    def run(self, message: str) -> str:
+        # Retrieve relevant memories
+        memories = self.long_term.search(message)
+        context = "\n".join(memories) if memories else ""
 
-        # Add to short-term memory
-        self.short_term.add("user", user_message)
+        # Add to short-term
+        self.short_term.add("user", message)
 
-        # Run agent with context
+        # Run with context
         system = f"Relevant context:\n{context}" if context else ""
+        response = run_agent_with_system(system, self.short_term.get_messages())
 
-        response = run_agent_with_system(
-            system,
-            self.short_term.get_messages()
-        )
-
-        # Store response in long-term memory
-        self.long_term.store(response, {"type": "assistant_response"})
+        # Store response
+        self.long_term.store(response)
         self.short_term.add("assistant", response)
 
         return response
@@ -574,7 +523,9 @@ class MemoryAgent:
 
 ---
 
-## Error Handling and Recovery
+## Error Handling
+
+Agents fail. Plan for it.
 
 ### Retry Logic
 
@@ -582,26 +533,20 @@ class MemoryAgent:
 import time
 from anthropic import APIError, RateLimitError
 
-def run_agent_with_retry(user_message: str, max_retries: int = 3) -> str:
-    """Run agent with automatic retry on failure."""
-
+def run_with_retry(message: str, max_retries: int = 3) -> str:
     for attempt in range(max_retries):
         try:
-            return run_agent(user_message)
+            return run_agent(message)
 
         except RateLimitError:
-            wait_time = 2 ** attempt  # Exponential backoff
-            print(f"Rate limited. Waiting {wait_time}s...")
-            time.sleep(wait_time)
+            wait = 2 ** attempt
+            print(f"Rate limited. Waiting {wait}s...")
+            time.sleep(wait)
 
         except APIError as e:
             print(f"API error: {e}")
             if attempt == max_retries - 1:
                 raise
-
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            raise
 
     raise Exception("Max retries exceeded")
 ```
@@ -609,183 +554,141 @@ def run_agent_with_retry(user_message: str, max_retries: int = 3) -> str:
 ### Loop Detection
 
 ```python
-def run_agent_with_loop_detection(user_message: str, max_iterations: int = 20) -> str:
-    """Run agent with loop detection."""
-
-    messages = [{"role": "user", "content": user_message}]
-    tool_calls = []
+def run_with_loop_detection(message: str, max_iterations: int = 20) -> str:
+    messages = [{"role": "user", "content": message}]
+    seen_calls = []
     iteration = 0
 
     while iteration < max_iterations:
         response = client.messages.create(
             model=MODEL,
-            max_tokens=MAX_TOKENS,
             tools=TOOLS,
             messages=messages
         )
 
         if response.stop_reason == "tool_use":
-            # Check for loops
-            current_calls = extract_tool_calls(response)
+            current = [(b.name, str(b.input)) for b in response.content if b.type == "tool_use"]
 
-            if detect_loop(tool_calls, current_calls):
-                # Break the loop
+            # Check for loop
+            if current in seen_calls[-3:]:
                 messages.append({
                     "role": "user",
-                    "content": "You seem to be repeating the same action. Please try a different approach or provide your final answer."
+                    "content": "You're repeating yourself. Try a different approach or give your final answer."
                 })
             else:
-                tool_calls.extend(current_calls)
-                # Process tools normally
-                # ...
+                seen_calls.append(current)
+                # Process tools normally...
 
         else:
             return extract_text(response)
 
         iteration += 1
 
-    return "Agent reached maximum iterations"
-
-def detect_loop(history: list, current: list, window: int = 3) -> bool:
-    """Detect if agent is stuck in a loop."""
-    if len(history) < window:
-        return False
-
-    recent = history[-window:]
-    return all(
-        c["name"] == r["name"] and c["input"] == r["input"]
-        for c, r in zip(current, recent[-len(current):])
-    )
+    return "Agent reached max iterations"
 ```
 
-### Graceful Degradation
+### Safe Tool Execution
 
 ```python
 def execute_tool_safely(name: str, inputs: dict) -> str:
-    """Execute tool with fallback on failure."""
-
     try:
         result = execute_tool(name, inputs)
         return result
-
     except Exception as e:
-        # Log the error
-        print(f"Tool {name} failed: {e}")
-
-        # Return informative error
-        return f"Tool '{name}' encountered an error: {str(e)}. Please try an alternative approach."
+        return f"Tool '{name}' failed: {str(e)}. Try a different approach."
 ```
 
 ---
 
-## Building a Complete Agent
+## Complete Research Agent
 
-Let's build a full-featured research agent:
-
-**Ask Claude Code:**
-```
-Create a complete research agent that:
-
-1. Takes a research question
-2. Searches the web for information
-3. Reads and analyzes sources
-4. Takes notes and organizes findings
-5. Synthesizes a comprehensive answer with citations
-
-Include:
-- Multiple tools (search, fetch, note-taking)
-- Memory management
-- Error handling
-- Progress updates
-- Final report generation
-
-Make it production-ready with logging and configuration.
-```
-
-### Expected Structure
+Let's put it all together:
 
 ```python
-# research_agent.py
-
-import logging
 from dataclasses import dataclass
 from typing import List
-from anthropic import Anthropic
+import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @dataclass
-class ResearchNote:
+class Note:
     source: str
     content: str
-    relevance: float
 
 class ResearchAgent:
     def __init__(self):
         self.client = Anthropic()
-        self.notes: List[ResearchNote] = []
-        self.sources_visited: set = set()
+        self.notes: List[Note] = []
+        self.visited: set = set()
 
     def research(self, question: str) -> str:
-        """Conduct research on a question."""
-        logger.info(f"Starting research: {question}")
+        logger.info(f"Researching: {question}")
 
         # Phase 1: Generate search queries
         queries = self._generate_queries(question)
 
-        # Phase 2: Search and gather information
+        # Phase 2: Search and gather
         for query in queries:
             results = self._search(query)
             for result in results:
-                if result.url not in self.sources_visited:
-                    content = self._fetch_and_analyze(result.url)
+                if result.url not in self.visited:
+                    content = self._fetch_and_extract(result.url)
                     self._take_notes(result.url, content)
-                    self.sources_visited.add(result.url)
+                    self.visited.add(result.url)
 
-        # Phase 3: Synthesize findings
+        # Phase 3: Synthesize
         report = self._synthesize(question)
 
-        logger.info(f"Research complete. {len(self.notes)} notes from {len(self.sources_visited)} sources")
-
+        logger.info(f"Done. {len(self.notes)} notes from {len(self.visited)} sources")
         return report
 
     def _generate_queries(self, question: str) -> List[str]:
-        """Generate search queries for the research question."""
-        # Implementation
-        pass
+        response = self.client.messages.create(
+            model=MODEL,
+            system="Generate 3-5 search queries to research this question.",
+            messages=[{"role": "user", "content": question}]
+        )
+        return parse_queries(extract_text(response))
 
     def _search(self, query: str) -> List[dict]:
-        """Search the web for information."""
-        # Implementation
+        # Implement with your search API
         pass
 
-    def _fetch_and_analyze(self, url: str) -> str:
-        """Fetch and extract key information from a URL."""
-        # Implementation
+    def _fetch_and_extract(self, url: str) -> str:
+        # Fetch URL and extract key information
         pass
 
     def _take_notes(self, source: str, content: str):
-        """Extract and store relevant notes."""
-        # Implementation
-        pass
+        # Use Claude to extract key points
+        response = self.client.messages.create(
+            model=MODEL,
+            system="Extract 3-5 key facts from this content.",
+            messages=[{"role": "user", "content": content}]
+        )
+        self.notes.append(Note(source=source, content=extract_text(response)))
 
     def _synthesize(self, question: str) -> str:
-        """Synthesize notes into a comprehensive answer."""
-        # Implementation
-        pass
+        notes_text = "\n\n".join(f"[{n.source}]\n{n.content}" for n in self.notes)
+
+        response = self.client.messages.create(
+            model=MODEL,
+            system="Synthesize these notes into a comprehensive answer. Cite sources.",
+            messages=[{"role": "user", "content": f"Question: {question}\n\nNotes:\n{notes_text}"}]
+        )
+        return extract_text(response)
 ```
 
 ---
 
-## Testing Your Agent
+## Testing
 
 ### Unit Tests
 
 ```python
 import pytest
-from tools import calculate, read_file, execute_tool
+from tools import calculate, execute_tool
 
 def test_calculator():
     assert calculate("2 + 2") == "4"
@@ -798,67 +701,41 @@ def test_execute_tool():
 
 def test_unknown_tool():
     result = execute_tool("unknown", {})
-    assert "Unknown tool" in result
+    assert "Unknown" in result
 ```
 
 ### Integration Tests
 
 ```python
-def test_agent_simple_query():
+def test_agent_math():
     result = run_agent("What is 15 + 27?")
     assert "42" in result
 
 def test_agent_multi_step():
-    result = run_agent("Calculate 10^2 and then take the square root")
+    result = run_agent("Calculate 10^2, then take the square root")
     assert "10" in result
-
-def test_agent_handles_errors():
-    result = run_agent("Divide 100 by 0")
-    assert "error" in result.lower() or "cannot" in result.lower()
-```
-
-### Behavioral Tests
-
-```python
-def test_agent_uses_tools():
-    """Verify agent actually uses tools, not just making up answers."""
-    with patch('tools.calculate') as mock_calc:
-        mock_calc.return_value = "42"
-        result = run_agent("What is sqrt(1764)?")
-        mock_calc.assert_called()
-
-def test_agent_stops_appropriately():
-    """Verify agent doesn't loop infinitely."""
-    start = time.time()
-    result = run_agent("What is 1+1?")
-    duration = time.time() - start
-    assert duration < 30  # Should complete quickly
 ```
 
 ---
 
 ## Next Steps
 
-Now that you can build agents, learn to:
+Now that you can build agents:
 
-1. **[Using Agents](./using-agents)**: Master prompting and usage patterns
-2. **[Agent Products](./agent-products)**: Build production systems
+1. **[Using Agents](./using-agents)** — Master prompting and debugging
+2. **[Agent Products](./agent-products)** — Ship production systems
 
 ### Practice Projects
 
-1. **File Organizer Agent**: Organize files based on content
-2. **Code Review Agent**: Analyze code for issues
-3. **Meeting Assistant**: Summarize transcripts and extract action items
-4. **Data Analyst**: Query databases and generate reports
-
-### Advanced Topics
-
-- Multi-agent collaboration
-- Human-in-the-loop workflows
-- Streaming responses
-- Async execution
-- Cost optimization
+| Project | Skills Practiced |
+|---------|------------------|
+| File Organizer | File tools, categorization |
+| Code Reviewer | Code analysis, multi-file |
+| Meeting Summarizer | Text processing, extraction |
+| Data Analyst | SQL, visualization |
 
 ---
 
-**Start building!** Take one of the examples above and extend it with your own tools and logic. The best way to learn agent development is through experimentation.
+<Callout type="success">
+**Start building!** Take the calculator agent and add one more tool. Then another. Before you know it, you'll have a sophisticated multi-tool agent.
+</Callout>

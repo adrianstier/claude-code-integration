@@ -1,439 +1,743 @@
 ---
-title: 'R for Data Analysis - Introduction'
-description: 'Learn R programming for data analysis with hands-on examples and Claude Code assistance'
+title: 'R for Data Analysis'
+description: 'Get started with R, tidyverse, and statistical analysis workflows'
 order: 3
 duration: '120 minutes'
-prerequisites: ['VS Code setup', 'Git basics']
+prerequisites: ['start-here']
 ---
 
-# R for Data Analysis - Introduction
+# R for Data Analysis
 
-Learn R programming for data analysis! This hands-on tutorial will teach you R fundamentals through practical examples with Claude Code as your coding partner.
+R was built by statisticians, for statisticians. It's the language behind academic research, clinical trials, and peer-reviewed journals worldwide. By the end of this guide, you'll be analyzing real data with the same tools used in research labs at Stanford and the CDC.
 
-## What You'll Learn
-
-- R programming basics (variables, functions, data structures)
-- Data manipulation with dplyr and tidyverse
-- Data visualization with ggplot2
-- Statistical analysis fundamentals
-- Working with real datasets
-- How to effectively use Claude Code for R development
+<Diagram title="What You'll Build" type="flowchart" caption="A complete R analysis workflow">
+{`flowchart LR
+    A[Raw Data] --> B[tidyverse]
+    B --> C[Clean Data]
+    C --> D[dplyr Analysis]
+    D --> E[ggplot2 Viz]
+    E --> F[Insights]
+`}
+</Diagram>
 
 ## Prerequisites
 
-Before starting:
-- Complete [macOS Setup](/start-here/mac-setup) or [Windows Setup](/start-here/windows-setup)
-- R and RStudio installed
-- Basic understanding of programming concepts (helpful but not required)
+Before starting, make sure you have:
 
-## Time Required
-
-~2 hours to complete all sections
+<Checklist>
+  <ChecklistItem>R installed ([Mac](/start-here/mac-setup) or [Windows](/start-here/windows-setup))</ChecklistItem>
+  <ChecklistItem>RStudio or VS Code with R extension</ChecklistItem>
+  <ChecklistItem>Basic terminal knowledge</ChecklistItem>
+</Checklist>
 
 ---
 
-## 1. Setting Up Your R Environment
+## Part 1: Setting Up R
 
-### Installing R and RStudio
+R has a steeper setup than Python, but the payoff is worth it. Let's get everything running.
 
-**macOS:**
+<Tabs>
+  <TabList>
+    <Tab>Mac</Tab>
+    <Tab>Windows</Tab>
+  </TabList>
+  <TabPanel>
+
+**Install R and RStudio:**
+
 ```bash
-# Install R
+# Install R via Homebrew
 brew install r
 
-# Install RStudio (download from RStudio.com or use Homebrew)
+# Install RStudio
 brew install --cask rstudio
 ```
 
-**Windows:**
-```bash
-# Download and install from:
-# R: https://cran.r-project.org/bin/windows/base/
-# RStudio: https://posit.co/download/rstudio-desktop/
-```
+Open RStudio from your Applications folder.
 
-### Installing Essential Packages
+  </TabPanel>
+  <TabPanel>
 
-Open RStudio and run:
+**Download and install:**
+
+Download R from [cran.r-project.org](https://cran.r-project.org/bin/windows/base/) and RStudio from [posit.co/download/rstudio-desktop](https://posit.co/download/rstudio-desktop/).
+
+Run both installers with default settings.
+
+  </TabPanel>
+</Tabs>
+
+<Steps>
+<Step title="Install Core Packages">
+
+Open RStudio and run this in the console:
 
 ```r
-# Install tidyverse (includes dplyr, ggplot2, and more)
+# The tidyverse is your toolkit - includes dplyr, ggplot2, and more
 install.packages("tidyverse")
 
-# Install additional useful packages
-install.packages(c("readr", "lubridate", "stringr"))
+# Additional helpful packages
+install.packages(c("readxl", "writexl", "lubridate"))
+```
 
+This takes a few minutes. Grab coffee.
+
+</Step>
+<Step title="Verify Installation">
+
+```r
 # Load tidyverse
 library(tidyverse)
+
+# You should see a message about loaded packages
 ```
 
-### VS Code Setup for R
+If you see the tidyverse welcome message, you're ready.
 
-Install the R extension in VS Code:
+</Step>
+<Step title="VS Code Setup (Optional)">
 
-```bash
-# In VS Code, install the R extension
-# Press Cmd+Shift+X (Mac) or Ctrl+Shift+X (Windows)
-# Search for "R" by REditorSupport and install
-```
+If you prefer VS Code over RStudio:
+
+1. Install the "R" extension by REditorSupport
+2. Open Command Palette and configure R path
+3. Create `.R` files and run with `Cmd+Enter` (Mac) or `Ctrl+Enter` (Windows)
+
+</Step>
+</Steps>
+
+<Callout type="tip">
+**RStudio vs VS Code**: RStudio is purpose-built for R with better debugging and plot viewing. VS Code is better if you also code in Python/JavaScript. Many data scientists use both.
+</Callout>
 
 ---
 
-## 2. R Basics
+## Part 2: R Fundamentals
 
-### Variables and Data Types
+R has some quirks that trip up beginners. Let's cover them upfront.
 
-Create a new R script:
+### Variables and Assignment
+
+R uses `<-` for assignment (not `=`):
 
 ```r
-# Numeric
-age <- 25
-height <- 5.9
-temperature <- 98.6
+# The R way
+project_budget <- 50000
+team_size <- 8
+cost_per_person <- project_budget / team_size
 
-# Character (strings)
-name <- "Alice"
-city <- "San Francisco"
-
-# Logical (boolean)
-is_student <- TRUE
-has_experience <- FALSE
+# This also works, but is less idiomatic
+name = "Analysis Project"
 
 # Print values
-print(paste("Name:", name))
-print(paste("Age:", age))
+print(project_budget)
+print(paste("Cost per person:", cost_per_person))
 ```
 
-**Ask Claude Code:**
-```
-Explain the difference between <- and = in R.
-When should I use each one?
-```
+<Callout type="note">
+**Why `<-` instead of `=`?** Historical reasons. R predates many modern languages. Use `<-` for assignment and `=` for function arguments. Claude Code can help convert code between styles.
+</Callout>
 
-### Vectors
+### Data Types
 
 ```r
-# Numeric vector
-temperatures <- c(72, 75, 68, 71, 73, 76, 74)
-print(temperatures)
+# Numeric (integers and decimals)
+sample_size <- 150
+p_value <- 0.042
 
-# Character vector
-days <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-print(days)
+# Character (text/strings)
+study_name <- "Customer Retention Analysis"
+department <- "Marketing"
 
-# Vector operations
-mean_temp <- mean(temperatures)
-max_temp <- max(temperatures)
+# Logical (TRUE/FALSE)
+is_significant <- TRUE
+needs_review <- FALSE
 
-print(paste("Average temperature:", mean_temp))
-print(paste("Maximum temperature:", max_temp))
-
-# Indexing (R uses 1-based indexing!)
-first_day <- days[1]  # "Mon"
-weekend <- days[6:7]  # "Sat", "Sun"
+# Check types with class()
+class(sample_size)   # "numeric"
+class(study_name)    # "character"
+class(is_significant) # "logical"
 ```
 
-### Data Frames
+### Vectors: R's Building Block
+
+Everything in R is a vector. Even single values are vectors of length 1.
+
+```r
+# Create vectors with c() - "combine"
+temperatures <- c(72, 75, 68, 71, 73, 76, 74)
+days <- c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+sunny <- c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
+
+# Vector operations are automatic
+fahrenheit <- c(72, 75, 68)
+celsius <- (fahrenheit - 32) * 5/9  # Applies to ALL elements
+
+# Built-in statistics
+mean(temperatures)  # 72.71...
+max(temperatures)   # 76
+min(temperatures)   # 68
+sd(temperatures)    # Standard deviation
+```
+
+<Callout type="warning">
+**R uses 1-based indexing!** The first element is `[1]`, not `[0]`. This trips up Python users constantly.
+</Callout>
+
+```r
+# Indexing
+days[1]      # "Mon" (not [0]!)
+days[6:7]    # "Sat", "Sun"
+days[-1]     # Everything EXCEPT first element
+
+# Logical indexing
+temperatures[temperatures > 73]  # Values above 73
+```
+
+### Data Frames: Your Main Tool
+
+Data frames are tables—like Excel, but programmable.
 
 ```r
 # Create a data frame
-weather_data <- data.frame(
+weather <- data.frame(
   day = days,
-  temperature = temperatures,
-  sunny = c(TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE)
+  temp = temperatures,
+  sunny = sunny
 )
 
-# View the data
-print(weather_data)
-head(weather_data)  # First 6 rows
-str(weather_data)   # Structure
+# View it
+print(weather)
+head(weather, 3)   # First 3 rows
+str(weather)       # Structure (types, dimensions)
+summary(weather)   # Statistics for each column
 
 # Access columns
-weather_data$temperature
-weather_data$day
+weather$temp
+weather$day
 
 # Filter rows
-sunny_days <- weather_data[weather_data$sunny == TRUE, ]
-print(sunny_days)
+weather[weather$sunny == TRUE, ]
+weather[weather$temp > 72, ]
 ```
 
-**Ask Claude Code:**
-```
-Create a data frame with student information including:
-- names (5 students)
-- ages
-- test scores
-- pass/fail status
-
-Then calculate the average score and find students who passed.
-```
+<Diagram title="Data Frame Mental Model" type="flowchart">
+{`flowchart TB
+    subgraph df["Data Frame"]
+        A["Columns = Variables"] --> B["day | temp | sunny"]
+        C["Rows = Observations"] --> D["Mon | 72 | TRUE"]
+        D --> E["Tue | 75 | TRUE"]
+    end
+`}
+</Diagram>
 
 ---
 
-## 3. Data Manipulation with dplyr
+## Part 3: The Tidyverse Way
 
-### Loading and Exploring Data
+Base R works, but tidyverse makes data analysis readable and fast.
+
+<Diagram title="The Tidyverse Ecosystem" type="flowchart">
+{`flowchart LR
+    A[readr] -->|read data| B[dplyr]
+    B -->|manipulate| C[tidyr]
+    C -->|reshape| D[ggplot2]
+    D -->|visualize| E[Final Output]
+`}
+</Diagram>
+
+### Creating Sample Data
 
 ```r
 library(tidyverse)
 
-# Create sample dataset
-sales_data <- tibble(
+# Create a realistic sales dataset
+set.seed(42)  # For reproducibility
+
+sales <- tibble(
   date = seq(as.Date("2025-01-01"), as.Date("2025-01-31"), by = "day"),
   product = sample(c("Laptop", "Phone", "Tablet"), 31, replace = TRUE),
   quantity = sample(1:10, 31, replace = TRUE),
-  price = sample(c(999, 699, 399), 31, replace = TRUE),
+  unit_price = case_when(
+    product == "Laptop" ~ 999,
+    product == "Phone" ~ 699,
+    product == "Tablet" ~ 399
+  ),
   region = sample(c("West", "East", "North", "South"), 31, replace = TRUE)
 )
 
-# View the data
-glimpse(sales_data)
-head(sales_data, 10)
+# tibble is tidyverse's improved data.frame
+glimpse(sales)
 ```
 
-### The Pipe Operator
+### The Pipe: %>%
+
+The pipe (`%>%`) chains operations together. Read it as "then."
 
 ```r
-# Traditional way (hard to read)
-result1 <- filter(sales_data, product == "Laptop")
-result2 <- select(result1, date, quantity, price)
-result3 <- arrange(result2, desc(quantity))
+# Without pipe (nested, hard to read)
+arrange(filter(select(sales, date, product, quantity), product == "Laptop"), desc(quantity))
 
-# With pipe operator (easy to read)
-result <- sales_data %>%
+# With pipe (clear, step-by-step)
+sales %>%
+  select(date, product, quantity) %>%
   filter(product == "Laptop") %>%
-  select(date, quantity, price) %>%
   arrange(desc(quantity))
 ```
 
-### Filtering with filter()
+<Callout type="tip">
+**Keyboard shortcut**: Type `%>%` with `Cmd+Shift+M` (Mac) or `Ctrl+Shift+M` (Windows) in RStudio.
+</Callout>
+
+### The Five Core dplyr Verbs
+
+<Diagram title="dplyr Verbs" type="flowchart">
+{`flowchart TB
+    A[filter] -->|"Keep rows matching condition"| B[select]
+    B -->|"Keep/drop columns"| C[mutate]
+    C -->|"Create new columns"| D[group_by]
+    D -->|"Group for aggregation"| E[summarize]
+    E -->|"Calculate summaries"| F[Result]
+`}
+</Diagram>
+
+#### 1. filter() — Keep Rows
 
 ```r
-# Filter laptops
-laptops <- sales_data %>%
+# Single condition
+laptops <- sales %>%
   filter(product == "Laptop")
 
-# Multiple conditions
-high_value_sales <- sales_data %>%
+# Multiple conditions (AND)
+big_laptop_sales <- sales %>%
   filter(product == "Laptop", quantity > 5)
 
-# Filter by date range
-january_first_week <- sales_data %>%
-  filter(date <= as.Date("2025-01-07"))
+# OR conditions
+mobile_devices <- sales %>%
+  filter(product == "Phone" | product == "Tablet")
 
-print(high_value_sales)
+# Date filtering
+first_week <- sales %>%
+  filter(date <= as.Date("2025-01-07"))
 ```
 
-### Selecting Columns with select()
+#### 2. select() — Keep Columns
 
 ```r
-# Select specific columns
-sales_summary <- sales_data %>%
+# Keep specific columns
+sales %>%
   select(date, product, quantity)
 
-# Select range of columns
-sales_details <- sales_data %>%
-  select(product:price)
-
 # Drop columns
-without_region <- sales_data %>%
+sales %>%
   select(-region)
 
-head(sales_summary)
+# Select range
+sales %>%
+  select(product:unit_price)
+
+# Rename while selecting
+sales %>%
+  select(sale_date = date, item = product)
 ```
 
-### Creating New Columns with mutate()
+#### 3. mutate() — Create Columns
 
 ```r
 # Add calculated column
-sales_with_total <- sales_data %>%
-  mutate(total_revenue = quantity * price)
+sales %>%
+  mutate(revenue = quantity * unit_price)
 
-# Multiple new columns
-sales_enhanced <- sales_data %>%
+# Multiple columns at once
+sales %>%
   mutate(
-    total_revenue = quantity * price,
+    revenue = quantity * unit_price,
     weekday = weekdays(date),
-    month = month(date)
+    month = format(date, "%B")
   )
 
-head(sales_enhanced)
+# Conditional column
+sales %>%
+  mutate(
+    size = case_when(
+      quantity >= 8 ~ "Large",
+      quantity >= 4 ~ "Medium",
+      TRUE ~ "Small"
+    )
+  )
 ```
 
-### Grouping and Summarizing
+#### 4. group_by() + summarize() — Aggregate
+
+This is where R shines for analysis:
 
 ```r
-# Summary statistics by product
-product_summary <- sales_data %>%
-  mutate(revenue = quantity * price) %>%
+# Revenue by product
+sales %>%
+  mutate(revenue = quantity * unit_price) %>%
   group_by(product) %>%
   summarize(
     total_sales = n(),
-    total_quantity = sum(quantity),
+    total_units = sum(quantity),
     total_revenue = sum(revenue),
-    avg_quantity = mean(quantity)
+    avg_order_size = mean(quantity)
   )
 
-print(product_summary)
-
-# Multiple grouping
-region_product_summary <- sales_data %>%
-  mutate(revenue = quantity * price) %>%
+# Multiple grouping variables
+sales %>%
+  mutate(revenue = quantity * unit_price) %>%
   group_by(region, product) %>%
   summarize(
     total_revenue = sum(revenue),
-    avg_price = mean(price)
+    .groups = "drop"  # Ungroup after
   )
-
-print(region_product_summary)
 ```
 
-**Ask Claude Code:**
+#### 5. arrange() — Sort Rows
+
+```r
+# Sort ascending
+sales %>%
+  arrange(quantity)
+
+# Sort descending
+sales %>%
+  arrange(desc(quantity))
+
+# Multiple sort keys
+sales %>%
+  arrange(product, desc(quantity))
 ```
-Using the sales_data:
-1. Find the total revenue per region
-2. Identify the top 5 highest revenue days
-3. Calculate average quantity sold per product per region
+
+### Putting It All Together
+
+```r
+# Complete analysis pipeline
+sales_analysis <- sales %>%
+  # Calculate revenue
+  mutate(revenue = quantity * unit_price) %>%
+  # Focus on laptops
+  filter(product == "Laptop") %>%
+  # Group by region
+  group_by(region) %>%
+  # Summary statistics
+  summarize(
+    orders = n(),
+    units = sum(quantity),
+    revenue = sum(revenue),
+    avg_order = mean(quantity)
+  ) %>%
+  # Sort by revenue
+  arrange(desc(revenue))
+
+print(sales_analysis)
 ```
 
 ---
 
-## 4. Data Visualization with ggplot2
+## Part 4: Visualization with ggplot2
 
-### Understanding ggplot2 Syntax
+ggplot2 creates publication-quality graphics. The syntax follows "grammar of graphics."
 
-```r
-library(ggplot2)
+<Diagram title="ggplot2 Structure" type="flowchart">
+{`flowchart LR
+    A["ggplot(data, aes())"] --> B["+ geom_*()"]
+    B --> C["+ labs()"]
+    C --> D["+ theme_*()"]
+    D --> E[Final Plot]
+`}
+</Diagram>
 
-# Basic structure:
-# ggplot(data, aes(x = ..., y = ...)) + geom_*()
-
-# Scatter plot
-ggplot(sales_data, aes(x = date, y = quantity)) +
-  geom_point() +
-  labs(title = "Sales Quantity Over Time",
-       x = "Date",
-       y = "Quantity Sold")
-
-# Add color by product
-ggplot(sales_data, aes(x = date, y = quantity, color = product)) +
-  geom_point(size = 3) +
-  labs(title = "Sales by Product",
-       x = "Date",
-       y = "Quantity")
-```
-
-### Bar Charts
+### The Basic Pattern
 
 ```r
-# Revenue by product
-sales_data %>%
-  mutate(revenue = quantity * price) %>%
-  group_by(product) %>%
-  summarize(total_revenue = sum(revenue)) %>%
-  ggplot(aes(x = product, y = total_revenue, fill = product)) +
-  geom_col() +
-  labs(title = "Total Revenue by Product",
-       x = "Product",
-       y = "Revenue ($)") +
+# Every ggplot follows this pattern:
+ggplot(data, aes(x = variable1, y = variable2)) +
+  geom_something() +
+  labs(title = "Title", x = "X Label", y = "Y Label") +
   theme_minimal()
 ```
 
-### Line Charts
+### Common Plot Types
+
+#### Scatter Plot
+
+```r
+# Basic scatter
+ggplot(sales, aes(x = date, y = quantity)) +
+  geom_point() +
+  labs(title = "Daily Sales Quantity")
+
+# With color by product
+ggplot(sales, aes(x = date, y = quantity, color = product)) +
+  geom_point(size = 3) +
+  labs(title = "Sales by Product") +
+  theme_minimal()
+```
+
+#### Bar Chart
+
+```r
+# Revenue by product
+sales %>%
+  mutate(revenue = quantity * unit_price) %>%
+  group_by(product) %>%
+  summarize(total = sum(revenue)) %>%
+  ggplot(aes(x = product, y = total, fill = product)) +
+  geom_col() +
+  labs(
+    title = "Total Revenue by Product",
+    y = "Revenue ($)"
+  ) +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2")
+```
+
+#### Line Chart
 
 ```r
 # Daily revenue trend
-sales_data %>%
-  mutate(revenue = quantity * price) %>%
+sales %>%
+  mutate(revenue = quantity * unit_price) %>%
   group_by(date) %>%
   summarize(daily_revenue = sum(revenue)) %>%
   ggplot(aes(x = date, y = daily_revenue)) +
-  geom_line(color = "blue", size = 1) +
+  geom_line(color = "steelblue", linewidth = 1) +
   geom_point(color = "darkblue", size = 2) +
   labs(title = "Daily Revenue Trend") +
   theme_minimal()
 ```
 
-### Box Plots
+#### Box Plot
 
 ```r
-# Quantity by product
-ggplot(sales_data, aes(x = product, y = quantity, fill = product)) +
+# Distribution by product
+ggplot(sales, aes(x = product, y = quantity, fill = product)) +
   geom_boxplot() +
-  labs(title = "Quantity Distribution by Product") +
+  labs(title = "Order Size Distribution") +
   theme_minimal()
 ```
 
-**Ask Claude Code:**
+#### Histogram
+
+```r
+# Distribution of order sizes
+ggplot(sales, aes(x = quantity)) +
+  geom_histogram(bins = 10, fill = "steelblue", color = "white") +
+  labs(title = "Order Size Distribution") +
+  theme_minimal()
 ```
-Create visualizations showing:
-1. A stacked bar chart of revenue by region
-2. A line chart showing cumulative revenue
-3. A faceted plot for each product
+
+### Faceting: Multiple Plots
+
+```r
+# Separate plot for each product
+sales %>%
+  mutate(revenue = quantity * unit_price) %>%
+  ggplot(aes(x = date, y = revenue)) +
+  geom_line() +
+  facet_wrap(~ product) +
+  labs(title = "Revenue by Product") +
+  theme_minimal()
+```
+
+### Saving Plots
+
+```r
+# Save the last plot
+ggsave("revenue_by_product.png", width = 10, height = 6, dpi = 300)
+
+# Save a specific plot
+my_plot <- ggplot(sales, aes(x = date, y = quantity)) + geom_point()
+ggsave("my_plot.png", plot = my_plot)
 ```
 
 ---
 
-## 5. Reading and Writing Data
+## Part 5: Reading and Writing Data
 
 ### CSV Files
 
 ```r
-# Write to CSV
-write_csv(sales_data, "sales_january_2025.csv")
+library(readr)
 
-# Read from CSV
-sales_imported <- read_csv("sales_january_2025.csv")
+# Write
+write_csv(sales, "january_sales.csv")
+
+# Read
+imported_sales <- read_csv("january_sales.csv")
 ```
 
 ### Excel Files
 
 ```r
-# Install packages if needed
-install.packages("readxl")
-install.packages("writexl")
-
 library(readxl)
 library(writexl)
 
-# Write to Excel
-write_xlsx(sales_data, "sales_january_2025.xlsx")
+# Write
+write_xlsx(sales, "january_sales.xlsx")
 
-# Read from Excel
-excel_data <- read_excel("sales_january_2025.xlsx")
+# Read
+excel_data <- read_excel("january_sales.xlsx")
+
+# Read specific sheet
+read_excel("workbook.xlsx", sheet = "Sales")
+```
+
+### Multiple Files
+
+```r
+# Read all CSVs in a folder
+library(purrr)
+
+all_files <- list.files("data/", pattern = "*.csv", full.names = TRUE)
+combined_data <- map_dfr(all_files, read_csv)
 ```
 
 ---
 
-## 6. Next Steps
+## Part 6: Complete Analysis Pipeline
 
-### Practice Projects
+Let's put everything together:
 
-1. **Customer Analysis** - Segment customers and analyze behavior
-2. **Time Series** - Forecast sales trends
-3. **Statistical Modeling** - Build predictive models
+```r
+# Full Analysis Script
+# -------------------
 
-### Advanced Topics
+library(tidyverse)
 
-- **Shiny**: Build interactive web apps
-- **tidymodels**: Machine learning in R
-- **RMarkdown**: Automated reporting
+# 1. Load Data
+sales <- read_csv("data/sales.csv")
 
-### Continue Learning
+# 2. Clean & Transform
+sales_clean <- sales %>%
+  # Handle missing values
+  drop_na() %>%
+  # Create calculated columns
+  mutate(
+    revenue = quantity * unit_price,
+    weekday = weekdays(date),
+    is_weekend = weekday %in% c("Saturday", "Sunday")
+  ) %>%
+  # Remove obvious errors
+  filter(quantity > 0, unit_price > 0)
 
-- [Automation Track](/automation): Automate R reports
-- [App Builder Track](/app-builder): Build Shiny dashboards
-- [Git & GitHub](/git-github): Version control
+# 3. Analysis
+summary_stats <- sales_clean %>%
+  group_by(product) %>%
+  summarize(
+    total_revenue = sum(revenue),
+    avg_order_size = mean(quantity),
+    order_count = n(),
+    .groups = "drop"
+  ) %>%
+  arrange(desc(total_revenue))
+
+print(summary_stats)
+
+# 4. Visualization
+revenue_plot <- summary_stats %>%
+  ggplot(aes(x = reorder(product, total_revenue), y = total_revenue, fill = product)) +
+  geom_col() +
+  coord_flip() +
+  labs(
+    title = "Revenue by Product",
+    x = NULL,
+    y = "Total Revenue ($)"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+ggsave("outputs/revenue_by_product.png", revenue_plot, width = 8, height = 5, dpi = 300)
+
+# 5. Report
+cat("\n=== KEY FINDINGS ===\n")
+cat(paste("Total Revenue:", scales::dollar(sum(sales_clean$revenue)), "\n"))
+cat(paste("Top Product:", summary_stats$product[1], "\n"))
+cat(paste("Total Orders:", nrow(sales_clean), "\n"))
+```
+
+---
+
+## Troubleshooting
+
+<Tabs>
+  <TabList>
+    <Tab>Package Errors</Tab>
+    <Tab>Data Import Issues</Tab>
+    <Tab>Plot Problems</Tab>
+  </TabList>
+  <TabPanel>
+
+**"Package not found"** or **"there is no package called..."**
+
+Run `install.packages("package_name")` first, then `library(package_name)`.
+
+**"Object not found"**
+
+You forgot to run `library(tidyverse)` or haven't loaded the data yet. Check your script runs top to bottom.
+
+**Installation fails on Mac**
+
+Try `brew install r` first, then reinstall packages.
+
+  </TabPanel>
+  <TabPanel>
+
+**CSV encoding issues**
+
+Try specifying encoding: `read_csv("file.csv", locale = locale(encoding = "UTF-8"))`
+
+**Excel date formatting**
+
+Excel dates often need conversion: `mutate(date = as.Date(date, origin = "1899-12-30"))`
+
+**Column name issues**
+
+Use `janitor::clean_names()` to standardize: `data %>% janitor::clean_names()`
+
+  </TabPanel>
+  <TabPanel>
+
+**Plot not showing**
+
+In scripts, wrap in `print()`: `print(my_plot)`
+
+**Colors not working**
+
+Check spelling, use `scale_fill_*` for fill and `scale_color_*` for color.
+
+**Text too small**
+
+Add `theme(text = element_text(size = 14))`
+
+  </TabPanel>
+</Tabs>
+
+---
+
+## Next Steps
+
+You've got the R fundamentals. Here's where to go deeper:
+
+| Want to... | Learn |
+|------------|-------|
+| Automate reports | RMarkdown, Quarto |
+| Build dashboards | Shiny |
+| Machine learning | tidymodels |
+| Bigger data | data.table, arrow |
 
 ---
 
 ## Resources
 
-- [R for Data Science](https://r4ds.had.co.nz/)
-- [tidyverse Documentation](https://www.tidyverse.org/)
-- [ggplot2 Cookbook](https://r-graphics.org/)
-- [RStudio Community](https://community.rstudio.com/)
+- [R for Data Science](https://r4ds.had.co.nz/) — Free online book
+- [tidyverse documentation](https://www.tidyverse.org/) — Official reference
+- [ggplot2 gallery](https://r-graph-gallery.com/) — Visual examples
+- [RStudio cheatsheets](https://posit.co/resources/cheatsheets/) — Quick reference PDFs
 
 ---
 
-**Congratulations!** You now have a solid foundation in R for data analysis. Keep practicing and use Claude Code to help you learn!
+<Callout type="success">
+**You're ready!** Open RStudio, load some data, and start exploring. When you get stuck, Claude can help debug R code just like any other language.
+</Callout>

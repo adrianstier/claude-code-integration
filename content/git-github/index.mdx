@@ -7,113 +7,217 @@ duration: '90 minutes'
 
 # Git & GitHub Basics
 
-Master version control and collaboration with Git and GitHub.
+Ever lost hours of work because you forgot to save? Or broke something and couldn't remember what it looked like before? Git fixes both problems—and a lot more.
 
-<Callout type="tip" title="Why Git Matters">
-Git is the industry standard for version control. Even if you work alone, Git lets you experiment safely, undo mistakes, and track your project history.
+<Callout type="tip">
+Git is the industry standard for version control. Even solo developers use it. Once you learn it, you'll wonder how you ever coded without it.
 </Callout>
 
 ## What You'll Learn
 
-- Core Git concepts (repos, commits, branches)
-- Commit best practices
-- Branching and merging
-- Pushing to GitHub
-- Pull requests and code review
-- Using Claude for Git workflows
+By the end of this guide, you'll be able to:
 
-## Prerequisites
+- Track every change to your projects (and undo mistakes)
+- Experiment safely with branches
+- Push your code to GitHub for backup and collaboration
+- Create pull requests for code review
+- Use Claude to handle the boring Git stuff
 
-- Completed [Start Here](/start-here) setup
-- Git and GitHub configured
-
----
-
-## Git Core Concepts
-
-### What is Git?
-
-Git is a **version control system** that tracks changes to your files over time. Think of it as "Track Changes" for code, but much more powerful.
-
-### Key Terms
-
-- **Repository (repo)**: A project tracked by Git
-- **Commit**: A snapshot of your project at a point in time
-- **Branch**: A parallel version of your project
-- **Remote**: A version of your repo hosted elsewhere (like GitHub)
-- **Clone**: Download a copy of a remote repo
-- **Push**: Send your commits to a remote
-- **Pull**: Get commits from a remote
+<Diagram title="The Git Mental Model" type="flowchart" caption="Think of Git as checkpoints in a video game">
+{`flowchart LR
+    A[You write code] --> B[Save checkpoint]
+    B --> C[Keep working]
+    C --> D{Something breaks?}
+    D -->|Yes| E[Load previous checkpoint]
+    D -->|No| B
+    E --> C
+`}
+</Diagram>
 
 ---
 
-## Your First Repository
+## Part 1: Understanding Git
 
-### Initialize a New Repo
+### What Problem Does Git Solve?
+
+Without Git, you're one mistake away from disaster. With Git:
+
+| Without Git | With Git |
+|-------------|----------|
+| "final_v2_REAL_final.docx" | One file, complete history |
+| Accidentally delete code, it's gone | Undo any change, any time |
+| Can't experiment (might break things) | Branch, experiment, delete if it fails |
+| "What changed last week?" | See exactly who changed what, when |
+| Collaborating = emailing files | Multiple people work on same codebase |
+
+### Key Concepts (Plain English)
+
+<Diagram title="Git Vocabulary" type="flowchart">
+{`flowchart TB
+    subgraph local["Your Computer"]
+        A[Working Directory] -->|git add| B[Staging Area]
+        B -->|git commit| C[Local Repository]
+    end
+
+    subgraph remote["GitHub"]
+        D[Remote Repository]
+    end
+
+    C -->|git push| D
+    D -->|git pull| C
+`}
+</Diagram>
+
+| Term | What It Actually Means |
+|------|------------------------|
+| **Repository (repo)** | A project folder that Git is tracking |
+| **Commit** | A saved checkpoint of your project |
+| **Branch** | A parallel universe of your code |
+| **Remote** | Your repo on GitHub (in the cloud) |
+| **Push** | Upload your commits to GitHub |
+| **Pull** | Download new commits from GitHub |
+
+---
+
+## Part 2: Your First Repository
+
+Let's create a repo, make changes, and commit them.
+
+<Steps>
+<Step title="Create a Project">
 
 ```bash
-# Create a project folder
 mkdir my-project
 cd my-project
+```
 
-# Initialize Git
+</Step>
+<Step title="Initialize Git">
+
+```bash
 git init
+```
 
-# Create a README
+This creates a hidden `.git` folder that tracks everything.
+
+</Step>
+<Step title="Create a File">
+
+```bash
 echo "# My Project" > README.md
+```
 
-# Check status
+</Step>
+<Step title="Check Status">
+
+```bash
 git status
 ```
 
-You'll see README.md is "untracked".
+You'll see README.md listed as "untracked"—Git sees it but isn't tracking it yet.
 
-### Make Your First Commit
+</Step>
+<Step title="Stage the File">
 
 ```bash
-# Stage the file
 git add README.md
-
-# Commit with a message
-git commit -m "Initial commit: Add README"
-
-# View history
-git log
 ```
 
-**Best Practice:** Commit messages should be clear and descriptive.
+Staging means "I want to include this in my next commit."
+
+</Step>
+<Step title="Commit">
+
+```bash
+git commit -m "Initial commit: add README"
+```
+
+Congratulations—you've saved your first checkpoint!
+
+</Step>
+</Steps>
+
+<Callout type="tip">
+**View your history anytime:**
+```bash
+git log --oneline
+```
+</Callout>
 
 ---
 
-## Commit Best Practices
+## Part 3: The Daily Workflow
 
-### Good Commit Messages
+This is what you'll do every day:
 
-Use the format:
+<Diagram title="Daily Git Cycle" type="flowchart" caption="Rinse and repeat">
+{`flowchart LR
+    A[Write code] --> B[git status]
+    B --> C[git add .]
+    C --> D[git commit]
+    D --> E[git push]
+    E --> A
+`}
+</Diagram>
+
+### The Commands
+
+```bash
+# 1. See what changed
+git status
+
+# 2. Stage your changes
+git add .                    # Stage everything
+# or
+git add specific-file.js    # Stage one file
+
+# 3. Commit with a message
+git commit -m "feat: add user login"
+
+# 4. Push to GitHub (after you've connected—see Part 5)
+git push
+```
+
+<Callout type="warning">
+**Always run `git status` first.** It shows you exactly what's about to happen. No surprises.
+</Callout>
+
+---
+
+## Part 4: Commit Messages That Don't Suck
+
+Your commit messages are a gift to your future self. Make them useful.
+
+### The Format
+
 ```
 type: brief description
 
-Optional detailed explanation
+Optional longer explanation
 ```
 
-**Types:**
-- `feat:` New feature
-- `fix:` Bug fix
-- `docs:` Documentation
-- `refactor:` Code restructuring
-- `test:` Adding tests
-- `chore:` Maintenance
+### Types
 
-**Examples:**
+| Type | When to Use |
+|------|-------------|
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `docs` | Documentation changes |
+| `refactor` | Code restructuring (no behavior change) |
+| `test` | Adding or fixing tests |
+| `chore` | Maintenance (dependencies, configs) |
 
-**Good:**
+### Examples
+
+**Good commits:**
 ```
-feat: add user authentication
-fix: resolve login redirect loop
-docs: update installation guide
+feat: add password strength indicator
+fix: prevent crash when email is empty
+docs: add API authentication examples
+refactor: extract validation into separate function
 ```
 
-**Bad:**
+**Bad commits:**
 ```
 stuff
 fixed
@@ -121,498 +225,360 @@ wip
 asdf
 ```
 
-### Using Claude for Commit Messages
-
-Ask Claude:
+<Callout type="tip">
+**Let Claude write your commit messages.** After making changes, ask:
 ```
-I changed [describe changes]. Write a good commit message.
+I changed [describe changes]. Write a commit message.
 ```
-
-Claude can analyze your `git diff` and suggest a message!
+Claude will analyze your `git diff` and write something better than you would.
+</Callout>
 
 ---
 
-## Working with Branches
+## Part 5: Connecting to GitHub
 
-### Why Branches?
+GitHub is where your code lives in the cloud. It's your backup, your portfolio, and how you collaborate.
 
-Branches let you work on features without affecting the main code.
+<Steps>
+<Step title="Create a GitHub Repository">
 
-### Create and Switch Branches
+1. Go to [github.com](https://github.com)
+2. Click **+** → **New repository**
+3. Name it `my-project`
+4. **Don't** check "Initialize with README" (you already have one)
+5. Click **Create repository**
+
+</Step>
+<Step title="Connect Your Local Repo">
+
+GitHub shows you the commands. Run them:
 
 ```bash
-# Create a new branch
-git branch feature/new-feature
-
-# Switch to it
-git checkout feature/new-feature
-
-# OR do both at once
-git checkout -b feature/new-feature
-
-# List branches
-git branch
-
-# See current branch
-git branch --show-current
+git remote add origin git@github.com:yourusername/my-project.git
+git branch -M main
+git push -u origin main
 ```
 
-### Merge a Branch
+</Step>
+<Step title="Verify">
+
+Refresh your GitHub page. Your code is there!
+
+</Step>
+</Steps>
+
+From now on, `git push` sends your commits to GitHub. `git pull` downloads any new commits.
+
+---
+
+## Part 6: Branches — Parallel Universes
+
+Branches let you experiment without affecting your main code. If your experiment works, merge it. If it fails, delete the branch. No harm done.
+
+<Diagram title="Branching Model" type="flowchart" caption="Main stays stable while you experiment">
+{`flowchart TB
+    A[main] --> B[main]
+    B --> C[main]
+    B --> D[feature/login]
+    D --> E[feature/login]
+    E --> F[feature/login]
+    F --> G[Merge into main]
+    C --> G
+    G --> H[main with new feature]
+`}
+</Diagram>
+
+### Create and Use Branches
+
+```bash
+# Create a new branch and switch to it
+git checkout -b feature/new-thing
+
+# Make changes, commit as usual
+git add .
+git commit -m "feat: add new thing"
+
+# Push the branch to GitHub
+git push -u origin feature/new-thing
+```
+
+### Merge Back to Main
 
 ```bash
 # Switch to main
 git checkout main
 
-# Merge your feature
-git merge feature/new-feature
+# Merge your branch
+git merge feature/new-thing
 
-# Delete the branch (optional)
-git branch -d feature/new-feature
-```
+# Delete the branch (optional, but tidy)
+git branch -d feature/new-thing
 
----
-
-## Easier Ways to Use Git & GitHub
-
-### Terminal vs GUI Tools
-
-**You don't have to use terminal commands!** Many developers find visual tools easier, especially when starting out.
-
-### GitHub Website (Easiest for Beginners)
-
-**What you can do directly on GitHub.com:**
-
-1. **Create and edit files** - Click "Add file" → "Create new file"
-2. **Upload files** - Drag and drop files directly into browser
-3. **Edit existing files** - Click any file → pencil icon to edit
-4. **Commit changes** - GitHub auto-commits when you save
-5. **Create branches** - Dropdown at top left
-6. **Review changes** - Visual diff view shows what changed
-7. **Merge pull requests** - Click "Merge pull request" button
-8. **Manage collaborators** - Settings → Collaborators
-9. **View history** - Click "commits" to see all changes
-
-**Perfect for:**
-- Quick fixes and typos
-- Editing documentation
-- Learning Git concepts visually
-- Small projects
-- Non-technical team members
-
-**Example: Edit a file on GitHub**
-1. Navigate to your file on github.com
-2. Click the pencil icon (top right)
-3. Make your changes
-4. Scroll down, add commit message
-5. Click "Commit changes" - Done!
-
-### VS Code Integration (Best for Developers)
-
-**VS Code has Git built-in!** No terminal needed.
-
-#### Setup VS Code Git
-
-1. **Install VS Code**: [code.visualstudio.com](https://code.visualstudio.com)
-2. **Open your project**: File → Open Folder
-3. **Source Control Panel**: Click icon on left (looks like branching diagram)
-
-#### Using Git in VS Code
-
-**Make commits:**
-1. See changed files in Source Control panel
-2. Hover over file → click "+" to stage
-3. Type commit message at top
-4. Click checkmark to commit
-
-**Push to GitHub:**
-1. Click "..." menu in Source Control
-2. Select "Push"
-3. Done!
-
-**Create branches:**
-1. Click branch name in bottom-left corner
-2. "Create new branch"
-3. Enter name
-4. Start coding!
-
-**Merge changes:**
-1. Switch to target branch (bottom-left)
-2. Click "..." → "Branch" → "Merge Branch"
-3. Select branch to merge
-4. Resolve any conflicts in visual editor
-
-**View history:**
-- Install "GitLens" extension (highly recommended!)
-- See who changed what, when, and why
-- Visual commit history
-- Inline blame annotations
-
-**Why VS Code is great:**
-- See all changes visually
-- Stage individual lines (not just files!)
-- Syntax highlighting in diffs
-- Integrated with your coding workflow
-- Extensions like GitLens add superpowers
-- Preview changes before committing
-- Built-in merge conflict resolver
-
-### GitHub Desktop (Easiest Desktop App)
-
-**Download**: [desktop.github.com](https://desktop.github.com)
-
-**Features:**
-- Visual commit interface
-- Drag-and-drop files to stage
-- Branch switcher with visual diagram
-- One-click push/pull
-- Conflict resolution wizard
-- Works offline
-
-**Perfect for:** Anyone who prefers GUI over terminal, beginners, designers, project managers.
-
-**Workflow:**
-1. Open GitHub Desktop
-2. Select your repository
-3. See changes in left panel
-4. Check boxes to stage files
-5. Write commit message at bottom
-6. Click "Commit to main"
-7. Click "Push origin" - Done!
-
-### Other GUI Tools
-
-**GitKraken** (Most Visual)
-- [gitkraken.com](https://gitkraken.com)
-- Beautiful graph of branches
-- Drag-and-drop branch merging
-- Interactive rebase
-- Free for public repos
-
-**Sourcetree** (Free & Powerful)
-- [sourcetreeapp.com](https://www.sourcetreeapp.com)
-- Advanced features in simple UI
-- Good for large repositories
-- Windows and Mac
-
-**Tower** (Professional)
-- [git-tower.com](https://www.git-tower.com)
-- Undo almost anything
-- Pull request management
-- Paid but very polished
-
-### VS Code + Claude = Magic
-
-**Use Claude Code directly in VS Code!**
-
-1. **Install Claude Code**: [docs.claude.com/claude-code](https://docs.claude.com/en/docs/claude-code/overview)
-2. **Open terminal in VS Code**: Ctrl+` (or View → Terminal)
-3. **Ask Claude to handle Git**:
-   ```
-   Claude, commit my changes with a good message
-   Claude, create a new branch for this feature
-   Claude, help me resolve this merge conflict
-   ```
-
-**Claude can:**
-- Write commit messages by analyzing your changes
-- Create and manage branches
-- Resolve merge conflicts
-- Write PR descriptions
-- Explain git errors
-- Suggest workflow improvements
-
-**Example conversation:**
-```
-You: "I made changes to 3 files, help me commit them"
-
-Claude: [Analyzes changes]
-- auth.ts: Added password validation
-- api.ts: Fixed rate limiting bug
-- README.md: Updated installation steps
-
-Suggested commits:
-1. "fix: implement password strength validation"
-2. "fix: resolve rate limiting edge case"
-3. "docs: clarify installation requirements"
-
-Shall I create these commits?
-```
-
-### Recommended Setup for Beginners
-
-**Start simple, add complexity as needed:**
-
-1. **Week 1**: Use GitHub website only
-   - Create repos, edit files, make commits
-   - Learn concepts visually
-
-2. **Week 2**: Add GitHub Desktop
-   - Clone repos locally
-   - Make bigger changes offline
-   - Practice branches
-
-3. **Week 3**: Switch to VS Code Git
-   - Integrate with coding workflow
-   - Install GitLens extension
-   - Learn staging individual lines
-
-4. **Week 4**: Learn terminal basics
-   - Use Claude to help with commands
-   - Keep GUI as backup
-   - Mix and match tools
-
-**You can use all these tools on the same repository!** Edit on GitHub, commit in VS Code, push with GitHub Desktop - whatever feels easiest.
-
-### Integrating with Other Apps
-
-**Notion**:
-- Link GitHub issues in Notion databases
-- Embed GitHub widgets
-- Use Notion API to create issues
-
-**Slack**:
-- Install GitHub app for Slack
-- Get notified of commits, PRs, issues
-- `/github subscribe owner/repo` to follow repos
-
-**Jira**:
-- Link commits to Jira tickets
-- Use commit message format: `"ABC-123: add feature"`
-- Auto-update Jira status from commits
-
-**Linear**:
-- Similar to Jira integration
-- Cleaner UI, better GitHub sync
-
-**Figma**:
-- Link designs to GitHub issues
-- Add Figma links in PR descriptions
-- Track implementation status
-
-**Discord**:
-- GitHub webhook notifications
-- Show commits in dev channel
-- Community involvement tracking
-
----
-
-## Connecting to GitHub
-
-### Create a GitHub Repository
-
-1. Go to [github.com](https://github.com)
-2. Click "+" → "New repository"
-3. Name: `my-project`
-4. **Don't** initialize with README (you already have one)
-5. Click "Create repository"
-
-### Connect Your Local Repo
-
-```bash
-# Add GitHub as remote
-git remote add origin git@github.com:yourusername/my-project.git
-
-# Push your code
-git push -u origin main
-
-# View remotes
-git remote -v
-```
-
----
-
-## Daily Git Workflow
-
-### The Basic Cycle
-
-```bash
-# 1. Check what changed
-git status
-
-# 2. Stage files
-git add file1.txt file2.txt
-# Or stage everything
-git add .
-
-# 3. Commit
-git commit -m "feat: add new features"
-
-# 4. Push to GitHub
+# Push the updated main
 git push
 ```
 
-### Pull Before You Push
-
-```bash
-# Get latest changes from GitHub
-git pull
-
-# Then make your changes and push
-git add .
-git commit -m "your message"
-git push
-```
+<Callout type="tip">
+**Branch naming conventions:**
+- `feature/user-login` — New features
+- `fix/login-crash` — Bug fixes
+- `docs/api-reference` — Documentation
+</Callout>
 
 ---
 
-## Working with Claude on Git
+## Part 7: Pull Requests — Code Review
 
-### Ask Claude to Plan Commits
+Instead of merging directly, you can create a **pull request (PR)** on GitHub. This lets others review your code before it goes into main.
 
-```
-I made these changes:
-[describe changes]
-
-How should I organize these into commits?
-```
-
-### Get Help with Conflicts
-
-If you have merge conflicts:
-
-```
-I have a merge conflict in [file]. Here's the content:
-[paste conflict markers]
-
-Help me resolve it.
-```
-
-### Review Before Committing
-
-```
-Here's my git diff:
-[paste diff]
-
-Review the changes and suggest a commit message.
-```
-
----
-
-## Pull Requests
-
-### What is a Pull Request?
-
-A pull request (PR) asks to merge your branch into another branch (usually `main`).
+<Diagram title="Pull Request Flow" type="flowchart" caption="Get feedback before merging">
+{`flowchart LR
+    A[Create branch] --> B[Make commits]
+    B --> C[Push branch]
+    C --> D[Open PR on GitHub]
+    D --> E[Team reviews]
+    E --> F{Approved?}
+    F -->|Yes| G[Merge PR]
+    F -->|Changes requested| B
+`}
+</Diagram>
 
 ### Creating a PR
 
-1. Push your branch to GitHub:
-   ```bash
-   git push -u origin feature/my-feature
-   ```
-
+1. Push your branch to GitHub
 2. Go to your repo on GitHub
-3. Click "Compare & pull request"
-4. Add title and description:
-   ```markdown
-   ## What
-   [Brief description]
+3. Click **Compare & pull request** (GitHub often prompts you)
+4. Fill in the template:
 
-   ## Why
-   [Reason for changes]
+```markdown
+## What
+Brief description of changes
 
-   ## Changes
-   - [Change 1]
-   - [Change 2]
+## Why
+Why are these changes needed?
 
-   ## Testing
-   - [How you tested]
-   ```
+## Changes
+- Added X
+- Fixed Y
+- Updated Z
 
-5. Click "Create pull request"
-
-### Using Claude for PR Descriptions
-
+## Testing
+How did you test this?
 ```
-I'm creating a PR for these changes:
-[describe changes]
 
-Write a good PR description.
+5. Click **Create pull request**
+
+<Callout type="tip">
+**Let Claude write your PR description:**
 ```
+I'm creating a PR for these changes: [describe]. Write a PR description.
+```
+</Callout>
 
 ---
 
-## Common Git Commands
+## Part 8: Easier Ways to Use Git
 
-### Status and Info
+**You don't have to memorize commands.** Most developers use visual tools.
+
+<Tabs>
+  <TabList>
+    <Tab>VS Code</Tab>
+    <Tab>GitHub Website</Tab>
+    <Tab>GitHub Desktop</Tab>
+  </TabList>
+  <TabPanel>
+**VS Code Has Git Built-In**
+
+No terminal needed. Click the Source Control icon (branching diagram in sidebar), see all changed files, click + to stage files, type a message, click ✓ to commit, then click ... → Push.
+
+**Install GitLens extension** for superpowers: see who changed each line and when, visual commit history, and compare branches.
+  </TabPanel>
+  <TabPanel>
+**Edit Directly on GitHub**
+
+For quick fixes, you don't need Git at all. Navigate to your file on github.com, click the pencil icon, edit the file, scroll down, add commit message, and click Commit changes.
+
+Perfect for fixing typos, updating documentation, and small changes.
+  </TabPanel>
+  <TabPanel>
+**GitHub Desktop**
+
+Download from [desktop.github.com](https://desktop.github.com). Visual interface for all Git operations, drag-and-drop staging, one-click push/pull, and great conflict resolution.
+
+Perfect if you prefer GUI over terminal.
+  </TabPanel>
+</Tabs>
+
+---
+
+## Part 9: Common Commands Reference
+
+### Everyday Commands
 
 ```bash
-git status              # See what changed
-git log                 # View commit history
+git status              # What's changed?
+git add .               # Stage all changes
+git commit -m "msg"     # Commit with message
+git push                # Upload to GitHub
+git pull                # Download from GitHub
+```
+
+### Viewing History
+
+```bash
 git log --oneline       # Compact history
 git diff                # See unstaged changes
 git diff --staged       # See staged changes
-git show COMMIT_ID      # View a specific commit
-```
-
-### Staging and Committing
-
-```bash
-git add FILE            # Stage specific file
-git add .               # Stage all changes
-git commit -m "message" # Commit with message
-git commit --amend      # Fix last commit
+git show abc123         # View specific commit
 ```
 
 ### Branches
 
 ```bash
 git branch              # List branches
-git branch NAME         # Create branch
-git checkout NAME       # Switch branch
-git checkout -b NAME    # Create and switch
-git merge NAME          # Merge branch
-git branch -d NAME      # Delete branch
+git checkout -b name    # Create & switch to branch
+git checkout main       # Switch to main
+git merge name          # Merge branch into current
+git branch -d name      # Delete branch
 ```
 
-### Remote Operations
+### Undoing Things
 
 ```bash
-git clone URL           # Clone repository
-git remote -v           # List remotes
-git push                # Push to remote
-git pull                # Pull from remote
-git fetch               # Get remote changes (don't merge)
+git restore file.txt         # Discard changes to file
+git restore --staged file    # Unstage file
+git reset HEAD~1             # Undo last commit, keep changes
+git reset --hard HEAD~1      # Undo last commit, delete changes
 ```
 
-### Undo Changes
-
-```bash
-git restore FILE        # Discard changes to file
-git restore --staged FILE # Unstage file
-git reset HEAD~1        # Undo last commit (keep changes)
-git reset --hard HEAD~1 # Undo last commit (delete changes!)
-```
+<Callout type="warning">
+`--hard` deletes your changes. Use carefully!
+</Callout>
 
 ---
 
-## Git Ignore
+## Part 10: Troubleshooting
 
-`.gitignore` tells Git which files to ignore.
+<Tabs>
+  <TabList>
+    <Tab>Merge Conflicts</Tab>
+    <Tab>Undo Commit</Tab>
+    <Tab>Wrong Branch</Tab>
+    <Tab>Push Rejected</Tab>
+  </TabList>
+  <TabPanel>
 
-### Common Patterns
+### Merge Conflicts
+
+When two people change the same lines, Git can't decide which version to keep.
 
 ```
-# Node.js
+<<<<<<< HEAD
+Your version of the code
+=======
+Their version of the code
+>>>>>>> feature/their-branch
+```
+
+**To fix:**
+1. Open the file
+2. Delete the markers (`<<<<`, `====`, `>>>>`)
+3. Keep the code you want
+4. Stage and commit:
+   ```bash
+   git add .
+   git commit -m "Resolve merge conflict"
+   ```
+
+<Callout type="tip">
+VS Code has a visual merge conflict resolver. Click "Accept Current", "Accept Incoming", or "Accept Both".
+</Callout>
+
+  </TabPanel>
+  <TabPanel>
+
+### Undo Last Commit
+
+**Keep the changes, undo the commit:**
+```bash
+git reset HEAD~1
+```
+
+**Delete everything (careful!):**
+```bash
+git reset --hard HEAD~1
+```
+
+**Already pushed? Add a new commit that reverts:**
+```bash
+git revert HEAD
+git push
+```
+
+  </TabPanel>
+  <TabPanel>
+
+### Committed to Wrong Branch
+
+```bash
+# Note the commit ID
+git log --oneline
+# e.g., abc1234
+
+# Switch to correct branch
+git checkout correct-branch
+
+# Grab the commit
+git cherry-pick abc1234
+
+# Go back and remove from wrong branch
+git checkout wrong-branch
+git reset --hard HEAD~1
+```
+
+  </TabPanel>
+  <TabPanel>
+
+### Push Rejected
+
+Usually means someone else pushed first.
+
+```bash
+# Get their changes
+git pull --rebase
+
+# Push again
+git push
+```
+
+If there are conflicts, resolve them first.
+
+  </TabPanel>
+</Tabs>
+
+---
+
+## Part 11: .gitignore — What Not to Track
+
+Some files shouldn't be in Git: dependencies, secrets, OS files.
+
+Create `.gitignore` in your project root:
+
+```
+# Dependencies
 node_modules/
-npm-debug.log
-
-# Python
-__pycache__/
-*.pyc
 venv/
+__pycache__/
 
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
-.idea/
-
-# Environment
+# Secrets
 .env
 .env.local
+*.key
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # Build outputs
 dist/
@@ -620,153 +586,78 @@ build/
 *.log
 ```
 
+<Callout type="warning">
+**Never commit secrets!** If you accidentally commit a password or API key, consider it compromised. Change it immediately.
+</Callout>
+
 ---
 
-## Troubleshooting
+## Part 12: Using Claude for Git
 
-### Forgot to Pull Before Committing
+Claude can handle the tedious parts of Git for you.
 
-```bash
-git pull --rebase
-# Resolve any conflicts
-git push
+### Write Commit Messages
+
+```
+I made these changes to auth.ts and api.ts.
+Analyze my git diff and write a commit message.
 ```
 
-### Want to Undo Last Commit
+### Resolve Conflicts
 
-```bash
-# Keep changes, undo commit
-git reset HEAD~1
-
-# Delete changes and commit
-git reset --hard HEAD~1
+```
+I have a merge conflict in this file:
+[paste the conflicted file]
+Help me resolve it.
 ```
 
-### Committed to Wrong Branch
+### Write PR Descriptions
 
-```bash
-# Note the commit ID
-git log
+```
+I'm creating a PR with these commits:
+- abc123: add login form
+- def456: add validation
+- ghi789: connect to API
 
-# Switch to correct branch
-git checkout correct-branch
-
-# Cherry-pick the commit
-git cherry-pick COMMIT_ID
-
-# Go back and remove from wrong branch
-git checkout wrong-branch
-git reset --hard HEAD~1
+Write a PR description.
 ```
 
-### Merge Conflicts
+### Explain Errors
 
-```bash
-# Pull causes conflicts
-git pull
-
-# Fix conflicts in files (look for <<<<<<, ======, >>>>>>)
-# Then:
-git add .
-git commit -m "Resolve merge conflicts"
-git push
+```
+Git gave me this error:
+[paste error]
+What does it mean and how do I fix it?
 ```
 
 ---
 
-## Best Practices
+## Best Practices Summary
 
-### Commit Often
+<Callout type="tip">
+**The golden rules:**
 
-- Small, focused commits are better than large ones
-- Commit complete, working changes
-- Don't commit broken code
-
-### Write Good Messages
-
-- Clear, concise, descriptive
-- Explain why, not just what
-- Follow conventional commits
-
-### Use Branches
-
-- `main` should always work
-- Create branches for features and fixes
-- Delete branches after merging
-
-### Pull Before Push
-
-- Always `git pull` before starting work
-- Reduces merge conflicts
-- Keeps you in sync with team
-
-### Review Before Committing
-
-```bash
-git diff              # See what you changed
-git status            # Confirm what you're committing
-```
-
----
-
-## Working with Teams
-
-### Collaboration Workflow
-
-1. **Clone** the repo:
-   ```bash
-   git clone git@github.com:team/project.git
-   ```
-
-2. **Create branch** for your work:
-   ```bash
-   git checkout -b feature/my-work
-   ```
-
-3. **Make changes** and commit:
-   ```bash
-   git add .
-   git commit -m "feat: add feature"
-   ```
-
-4. **Push branch**:
-   ```bash
-   git push -u origin feature/my-work
-   ```
-
-5. **Create PR** on GitHub
-
-6. **Code review** with team
-
-7. **Merge** PR after approval
-
-8. **Pull main** and repeat:
-   ```bash
-   git checkout main
-   git pull
-   ```
+1. **Commit often** — Small, focused commits are better than big ones
+2. **Write real messages** — "fix login bug" not "asdf"
+3. **Pull before push** — Avoid conflicts
+4. **Use branches** — Keep main stable
+5. **Review before committing** — Always run `git status` first
+</Callout>
 
 ---
 
 ## Next Steps
 
-You now know Git basics! Apply this knowledge:
+You know Git! Apply it to:
 
-- Track your data analysis projects: [Data Analysis](/data-analysis)
-- Version control your apps: [App Builder](/app-builder)
-- Manage automation scripts: [Automation](/automation)
-
----
-
-## Additional Resources
-
-- [Pro Git Book](https://git-scm.com/book/en/v2) (free)
-- [GitHub Docs](https://docs.github.com/)
-- [Git Cheat Sheet](https://education.github.com/git-cheat-sheet-education.pdf)
-- [Oh Shit, Git!?!](https://ohshitgit.com/) (fixing mistakes)
+- [Data Analysis](/data-analysis) — Version control your analysis scripts
+- [App Builder](/app-builder) — Manage your app's codebase
+- [Automation](/automation) — Track your automation scripts
 
 ---
 
-<Callout type="success" title="Practice Makes Perfect!">
-The best way to learn Git is to use it daily. Start with simple commits, then gradually explore branches and pull requests as you get comfortable.
-</Callout>
+## Resources
+
+- [Pro Git Book](https://git-scm.com/book/en/v2) — Free, comprehensive
+- [Oh Shit, Git!?!](https://ohshitgit.com/) — Fixing mistakes (real solutions, real language)
+- [GitHub Docs](https://docs.github.com/) — Official reference

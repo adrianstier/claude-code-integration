@@ -6,51 +6,118 @@ order: 1
 
 # Start Here
 
-Welcome! This guide will get you from zero to fully set up with Claude Code, VS Code, and Git/GitHub.
+You're about to set up the most powerful coding environment available. In about an hour, you'll have an AI that can read your entire codebase, write code alongside you, run commands, and help you ship real projects.
 
-## What You'll Set Up
+<Callout type="tip">
+Already have VS Code and Git? Skip to [Quick Start Exercise](/start-here/quick-start-exercise) to jump straight into Claude Code.
+</Callout>
 
-By the end of this track, you'll have:
+## What You're Building
 
--  VS Code installed and configured
--  Claude Code extension working
--  Git configured with your identity
--  GitHub account connected via SSH
--  Your first repo cloned with Claude templates
+By the end of this track, you'll have a complete development environment:
 
-## Time Required
+<Diagram title="Your Setup Journey" type="flowchart" caption="Each piece builds on the last">
+{`flowchart LR
+    A[VS Code] --> B[Git]
+    B --> C[GitHub]
+    C --> D[Claude Code]
+    D --> E[🚀 Ready to Build]
+`}
+</Diagram>
 
-- **Mac**: ~60 minutes
-- **Windows**: ~75 minutes
+**Here's what each piece does:**
+
+| Tool | What It Does | Why You Need It |
+|------|--------------|-----------------|
+| **VS Code** | Your code editor | Where you write and read code |
+| **Git** | Version control | Never lose work, undo mistakes |
+| **GitHub** | Cloud backup + collaboration | Share code, work with others |
+| **Claude Code** | AI coding partner | Understands your whole project |
 
 ## Choose Your Platform
 
-Pick your operating system to get started:
+<Tabs>
+  <TabList>
+    <Tab>Mac</Tab>
+    <Tab>Windows</Tab>
+  </TabList>
+  <TabPanel>
+    <div className="mt-4 p-6 border-2 border-primary-200 dark:border-primary-700 bg-primary-50 dark:bg-primary-950/50 rounded-xl">
+      <h3 className="text-xl font-bold mb-2 text-primary-900 dark:text-primary-100">macOS Setup</h3>
+      <p className="text-primary-800 dark:text-primary-200 mb-4">~60 minutes for the full setup</p>
+      <a href="/start-here/mac-setup" className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-medium hover:underline">
+        Start Mac Setup →
+      </a>
+    </div>
+  </TabPanel>
+  <TabPanel>
+    <div className="mt-4 p-6 border-2 border-cobalt-200 dark:border-cobalt-700 bg-cobalt-50 dark:bg-cobalt-950/50 rounded-xl">
+      <h3 className="text-xl font-bold mb-2 text-cobalt-900 dark:text-cobalt-100">Windows Setup</h3>
+      <p className="text-cobalt-800 dark:text-cobalt-200 mb-4">~75 minutes for the full setup</p>
+      <a href="/start-here/windows-setup" className="inline-flex items-center gap-2 text-cobalt-600 dark:text-cobalt-400 font-medium hover:underline">
+        Start Windows Setup →
+      </a>
+    </div>
+  </TabPanel>
+</Tabs>
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8 not-prose">
-  <a href="/start-here/mac-setup" className="block p-6 border-2 border-claude-200 dark:border-claude-700 bg-claude-50 dark:bg-claude-950/50 rounded-xl hover:shadow-lg hover:border-claude-400 dark:hover:border-claude-500 transition-all no-underline">
-    <h3 className="text-xl font-bold mb-2 text-claude-900 dark:text-claude-100">macOS Setup</h3>
-    <p className="text-claude-800 dark:text-claude-200">Complete setup guide for Mac users</p>
-  </a>
+## What Makes Claude Code Different?
 
-  <a href="/start-here/windows-setup" className="block p-6 border-2 border-blue-200 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/50 rounded-xl hover:shadow-lg hover:border-blue-400 dark:hover:border-blue-500 transition-all no-underline">
-    <h3 className="text-xl font-bold mb-2 text-blue-900 dark:text-blue-100">Windows Setup</h3>
-    <p className="text-blue-800 dark:text-blue-200">Complete setup guide for Windows users</p>
-  </a>
-</div>
+Most AI coding tools work like a chatbot—you copy code in, get an answer, paste it back. That's tedious and error-prone.
 
-## What's Next?
+Claude Code works differently:
 
-After completing setup, you can:
+<Diagram title="Claude Code vs Traditional AI" type="flowchart">
+{`flowchart TB
+    subgraph traditional["Traditional AI Chatbots"]
+        A1[Copy code] --> A2[Paste into chat]
+        A2 --> A3[Get response]
+        A3 --> A4[Copy back]
+        A4 --> A5[Hope it works]
+    end
 
-- Start the [Data Analysis Track](/data-analysis) to learn Python or R
-- Build your first app in the [App Builder Track](/app-builder)
-- Create useful scripts in the [Automation Track](/automation)
-- Master version control in [Git & GitHub Basics](/git-github)
+    subgraph claude["Claude Code"]
+        B1[Ask Claude] --> B2[Claude reads your files]
+        B2 --> B3[Claude writes changes directly]
+        B3 --> B4[You review & approve]
+    end
+`}
+</Diagram>
 
-## Need Help?
+**With Claude Code, you can:**
 
-If you get stuck:
-- Check the troubleshooting section in your platform's setup guide
-- Review the [Git & GitHub Basics](/git-github) for version control help
-- Consult the [Claude Code documentation](https://docs.claude.com/en/docs/claude-code/overview)
+- Ask questions about code you don't understand
+- Get changes applied directly to your files
+- Run terminal commands without memorizing syntax
+- Debug errors by just pasting them
+- Generate entire features with context of your whole project
+
+<Callout type="note">
+Claude Code runs locally in VS Code but connects to Anthropic's API. Your code stays on your machine—only what you send to Claude goes to the cloud.
+</Callout>
+
+## After Setup: Where to Go Next
+
+Once you've finished setup, pick the track that matches your goals:
+
+| Track | Best For | You'll Build |
+|-------|----------|--------------|
+| [Data Analysis](/data-analysis) | Researchers, analysts | Data pipelines, visualizations, reports |
+| [App Builder](/app-builder) | Developers, entrepreneurs | Web apps, APIs, dashboards |
+| [Automation](/automation) | Anyone doing repetitive tasks | Scripts, workflows, bots |
+| [Git & GitHub](/git-github) | Everyone | Version control fundamentals |
+
+<Callout type="tip">
+**New to coding?** Start with [Git & GitHub](/git-github) after setup. Understanding version control early saves headaches later.
+</Callout>
+
+## Getting Help
+
+Stuck? Here's where to look:
+
+1. **Troubleshooting sections** — Each setup guide has fixes for common issues
+2. **Claude Code itself** — Ask "why isn't this working?" with your error message
+3. **Official docs** — [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code/overview)
+4. **Community** — [Claude Discord](https://discord.gg/anthropic) has active help channels
+
+Ready? Pick your platform above and let's get you set up.

@@ -7,173 +7,276 @@ duration: '3-4 hours'
 
 # Automation Track
 
-Stop doing repetitive tasks manually. Let Claude help you automate them!
+Stop doing the same thing twice. Every repetitive task you do manually is time you'll never get back. Let's fix that.
 
-<Callout type="tip" title="Why Automate?">
-Every minute spent automating a daily 5-minute task saves you 30+ hours per year. Start with tasks you do repeatedly, and watch your productivity compound.
+<Diagram title="The Automation Mindset" type="flowchart" caption="If you do it more than twice, automate it">
+{`flowchart LR
+    A[Manual Task] --> B{Do it often?}
+    B -->|Yes| C[Automate It]
+    B -->|No| D[Do It Once]
+    C --> E[Time Saved Forever]
+    D --> F[Move On]
+`}
+</Diagram>
+
+<Callout type="tip" title="The Math of Automation">
+A 5-minute daily task costs you 30+ hours per year. Spend 2 hours automating it, and you've saved 28 hours—every year, forever. That's not just efficiency; it's compound interest on your time.
 </Callout>
 
-## What You'll Learn
-
-- Build Python scripts for file automation
-- Create scheduled tasks and cron jobs
-- Set up VS Code task automation
-- Generate reports automatically
-- Process data pipelines
+---
 
 ## What You'll Automate
 
-| Automation Type | Time Saved | Difficulty |
-|-----------------|-----------|------------|
-| File organization | 2-5 hrs/week | Beginner |
-| Report generation | 3-8 hrs/week | Intermediate |
-| Data pipelines | 5-20 hrs/week | Advanced |
-| Email processing | 1-3 hrs/week | Intermediate |
-| Scheduled backups | Peace of mind | Beginner |
+| Task Type | Time Saved | What You'll Build |
+|-----------|------------|-------------------|
+| File organization | 2-5 hrs/week | Smart file sorter |
+| Report generation | 3-8 hrs/week | Auto-reporter |
+| Data pipelines | 5-20 hrs/week | ETL automation |
+| Scheduled backups | Peace of mind | Backup scripts |
+| Code formatting | Ongoing friction | VS Code tasks |
+
+---
 
 ## Prerequisites
 
-- Completed [Start Here](/start-here) track
-- Basic Python or Bash knowledge (or let Claude teach you!)
-- Terminal/command line familiarity
-
-## Time Required
-
-3-4 hours to complete core concepts
+<Checklist>
+  <ChecklistItem>Completed [Start Here](/start-here) track</ChecklistItem>
+  <ChecklistItem>Basic Python or Bash familiarity (or willingness to learn!)</ChecklistItem>
+  <ChecklistItem>Terminal/command line comfort</ChecklistItem>
+</Checklist>
 
 ---
 
 ## Project 1: File Organizer
 
-**Problem:** Downloads folder is a mess with hundreds of files.
+**The problem**: Your Downloads folder is chaos. Hundreds of files, no organization, can't find anything.
 
-**Solution:** Build a smart file organizer that automatically sorts files.
+**The solution**: A smart script that sorts files automatically by type and date.
 
-### Ask Claude to Build It
+<Diagram title="File Organizer Flow" type="flowchart">
+{`flowchart TB
+    A[Scan Downloads] --> B[Detect File Type]
+    B --> C{What type?}
+    C -->|Images| D[Pictures/2025-01/]
+    C -->|Documents| E[Documents/PDFs/]
+    C -->|Videos| F[Videos/]
+    C -->|Code| G[Projects/]
+    D --> H[Log Move]
+    E --> H
+    F --> H
+    G --> H
+`}
+</Diagram>
+
+### Build It with Claude
 
 ```
 Write a Python script to organize my Downloads folder:
-- Move images (.jpg, .png, .gif) to Pictures/
+- Move images (.jpg, .png, .gif, .webp) to Pictures/
 - Move PDFs to Documents/PDFs/
-- Move videos (.mp4, .mov) to Videos/
-- Move code files to Projects/
+- Move videos (.mp4, .mov, .mkv) to Videos/
+- Move code files (.py, .js, .ts) to Projects/
 - Create dated subfolders (2025-01/)
-- Add a log file of what was moved
-- Include a --dry-run mode for testing
+- Keep a log of everything moved
+- Include --dry-run mode to preview changes
 
-Make it safe with error handling.
+Make it safe: never overwrite existing files.
 ```
 
 ### Expected Features
 
 Claude will create a script with:
-- File type detection
-- Safe moves (no overwrites)
-- Dry-run preview mode
-- Detailed logging
-- Configurable rules
+
+- **File type detection** — Extensions + MIME types for accuracy
+- **Safe moves** — Renames conflicts instead of overwriting
+- **Dry run mode** — See what would happen before committing
+- **Detailed logging** — Track every action for debugging
+- **Configurable rules** — Easy to customize for your needs
 
 ### Run It
 
 ```bash
-# Preview what will happen
+# First, see what would happen (safe!)
 python organize.py --dry-run
 
-# Actually organize files
+# If it looks good, run it for real
 python organize.py
 
-# Check the log
+# Check what was moved
 cat organize.log
 ```
 
 <Callout type="warning" title="Safety First">
-Always use `--dry-run` first to preview changes. Never run file operations on important folders without testing.
+Always use `--dry-run` first. Never run file operations on important folders without testing. Once a file is in the wrong place, finding it is painful.
 </Callout>
 
----
+### Make It Automatic
 
-## Project 2: Weekly Report Generator
+<Tabs>
+  <TabList>
+    <Tab>Mac/Linux</Tab>
+    <Tab>Windows</Tab>
+  </TabList>
+  <TabPanel>
 
-**Problem:** You generate the same report every week manually.
-
-**Solution:** Automate the entire process from data to PDF.
-
-### Ask Claude to Build It
-
-```
-Automate my weekly sales report:
-1. Read data from sales.csv
-2. Calculate KPIs (total revenue, growth, top products)
-3. Generate charts with matplotlib
-4. Create a professional PDF report
-5. Save with date in filename
-
-Use Python with pandas and matplotlib.
-Include error handling for missing data.
-```
-
-### Sample Output Structure
-
-```
-reports/
-   weekly_report_2025-01-15.pdf
-   charts/
-      revenue_trend.png
-      top_products.png
-```
-
-### Schedule It (Mac)
+Add to crontab for automatic organization:
 
 ```bash
 # Edit crontab
 crontab -e
 
-# Add this line to run every Monday at 9 AM
-0 9 * * 1 cd /path/to/project && python report_generator.py
+# Run daily at midnight
+0 0 * * * cd /path/to/script && python organize.py >> organize.log 2>&1
 ```
 
-### Schedule It (Windows)
+  </TabPanel>
+  <TabPanel>
 
-1. Open Task Scheduler
-2. Create Basic Task
-3. Set trigger: Weekly, Monday, 9:00 AM
-4. Set action: Start program
+Use Task Scheduler:
+
+1. Open Task Scheduler (search in Start menu)
+2. Create Basic Task → "Organize Downloads"
+3. Trigger: Daily at midnight
+4. Action: Start a program
 5. Program: `python`
-6. Arguments: `C:\path\to\report_generator.py`
+6. Arguments: `C:\path\to\organize.py`
+
+  </TabPanel>
+</Tabs>
 
 ---
 
-## Project 3: Batch File Renaming
+## Project 2: Report Generator
 
-**Problem:** 100+ files need systematic renaming for organization.
+**The problem**: Every week, you pull the same data, make the same charts, format the same PDF. It takes hours.
 
-**Solution:** Build a smart renamer with preview and undo.
+**The solution**: One command generates everything automatically.
 
-### Ask Claude to Build It
+<Diagram title="Report Pipeline" type="flowchart">
+{`flowchart LR
+    A[Raw Data] --> B[Clean & Calculate]
+    B --> C[Generate Charts]
+    C --> D[Build PDF]
+    D --> E[Save with Date]
+    E --> F[Email Team]
+`}
+</Diagram>
+
+### Build It with Claude
 
 ```
-Create a batch file renamer that:
-- Renames IMG_1234.jpg to 2025-01-15_photo_001.jpg
-- Uses file creation date for the date prefix
-- Adds sequential numbering
-- Has preview mode (shows old -> new)
-- Creates an undo script
-- Handles duplicates safely
+Create a weekly sales report generator:
 
-Include a config file for customization.
+1. Read data from sales.csv
+2. Calculate KPIs:
+   - Total revenue
+   - Week-over-week growth
+   - Top 5 products
+   - Regional breakdown
+3. Generate charts with matplotlib:
+   - Revenue trend line
+   - Product pie chart
+   - Regional bar chart
+4. Create a professional PDF report
+5. Save as weekly_report_YYYY-MM-DD.pdf
+
+Use Python with pandas and matplotlib.
+Handle missing data gracefully.
+Include error handling and logging.
+```
+
+### Output Structure
+
+<FileTree>
+  <FileTree.Folder name="reports" defaultOpen>
+    <FileTree.File name="weekly_report_2025-01-15.pdf" />
+    <FileTree.File name="weekly_report_2025-01-08.pdf" />
+    <FileTree.Folder name="charts" defaultOpen>
+      <FileTree.File name="revenue_trend.png" />
+      <FileTree.File name="top_products.png" />
+      <FileTree.File name="regional_breakdown.png" />
+    </FileTree.Folder>
+    <FileTree.File name="report.log" />
+  </FileTree.Folder>
+</FileTree>
+
+### Schedule It
+
+<Tabs>
+  <TabList>
+    <Tab>Mac/Linux (cron)</Tab>
+    <Tab>Windows (Task Scheduler)</Tab>
+  </TabList>
+  <TabPanel>
+
+```bash
+# Run every Monday at 9 AM
+0 9 * * 1 cd /path/to/reports && python generate_report.py
+```
+
+  </TabPanel>
+  <TabPanel>
+
+1. Task Scheduler → Create Basic Task
+2. Trigger: Weekly, Monday, 9:00 AM
+3. Action: Start program
+4. Program: `python`
+5. Arguments: `C:\path\to\generate_report.py`
+
+  </TabPanel>
+</Tabs>
+
+### Add Email Notification
+
+```
+Extend the report generator to email the PDF:
+1. Use smtplib for sending
+2. Attach the PDF
+3. Send to team@company.com
+4. Include summary stats in email body
+5. Use environment variables for credentials
+```
+
+---
+
+## Project 3: Batch File Renamer
+
+**The problem**: 500 photos named `IMG_1234.jpg`, `IMG_1235.jpg`... Useless for finding anything.
+
+**The solution**: Smart renaming with dates, sequences, and undo capability.
+
+### Build It with Claude
+
+```
+Create a batch file renamer:
+
+Features:
+- Rename IMG_1234.jpg to 2025-01-15_photo_001.jpg
+- Extract date from file metadata (EXIF for photos)
+- Add sequential numbering
+- Preview mode (show old → new before changing)
+- Generate an undo script
+- Handle duplicates safely
+- Support custom patterns via config file
+
+Include comprehensive error handling.
 ```
 
 ### Safe Workflow
 
 ```bash
-# 1. Preview changes
+# 1. Preview what will happen
 python renamer.py --preview
 
-# 2. Check the preview output
-# 3. Run if it looks correct
+# Output:
+# IMG_1234.jpg → 2025-01-15_photo_001.jpg
+# IMG_1235.jpg → 2025-01-15_photo_002.jpg
+# ...
+
+# 2. If it looks right, do it
 python renamer.py
 
-# 4. If something went wrong
+# 3. Made a mistake? Undo!
 python undo_rename.py
 ```
 
@@ -181,55 +284,96 @@ python undo_rename.py
 
 ## Project 4: Data Pipeline
 
-**Problem:** Manual data processing is error-prone and slow.
+**The problem**: Manual data processing is slow, error-prone, and mind-numbing.
 
-**Solution:** Build an automated ETL pipeline.
+**The solution**: An automated ETL (Extract, Transform, Load) pipeline.
 
-### Ask Claude to Build It
+<Diagram title="ETL Pipeline Architecture" type="flowchart">
+{`flowchart TB
+    subgraph extract[Extract]
+        E1[API] --> E2[Fetch Data]
+        E2 --> E3[Validate Response]
+    end
+
+    subgraph transform[Transform]
+        T1[Clean Data]
+        T2[Apply Business Logic]
+        T3[Format Output]
+        T1 --> T2 --> T3
+    end
+
+    subgraph load[Load]
+        L1[Database]
+        L2[Generate Report]
+        L3[Send Notification]
+    end
+
+    E3 --> T1
+    T3 --> L1
+    L1 --> L2
+    L2 --> L3
+`}
+</Diagram>
+
+### Build It with Claude
 
 ```
 Create a data pipeline that:
-1. Fetches data from an API endpoint
-2. Cleans and validates the data
-3. Transforms into the required format
-4. Loads into a SQLite database
-5. Generates a summary report
-6. Sends email notification on completion/error
+
+1. EXTRACT
+   - Fetch data from https://api.example.com/data
+   - Retry on failure (3 attempts with backoff)
+   - Log all API responses
+
+2. TRANSFORM
+   - Clean: Remove nulls, fix data types
+   - Validate: Check required fields, ranges
+   - Transform: Calculate derived fields
+
+3. LOAD
+   - Insert into SQLite database
+   - Track processed records
+   - Generate summary statistics
+
+4. NOTIFY
+   - Email on success with stats
+   - Alert on failure with error details
 
 Use Python with requests and sqlite3.
-Add retry logic for API failures.
-Log all steps with timestamps.
+Include comprehensive logging with timestamps.
 ```
 
-### Pipeline Architecture
+### Run It
 
-```
-[API Source] --> [Extract] --> [Transform] --> [Load] --> [Report]
-                    |              |              |
-                    v              v              v
-                [Logging]     [Validation]   [Database]
+```bash
+# Run manually
+python pipeline.py
+
+# Or schedule daily at 6 AM
+# crontab: 0 6 * * * python /path/to/pipeline.py
 ```
 
 ---
 
 ## VS Code Task Automation
 
-Automate common workflows directly in VS Code.
+Automate your development workflow right inside VS Code.
 
-### Ask Claude to Create Tasks
+### Create tasks.json
 
 ```
 Create VS Code tasks for my Python project:
+
 1. Run current file (F5)
 2. Run all tests (Ctrl+Shift+T)
 3. Format with black (Ctrl+Shift+F)
 4. Lint with flake8 (Ctrl+Shift+L)
 5. Deploy to server (Ctrl+Shift+D)
 
-Create .vscode/tasks.json with keyboard shortcuts.
+Create .vscode/tasks.json with proper keyboard shortcuts.
 ```
 
-### Example tasks.json
+### Example Configuration
 
 ```json
 {
@@ -246,100 +390,176 @@ Create .vscode/tasks.json with keyboard shortcuts.
       "presentation": {
         "reveal": "always",
         "panel": "new"
-      }
+      },
+      "problemMatcher": []
     },
     {
       "label": "Run Tests",
       "type": "shell",
-      "command": "pytest tests/ -v",
-      "group": "test"
+      "command": "pytest tests/ -v --tb=short",
+      "group": "test",
+      "presentation": {
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "Format Code",
+      "type": "shell",
+      "command": "black ${file}",
+      "presentation": {
+        "reveal": "silent"
+      }
     }
   ]
 }
 ```
 
+### Keyboard Shortcuts
+
+Add to `keybindings.json`:
+
+```json
+[
+  {
+    "key": "ctrl+shift+t",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Run Tests"
+  },
+  {
+    "key": "ctrl+shift+f",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Format Code"
+  }
+]
+```
+
 ---
 
-## Automation Best Practices
+## Scheduling Reference
 
-### 1. Test First
+<Diagram title="When to Run What" type="flowchart">
+{`flowchart TB
+    A[What frequency?] --> B{How often?}
+    B -->|Every few minutes| C[Cron: */5 * * * *]
+    B -->|Daily| D[Cron: 0 9 * * *]
+    B -->|Weekly| E[Cron: 0 9 * * 1]
+    B -->|Monthly| F[Cron: 0 9 1 * *]
 
-<Callout type="warning" title="Golden Rule">
-Never run automation on production data without testing on copies first.
+    C --> G[Data sync, monitoring]
+    D --> H[Reports, backups]
+    E --> I[Weekly summaries]
+    F --> J[Monthly cleanup]
+`}
+</Diagram>
+
+### Cron Syntax Quick Reference
+
+| Schedule | Expression | Example Use |
+|----------|------------|-------------|
+| Every minute | `* * * * *` | Health checks |
+| Every 5 minutes | `*/5 * * * *` | Data sync |
+| Every hour | `0 * * * *` | Log rotation |
+| Daily at 9 AM | `0 9 * * *` | Morning reports |
+| Monday at 9 AM | `0 9 * * 1` | Weekly summary |
+| First of month | `0 9 1 * *` | Monthly cleanup |
+
+### Cron Commands
+
+```bash
+# Edit your cron jobs
+crontab -e
+
+# List current jobs
+crontab -l
+
+# Remove all jobs (careful!)
+crontab -r
+```
+
+<Callout type="info" title="Pro Tip">
+Use [crontab.guru](https://crontab.guru/) to build and verify cron expressions. It shows you exactly when your job will run.
 </Callout>
 
-- Always add `--dry-run` or preview mode
-- Test on sample data before full runs
-- Keep backups of original files
+---
+
+## Best Practices
+
+### 1. Always Test First
+
+```python
+# Every automation script needs this
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--dry-run', action='store_true',
+                    help='Preview changes without executing')
+args = parser.parse_args()
+
+if args.dry_run:
+    print(f"Would move {src} to {dst}")
+else:
+    shutil.move(src, dst)
+```
 
 ### 2. Log Everything
 
 ```python
 import logging
+from datetime import datetime
 
 logging.basicConfig(
-    filename='automation.log',
+    filename=f'automation_{datetime.now():%Y%m%d}.log',
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-logging.info('Starting file organization...')
+logging.info('Starting file organization')
+logging.info(f'Moved {filename} to {destination}')
+logging.error(f'Failed to process {filename}: {error}')
 ```
 
-### 3. Use Version Control
+### 3. Handle Errors Gracefully
+
+```python
+def safe_process(filepath):
+    try:
+        process_file(filepath)
+        logging.info(f'Processed: {filepath}')
+    except FileNotFoundError:
+        logging.error(f'File not found: {filepath}')
+    except PermissionError:
+        logging.error(f'Permission denied: {filepath}')
+    except Exception as e:
+        logging.error(f'Unexpected error with {filepath}: {e}')
+        # Don't crash—continue with next file
+```
+
+### 4. Use Absolute Paths
+
+Scheduled tasks run from different directories. Always use absolute paths:
+
+```python
+import os
+
+# Get the directory where the script lives
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Build paths relative to script
+DATA_PATH = os.path.join(SCRIPT_DIR, 'data', 'input.csv')
+OUTPUT_PATH = os.path.join(SCRIPT_DIR, 'output', 'report.pdf')
+```
+
+### 5. Version Control Your Scripts
 
 ```bash
 # Initialize git for your automation scripts
-git init
+git init automations
+cd automations
 git add .
 git commit -m "feat: add file organizer script"
+
+# Now you can track changes, rollback mistakes, share with team
 ```
-
-### 4. Document Your Scripts
-
-Ask Claude:
-```
-Add comprehensive docstrings and a README to my script.
-Include usage examples and configuration options.
-```
-
-### 5. Handle Errors Gracefully
-
-```python
-try:
-    process_file(filepath)
-except FileNotFoundError:
-    logging.error(f"File not found: {filepath}")
-except PermissionError:
-    logging.error(f"Permission denied: {filepath}")
-```
-
----
-
-## Quick Reference: Scheduling
-
-### Mac/Linux (cron)
-
-| Schedule | Cron Expression |
-|----------|----------------|
-| Every hour | `0 * * * *` |
-| Daily at 9 AM | `0 9 * * *` |
-| Weekly (Monday 9 AM) | `0 9 * * 1` |
-| Monthly (1st at 9 AM) | `0 9 1 * *` |
-
-```bash
-# Edit crontab
-crontab -e
-
-# List current jobs
-crontab -l
-```
-
-### Windows (Task Scheduler)
-
-1. Search "Task Scheduler" in Start menu
-2. Action > Create Basic Task
-3. Follow the wizard for triggers and actions
 
 ---
 
@@ -347,64 +567,123 @@ crontab -l
 
 ### Script Not Running on Schedule
 
-**Mac/Linux:**
+<Tabs>
+  <TabList>
+    <Tab>Mac/Linux</Tab>
+    <Tab>Windows</Tab>
+  </TabList>
+  <TabPanel>
+
 ```bash
-# Check if cron is running
+# Is cron running?
 sudo service cron status
 
 # Check cron logs
 grep CRON /var/log/syslog
+
+# Common issues:
+# - Script not executable: chmod +x script.py
+# - Wrong path: use absolute paths
+# - Environment variables missing: set in crontab
 ```
 
-**Windows:**
-- Check Task Scheduler History tab
-- Verify "Run whether user is logged on or not"
+  </TabPanel>
+  <TabPanel>
+
+Check Task Scheduler:
+1. Open Task Scheduler
+2. Find your task
+3. Check "History" tab for errors
+4. Verify "Run whether user is logged on or not"
+5. Check "Run with highest privileges" if needed
+
+  </TabPanel>
+</Tabs>
 
 ### Permission Errors
 
 ```bash
 # Make script executable
-chmod +x script.py
+chmod +x myscript.py
 
-# Check file ownership
-ls -la script.py
+# Check who owns the file
+ls -la myscript.py
+
+# Run with explicit Python
+python3 /full/path/to/myscript.py
 ```
 
-### Path Issues in Scheduled Tasks
+### Environment Issues
 
-Always use absolute paths in scheduled scripts:
-```python
-import os
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_PATH = os.path.join(SCRIPT_DIR, 'data', 'input.csv')
+Scripts run by cron don't have your shell environment:
+
+```bash
+# In crontab, set PATH explicitly
+PATH=/usr/local/bin:/usr/bin:/bin
+
+# Or use full paths to executables
+0 9 * * * /usr/bin/python3 /home/user/scripts/report.py
 ```
 
 ---
 
-## Next Steps
+## Practice Projects
 
-### Continue Learning
+Ready to automate more? Try these:
 
-- [Data Analysis Track](/data-analysis): Automate data workflows
-- [App Builder Track](/app-builder): Build automation UIs
-- [Git & GitHub](/git-github): Version control for scripts
+| Project | Difficulty | What You'll Learn |
+|---------|------------|-------------------|
+| **Email Sorter** | Medium | Gmail API, rules engine |
+| **Backup Script** | Easy | File operations, cloud sync |
+| **Web Scraper** | Medium | HTTP requests, parsing |
+| **API Monitor** | Medium | Health checks, alerts |
+| **Invoice Generator** | Hard | PDF generation, templates |
 
-### Practice Projects
+### Start Here
 
-1. **Email Sorter**: Organize inbox by sender/subject
-2. **Backup Script**: Automated cloud backups
-3. **Web Scraper**: Collect data from websites
-4. **API Monitor**: Check service health automatically
-5. **Invoice Generator**: Create PDFs from templates
+```
+Help me build a [project name] automation:
+1. What libraries do I need?
+2. What's the basic structure?
+3. How do I handle errors?
+4. How do I schedule it?
+5. How do I monitor it's working?
+```
 
-### Resources
+---
 
-- [Python Automation Cookbook](https://automatetheboringstuff.com/)
-- [Cron Expression Generator](https://crontab.guru/)
-- [VS Code Tasks Documentation](https://code.visualstudio.com/docs/editor/tasks)
+## What's Next?
+
+<Steps>
+<Step title="Automate One Thing This Week">
+
+Pick the most annoying repetitive task you do. Spend an hour with Claude building a script to automate it. Even if it's not perfect, you'll learn and save time.
+
+</Step>
+<Step title="Build Your Toolkit">
+
+Start a folder of automation scripts. Version control it. Add to it whenever you find yourself doing something repetitive.
+
+</Step>
+<Step title="Level Up">
+
+- **[Data Analysis](/data-analysis)**: Automate data workflows
+- **[App Builder](/app-builder)**: Build UIs for your automations
+- **[Git & GitHub](/git-github)**: Automate your git workflows
+
+</Step>
+</Steps>
+
+---
+
+## Resources
+
+- [Automate the Boring Stuff with Python](https://automatetheboringstuff.com/) — Free book, perfect for beginners
+- [Cron Expression Generator](https://crontab.guru/) — Build and verify cron schedules
+- [VS Code Tasks Documentation](https://code.visualstudio.com/docs/editor/tasks) — Official task automation guide
 
 ---
 
 <Callout type="success" title="Start Automating!">
-Pick one repetitive task you do this week. Ask Claude to help you automate it. Start small, iterate, and build your automation toolkit over time.
+Pick one repetitive task you did this week. Describe it to Claude. Build a script. Run it. Feel the satisfaction of never doing that task manually again. That's the automation mindset.
 </Callout>

@@ -1,300 +1,417 @@
 ---
-title: 'Claude Skills - Custom Commands & Automations'
-description: 'Master Claude Skills to create reusable commands, project-specific automations, and powerful custom workflows in Claude Code'
-order: 8
-duration: '90 minutes'
+title: 'Claude Skills - Custom Commands'
+description: 'Create reusable commands, project-specific automations, and powerful custom workflows'
+order: 2
+duration: '60 minutes'
 ---
 
-# Claude Skills - Custom Commands & Automations
+# Claude Skills - Custom Commands
 
-**Skills** are one of Claude Code's most powerful features - they let you create reusable, project-specific commands that transform Claude into a truly customized coding partner. Think of them as programmable shortcuts that encode your team's workflows, best practices, and common tasks.
+Skills turn repetitive multi-step tasks into single commands. Instead of explaining the same process every time, create a skill once and invoke it with `/your-skill-name`. This is the power user's secret weapon.
+
+<Diagram title="How Skills Work" type="flowchart">
+{`flowchart LR
+    A["/my-skill arg"] --> B[Find skill.md]
+    B --> C[Read & parse]
+    C --> D[Replace $ARGUMENTS]
+    D --> E[Execute]
+`}
+</Diagram>
 
 <Callout type="tip" title="Why Skills Matter">
-Skills turn repetitive multi-step tasks into single commands. Instead of explaining the same process every time, create a skill once and invoke it with `/your-skill-name`. This is the secret weapon of power users.
+Every time you find yourself typing the same multi-step instructions, that's a skill waiting to be created. One well-crafted skill saves hours over weeks.
 </Callout>
 
-## What You'll Learn
+---
 
-- What Skills are and how they work
-- Built-in slash commands vs custom skills
-- **The `/commands` system** - complete reference guide
-- Creating project-specific skills
-- User-level skills for personal workflows
-- Advanced skill patterns and best practices
-- Real-world skill examples you can use today
+## Quick Start
+
+### Create Your First Skill
+
+**1. Create the command file:**
+
+```bash
+mkdir -p .claude/commands
+```
+
+**2. Write the skill:**
+
+Create `.claude/commands/fix-issue.md`:
+
+```markdown
+# Fix GitHub Issue
+
+Fix issue #$ARGUMENTS from GitHub:
+1. Read the issue description and comments
+2. Locate the relevant code
+3. Implement a fix with tests
+4. Create commit: "fix: Description (closes #$ARGUMENTS)"
+```
+
+**3. Use it:**
+
+```
+/fix-issue 1234
+```
+
+Claude fixes issue #1234 end-to-end.
 
 ---
 
-## Part 1: Understanding Skills
+## Types of Skills
 
-### What Are Skills?
+<Diagram title="Skill Hierarchy" type="flowchart">
+{`flowchart TB
+    A[Claude Code] --> B[Built-in Commands]
+    A --> C[Project Skills]
+    A --> D[User Skills]
 
-Skills are **reusable prompt templates** stored as Markdown files that Claude Code can execute. When you invoke a skill, Claude receives the skill's instructions along with any arguments you provide.
+    B --> B1[/help, /clear, /init]
+    C --> C1[.claude/commands/]
+    D --> D1[~/.claude/commands/]
 
-**Three types of skills:**
+    C1 --> E[Team-shared]
+    D1 --> F[Personal]
+`}
+</Diagram>
 
-1. **Built-in Slash Commands** - Commands that come with Claude Code (`/help`, `/clear`, `/init`)
-2. **Project Skills** - Custom commands stored in your project (`.claude/commands/`)
-3. **User Skills** - Personal commands stored in your home directory (`~/.claude/commands/`)
+### Built-in Commands
 
-### How Skills Work
+Always available, highest priority:
+
+| Command | What It Does | When to Use |
+|---------|--------------|-------------|
+| `/help` | Show all commands | Discovering features |
+| `/clear` | Reset conversation | Switching tasks |
+| `/init` | Generate CLAUDE.md | New projects |
+| `/compact` | Compress context | Long sessions |
+| `/review` | AI code review | Before commits |
+| `/memory` | Edit CLAUDE.md | Updating context |
+| `/permissions` | Manage tools | Security config |
+
+### Project Skills
+
+Live in your repository, shared with team:
 
 ```
-┌─────────────────┐     ┌────────────────────┐     ┌─────────────────┐
-│  You type       │ ──→ │  Claude reads      │ ──→ │  Claude         │
-│  /my-skill arg  │     │  skill markdown    │     │  executes task  │
-└─────────────────┘     └────────────────────┘     └─────────────────┘
-                              ↓
-                        Skill file contains:
-                        - Instructions
-                        - Context
-                        - $ARGUMENTS placeholder
+your-project/
+└── .claude/
+    └── commands/
+        ├── deploy.md        → /deploy
+        ├── fix-issue.md     → /fix-issue
+        └── git/
+            └── squash.md    → /git/squash
 ```
 
-### Built-in vs Custom Skills
+### User Skills
 
-**Built-in commands** (always available):
+Personal commands, global across all projects:
 
-| Command | Description |
-|---------|-------------|
-| `/help` | Show available commands |
-| `/clear` | Clear conversation context |
-| `/init` | Generate CLAUDE.md for project |
-| `/permissions` | Manage tool permissions |
-| `/config` | Open configuration |
-| `/compact` | Compress conversation context |
-| `/cost` | Show token usage and cost |
-| `/memory` | View/edit CLAUDE.md memory |
-| `/review` | Review recent changes |
-| `/pr-comments` | Address PR review comments |
-| `/terminal-setup` | Configure terminal integration |
-
-**Custom skills** (you create these):
-
-| Location | Scope | Example |
-|----------|-------|---------|
-| `.claude/commands/` | Project-specific | `/deploy`, `/test-all` |
-| `~/.claude/commands/` | User-wide | `/morning-standup`, `/eod-summary` |
+```
+~/.claude/
+└── commands/
+    ├── standup.md          → /standup
+    ├── eod.md              → /eod
+    └── review-pr.md        → /review-pr
+```
 
 ---
 
-## Part 2: Built-in Slash Commands Deep Dive
+## Skill Anatomy
 
-### `/init` - Project Setup
+Every skill follows this structure:
 
-Generates a `CLAUDE.md` file tailored to your project structure.
+```markdown
+# Skill Title
+
+Brief description of what this skill does.
+
+## Instructions
+
+1. First step Claude should take
+2. Second step
+3. Third step
+
+## Output Format
+
+Describe expected output format here.
+
+IMPORTANT: Critical instructions here.
+YOU MUST: Required behaviors.
+NEVER: Prohibited actions.
+```
+
+### Using Arguments
+
+Use `$ARGUMENTS` to accept input:
+
+**`.claude/commands/create-component.md`**
+
+```markdown
+# Create React Component
+
+Create a new component named $ARGUMENTS.
+
+1. Create src/components/$ARGUMENTS/$ARGUMENTS.tsx
+2. Create src/components/$ARGUMENTS/$ARGUMENTS.test.tsx
+3. Create src/components/$ARGUMENTS/index.ts
+4. Export from src/components/index.ts
+```
 
 **Usage:**
 ```
-/init
+/create-component UserProfile
 ```
 
-Claude analyzes your project and creates documentation including:
-- Common commands (build, test, lint)
-- Architecture overview
-- Code style guidelines
-- Environment setup
-
-<Callout type="info" title="Pro Tip">
-Run `/init` after major project changes to keep your CLAUDE.md current. Claude adapts to new dependencies, scripts, and structure.
-</Callout>
-
-### `/clear` - Context Reset
-
-Clears conversation history for a fresh start.
-
-**When to use:**
-- Switching between unrelated tasks
-- Context feels "muddled"
-- After completing major features
-- Before starting complex work
-
-```
-/clear
-```
-
-**After clearing:**
-- Claude forgets previous conversation
-- CLAUDE.md is still loaded (project context preserved)
-- Tool permissions remain
-
-### `/compact` - Smart Compression
-
-Compresses conversation while preserving key context.
-
-```
-/compact
-```
-
-**Use when:**
-- Conversation is getting long
-- Running into context limits
-- Want to keep some history but reduce tokens
-
-**Difference from `/clear`:**
-- `/clear` = Complete reset
-- `/compact` = Smart summarization (keeps important context)
-
-### `/memory` - CLAUDE.md Management
-
-View and edit your project's CLAUDE.md directly.
-
-```
-/memory
-```
-
-Opens CLAUDE.md for review. Use the `#` shortcut for quick updates:
-
-```
-# Add that we now use Prisma instead of raw SQL
-```
-
-Claude updates CLAUDE.md automatically.
-
-### `/review` - Code Review Mode
-
-Reviews recent changes with AI-powered analysis.
-
-```
-/review
-```
-
-Claude will:
-1. Analyze git diff
-2. Check for potential issues
-3. Suggest improvements
-4. Highlight security concerns
-
-### `/pr-comments` - Address PR Feedback
-
-Automatically reads and addresses PR review comments.
-
-```
-/pr-comments
-```
-
-Claude will:
-1. Fetch PR comments from GitHub
-2. Analyze feedback
-3. Implement requested changes
-4. Prepare responses to reviewers
+Claude creates `UserProfile` component with tests.
 
 ---
 
-## Part 3: The `/commands` System - Complete Reference
+## Real-World Examples
 
-The `/commands` system is the backbone of Claude Code's extensibility. Understanding it deeply unlocks the full power of custom automation.
+### Development Workflow Skills
 
-### Discovering Available Commands
+**`.claude/commands/review.md`** — Code Review
 
-**List all available commands:**
+```markdown
+# Code Review
 
-```
-/help
-```
+Review the current changes:
 
-This shows:
-- Built-in slash commands
-- Project commands (from `.claude/commands/`)
-- User commands (from `~/.claude/commands/`)
+1. Run `git diff` to see changes
+2. Analyze for:
+   - Logic errors
+   - Security vulnerabilities
+   - Performance issues
+   - Missing tests
+3. Provide feedback as:
 
-**View command details:**
+## Review Summary
+**Status:** Approved / Needs Changes
 
-```
-/help <command-name>
-```
+### Issues Found
+- [severity] Issue description (file:line)
 
-Shows the full content of any custom command, useful for understanding what a skill does before running it.
+### Suggestions
+- Improvement suggestion
 
-### Command Resolution Order
-
-When you type `/my-command`, Claude Code searches in this order:
-
-```
-1. Built-in commands (highest priority)
-   └── /help, /clear, /init, etc.
-
-2. Project commands
-   └── .claude/commands/my-command.md
-
-3. User commands (lowest priority)
-   └── ~/.claude/commands/my-command.md
+IMPORTANT: Be specific with line numbers.
+YOU MUST: Explain why something is an issue.
 ```
 
-<Callout type="warning" title="Name Conflicts">
-If you create a custom command with the same name as a built-in, the built-in always wins. Choose unique names for your custom commands.
-</Callout>
+**`.claude/commands/deploy.md`** — Safe Deployment
 
-### Command Anatomy
+```markdown
+# Deploy to Production
 
-Every command follows this structure:
+Safe deployment workflow:
 
+## Pre-flight Checks
+1. Run `git status` - working directory clean?
+2. Run `npm test` - all tests passing?
+3. Run `npm run build` - build successful?
+
+If any check fails, STOP and report.
+
+## Deploy
+1. Run `npm run deploy:prod`
+2. Wait for completion
+3. Run health checks
+
+## Verify
+1. Check production URL
+2. Verify key features work
+3. Report success/failure
+
+IMPORTANT: Get confirmation before deploying.
+NEVER: Deploy if tests are failing.
 ```
-/command-name [arguments]
-     │              │
-     │              └── Optional: passed as $ARGUMENTS
-     │
-     └── Filename without .md extension
+
+### Git Workflow Skills
+
+**`.claude/commands/git/squash.md`** — Squash Commits
+
+```markdown
+# Squash Commits
+
+Squash the last $ARGUMENTS commits:
+
+1. Show `git log --oneline -10`
+2. Confirm the commits to squash
+3. Run `git rebase -i HEAD~$ARGUMENTS`
+4. Use 'squash' for all but first
+5. Edit commit message
+6. Show result with `git log --oneline -5`
+
+IMPORTANT: Confirm before rebasing.
+NEVER: Squash commits already pushed.
 ```
 
-**Examples:**
+**`.claude/commands/git/branch-cleanup.md`** — Clean Old Branches
 
-| You Type | File Location | $ARGUMENTS Value |
-|----------|---------------|------------------|
-| `/deploy` | `commands/deploy.md` | (empty) |
-| `/fix-issue 123` | `commands/fix-issue.md` | `123` |
-| `/create-component Button ui` | `commands/create-component.md` | `Button ui` |
-| `/git/squash 3` | `commands/git/squash.md` | `3` |
+```markdown
+# Branch Cleanup
 
-### The Complete Built-in Commands Reference
+Clean up merged branches:
 
-Here's every built-in command with full details:
+1. List merged branches:
+   `git branch --merged main`
 
-#### Session Management
+2. For each branch (except main, develop):
+   - Ask for confirmation
+   - Delete with `git branch -d`
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `/clear` | Wipe conversation history | Task switching, context confusion |
-| `/compact` | Summarize and compress context | Long sessions, nearing token limits |
-| `/cost` | Show token usage and cost | Budget monitoring, optimization |
+3. Prune remote tracking:
+   `git remote prune origin`
 
-#### Project Setup
+4. Report branches deleted
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `/init` | Generate CLAUDE.md from project | New projects, after major changes |
-| `/memory` | View/edit CLAUDE.md | Updating project context |
+IMPORTANT: Never delete main or develop.
+```
 
-#### Configuration
+### Daily Workflow Skills
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `/config` | Open Claude Code settings | Changing global preferences |
-| `/permissions` | Manage tool permissions | Security, enabling/disabling tools |
-| `/terminal-setup` | Configure terminal integration | Initial setup, troubleshooting |
-| `/doctor` | Diagnose installation issues | Debugging Claude Code problems |
-| `/status` | Show current session status | Understanding current state |
+**`~/.claude/commands/standup.md`** — Morning Summary
 
-#### Development Workflow
+```markdown
+# Standup Summary
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `/review` | AI-powered code review | Before commits, PR preparation |
-| `/pr-comments` | Address PR feedback | After receiving PR reviews |
-| `/bug` | Report a Claude Code bug | When you find issues |
+Generate standup summary:
 
-#### Navigation & Help
+1. Check git log for yesterday's commits:
+   `git log --since="yesterday" --author="$(git config user.name)"`
 
-| Command | Description | When to Use |
-|---------|-------------|-------------|
-| `/help` | Show all available commands | Discovering features |
-| `/help <cmd>` | Show details for a command | Understanding specific commands |
+2. Check current branch status
 
-### Advanced Command Features
+3. Look for any failing tests
 
-#### Nested Commands (Subdirectories)
+4. Generate summary:
 
-Organize commands in folders:
+## Standup - [Today's Date]
+
+### Yesterday
+- [List from commits]
+
+### Today
+- [Current branch/task]
+
+### Blockers
+- [Any issues]
+```
+
+**`~/.claude/commands/eod.md`** — End of Day
+
+```markdown
+# End of Day
+
+Wrap up the day:
+
+1. Check for uncommitted changes
+2. If changes exist, create WIP commit:
+   `wip: [description of work in progress]`
+
+3. Generate summary:
+
+## EOD - [Date]
+
+### Completed
+- [Today's commits]
+
+### In Progress
+- [WIP items]
+
+### Tomorrow
+- [Next priorities]
+```
+
+### Investigation Skills
+
+**`.claude/commands/investigate.md`** — Bug Investigation
+
+```markdown
+# Investigate Bug
+
+Investigate: $ARGUMENTS
+
+## Understand
+1. Parse the bug description
+2. Identify expected vs actual behavior
+3. List affected components
+
+## Reproduce
+1. Find reproduction steps
+2. Locate relevant test files
+3. Add logging if needed
+
+## Analyze
+1. Search codebase for related code
+2. Check git history for recent changes
+3. Identify root cause
+
+## Report
+
+### Bug Analysis: [Title]
+
+**Behavior:** What happens
+**Expected:** What should happen
+**Root Cause:** Technical explanation
+**Files Affected:** List
+**Proposed Fix:** Approach
+**Risk:** Low/Medium/High
+
+DO NOT fix yet - wait for approval.
+```
+
+### Code Generation Skills
+
+**`.claude/commands/api-endpoint.md`** — Generate API Endpoint
+
+```markdown
+# Create API Endpoint
+
+Create endpoint for: $ARGUMENTS
+
+## Our Patterns
+- All inputs validated with Zod
+- All responses use ApiResponse<T>
+- Authentication via middleware
+- Proper error handling
+
+## Steps
+1. Create src/app/api/$ARGUMENTS/route.ts
+2. Create request/response schemas
+3. Add authentication check
+4. Implement business logic
+5. Add error handling
+6. Create tests in __tests__/
+
+## Template
+```typescript
+import { NextRequest } from 'next/server'
+import { z } from 'zod'
+import { auth, ApiResponse } from '@/lib'
+
+const schema = z.object({
+  // Define schema
+})
+
+export async function GET(req: NextRequest) {
+  const session = await auth()
+  if (!session) return ApiResponse.unauthorized()
+
+  // Implementation
+  return ApiResponse.success(data)
+}
+```
+
+IMPORTANT: Follow existing patterns in src/app/api/
+```
+
+---
+
+## Nested Commands
+
+Organize related commands in folders:
 
 ```
 .claude/commands/
@@ -308,1147 +425,164 @@ Organize commands in folders:
 │   └── reset.md        → /db/reset
 └── test/
     ├── unit.md         → /test/unit
-    ├── integration.md  → /test/integration
     └── e2e.md          → /test/e2e
 ```
 
 **Benefits:**
 - Logical grouping
 - Avoid naming conflicts
-- Easier to find related commands
+- Easier discovery
 - Team-friendly organization
 
-#### Command Aliases
+---
 
-Create short aliases for common commands:
+## Command Resolution
 
-**`.claude/commands/d.md`** (alias for deploy)
+When you type `/my-command`, Claude searches:
 
-```markdown
-# Quick Deploy Alias
+<Diagram title="Resolution Order" type="flowchart">
+{`flowchart TB
+    A["/my-command"] --> B{Built-in?}
+    B -->|Yes| C[Execute built-in]
+    B -->|No| D{Project skill?}
+    D -->|Yes| E[.claude/commands/my-command.md]
+    D -->|No| F{User skill?}
+    F -->|Yes| G[~/.claude/commands/my-command.md]
+    F -->|No| H[Command not found]
+`}
+</Diagram>
 
-This is an alias for the full deploy command.
+**Priority:**
+1. Built-in commands (highest)
+2. Project commands (`.claude/commands/`)
+3. User commands (`~/.claude/commands/`)
 
-Run the /deploy/production command with default settings.
-```
+<Callout type="warning" title="Name Conflicts">
+Don't name custom commands the same as built-ins. Built-ins always win.
+</Callout>
 
-Now `/d` triggers a production deploy.
+---
 
-#### Conditional Commands
+## Best Practices
 
-Build commands that adapt to context:
-
-**`.claude/commands/smart-test.md`**
-
-```markdown
-# Smart Test Runner
-
-Run the appropriate tests based on what changed.
-
-## Instructions
-
-1. Check `git diff --name-only` for changed files
-2. Determine test strategy:
-
-   **If only frontend files changed (src/components/*, src/app/*):**
-   - Run: `npm run test:frontend`
-   - Run: `npm run test:e2e -- --grep "component"`
-
-   **If only backend files changed (src/api/*, src/lib/*):**
-   - Run: `npm run test:backend`
-   - Run: `npm run test:integration`
-
-   **If database files changed (migrations/*, prisma/*):**
-   - Run: `npm run test:db`
-   - Warn about potential migration issues
-
-   **If config files changed (*.config.*, package.json):**
-   - Run full test suite: `npm test`
-
-   **If no code files changed:**
-   - Report: "No testable changes detected"
-
-3. Report results with pass/fail counts
-4. Suggest fixes for any failures
-
-IMPORTANT: Stop if tests fail and report the failures clearly.
-```
-
-#### Interactive Commands
-
-Commands that ask for input:
-
-**`.claude/commands/interactive-deploy.md`**
+### 1. Use Descriptive Sections
 
 ```markdown
-# Interactive Deployment
+# Create Database Migration
 
-Guide through deployment with confirmations.
+## What This Does
+Creates a timestamped migration file...
 
-## Step 1: Environment Selection
-
-Ask the user: "Which environment do you want to deploy to?"
-- staging (default, safe)
-- production (requires extra confirmation)
-- preview (creates temporary deployment)
-
-Wait for response before continuing.
-
-## Step 2: Pre-flight Checks
-
-Run these checks and report results:
-1. `git status` - Working directory clean?
-2. `npm test` - All tests passing?
-3. `npm run build` - Build successful?
-4. `npm audit` - No critical vulnerabilities?
-
-If any check fails, ask: "Continue anyway? (not recommended)"
-
-## Step 3: Confirmation
-
-Show summary:
-```
-Deploying to: [environment]
-Branch: [current branch]
-Commit: [short SHA]
-Tests: [pass/fail]
-```
-
-Ask: "Proceed with deployment? (yes/no)"
-
-## Step 4: Deploy
-
-If confirmed:
-1. Run deployment command
-2. Wait for completion
-3. Run health checks
-4. Report success/failure
-
-IMPORTANT: For production, require explicit "yes" confirmation.
-NEVER: Deploy if tests are failing without explicit override.
-```
-
-### Command Execution Flow
-
-Understanding how commands execute:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    /my-command arg1 arg2                     │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  1. RESOLUTION                                               │
-│     - Check built-in commands                                │
-│     - Check .claude/commands/my-command.md                   │
-│     - Check ~/.claude/commands/my-command.md                 │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  2. LOADING                                                  │
-│     - Read markdown file                                     │
-│     - Replace $ARGUMENTS with "arg1 arg2"                    │
-│     - Prepare as system context                              │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  3. EXECUTION                                                │
-│     - Claude receives command content as instructions        │
-│     - Claude follows the steps in the markdown               │
-│     - Tools are called as needed (with permissions)          │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│  4. OUTPUT                                                   │
-│     - Results displayed to user                              │
-│     - Any file changes shown                                 │
-│     - Conversation continues normally                        │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Commands vs Direct Prompts
-
-**When to use commands:**
-- Repetitive tasks you do frequently
-- Complex multi-step workflows
-- Team-shared procedures
-- Tasks requiring specific format/output
-- Onboarding new team members
-
-**When to use direct prompts:**
-- One-off tasks
-- Exploratory work
-- Tasks requiring lots of context from conversation
-- Quick questions
-
-### Command Best Practices
-
-#### 1. Use Descriptive Headers
-
-```markdown
-# Create Database Migration    ← Clear purpose
-
-## What This Does              ← Explain the outcome
-Creates a new timestamped migration file...
-
-## Prerequisites               ← Set expectations
+## Prerequisites
 - Database connection configured
 - Prisma schema updated
 
-## Steps                       ← Clear procedure
-1. Generate migration file
-2. ...
+## Steps
+1. Generate migration
+2. Review SQL
+3. Apply migration
 ```
 
-#### 2. Include Safety Rails
+### 2. Include Safety Rails
 
 ```markdown
 ## Safety Checks
 
 Before proceeding:
-- [ ] Verify not on production database
-- [ ] Confirm backup exists
-- [ ] Check no active transactions
+- Verify not on production database
+- Confirm backup exists
+- Check no active transactions
 
-IMPORTANT: If any safety check fails, STOP and report.
+IMPORTANT: If any check fails, STOP.
 ```
 
-#### 3. Define Clear Output
+### 3. Define Expected Output
 
 ```markdown
-## Expected Output
+## Output Format
 
-Provide response in this format:
 ```
 Migration: [filename]
 Tables affected: [list]
 Status: Created / Failed
-Next steps: [what to do]
+Next steps: [action]
 ```
 ```
 
-#### 4. Handle Errors Gracefully
+### 4. Handle Errors
 
 ```markdown
 ## Error Handling
 
-If migration generation fails:
+If migration fails:
 1. Do NOT retry automatically
-2. Report the exact error message
-3. Suggest possible causes:
+2. Report exact error
+3. Suggest causes:
    - Schema syntax error
    - Conflicting migration
    - Connection issue
 4. Provide recovery steps
 ```
 
-### Environment Variables in Commands
+---
 
-Commands can reference environment context:
+## Testing Skills
+
+Create a test skill to verify your setup:
+
+**`.claude/commands/test-skill.md`**
 
 ```markdown
-# Deploy to Current Environment
+# Test Skill
 
-## Environment Detection
+This skill verifies custom commands work.
 
-Check for these indicators:
-- `$NODE_ENV` environment variable
-- `.env.local` vs `.env.production` files
-- Current git branch name
+Arguments received: $ARGUMENTS
 
-## Branch-Based Deployment
+If you see this, skills are working!
 
-| Branch | Target Environment |
-|--------|-------------------|
-| main | production |
-| staging | staging |
-| develop | development |
-| feature/* | preview |
-
-Deploy to the appropriate environment based on current branch.
+Respond with:
+1. Confirmation you read this
+2. The arguments received
+3. Current directory
 ```
 
-### Chaining Commands
-
-Commands can reference other commands:
-
-**`.claude/commands/full-release.md`**
-
-```markdown
-# Full Release Process
-
-Complete release workflow combining multiple commands.
-
-## Phase 1: Quality Gates
-Execute the steps from /test/full command:
-- Run all test suites
-- Check code coverage
-- Lint and format
-
-## Phase 2: Version Bump
-Execute the steps from /version command:
-- Determine version type
-- Update package.json
-- Update CHANGELOG.md
-
-## Phase 3: Deploy
-Execute the steps from /deploy/production command:
-- Build production bundle
-- Deploy to servers
-- Verify deployment
-
-## Phase 4: Notify
-Execute the steps from /notify/release command:
-- Post to Slack
-- Update status page
-- Send release email
-
-IMPORTANT: Stop between phases and confirm with user.
+**Test it:**
+```
+/test-skill hello world
 ```
 
 ---
 
-## Part 4: Creating Custom Skills
+## Sharing with Your Team
 
-Now that you understand the `/commands` system, let's create your own custom skills.
-
-### Project Skills Location
-
-Create project-specific skills in:
-
-```
-your-project/
-└── .claude/
-    └── commands/
-        ├── deploy.md
-        ├── test-all.md
-        └── fix-issue.md
-```
-
-### User Skills Location
-
-Create personal skills in:
-
-```
-~/.claude/
-└── commands/
-    ├── morning-standup.md
-    ├── eod-summary.md
-    └── quick-review.md
-```
-
-### Skill File Structure
-
-A skill is simply a Markdown file with instructions:
-
-**`.claude/commands/deploy.md`**
-
-```markdown
-# Deploy to Production
-
-Deploy the current branch to production environment.
-
-## Pre-deployment Checklist
-1. Run all tests
-2. Check for uncommitted changes
-3. Verify environment variables
-4. Review recent commits
-
-## Deployment Steps
-1. Build the production bundle
-2. Run database migrations
-3. Deploy to production server
-4. Verify deployment health
-5. Notify team on Slack
-
-## Rollback Plan
-If issues detected:
-1. Revert to previous deployment
-2. Check error logs
-3. Create incident report
-
-IMPORTANT: Wait for CI to pass before deploying.
-YOU MUST: Get confirmation before proceeding with each step.
-```
-
-**Usage:**
-```
-/deploy
-```
-
-### Using Arguments in Skills
-
-Use `$ARGUMENTS` placeholder to pass dynamic values:
-
-**`.claude/commands/fix-issue.md`**
-
-```markdown
-# Fix GitHub Issue
-
-Fix the GitHub issue specified by the issue number.
-
-## Instructions
-
-1. Fetch issue #$ARGUMENTS from GitHub
-2. Read the issue description and all comments
-3. Understand the problem being reported
-4. Locate relevant code files
-5. Propose a fix with explanation
-6. Implement the fix
-7. Write tests to verify the fix
-8. Create a commit referencing the issue
-
-IMPORTANT: Always reference the issue number in commits.
-Format: "fix: Description of fix (closes #$ARGUMENTS)"
-```
-
-**Usage:**
-```
-/fix-issue 1234
-```
-
-Claude receives the full markdown with `$ARGUMENTS` replaced by `1234`.
-
-### Multiple Arguments
-
-For multiple arguments, use positional references or structured input:
-
-**`.claude/commands/create-component.md`**
-
-```markdown
-# Create React Component
-
-Create a new React component with the specified name and type.
-
-## Arguments
-Expecting: ComponentName [type]
-- ComponentName: PascalCase name for the component
-- type (optional): "page" | "layout" | "ui" (default: "ui")
-
-Example: /create-component UserProfile page
-
-## Instructions
-
-Parse the arguments from: $ARGUMENTS
-
-1. Extract component name (first word)
-2. Extract type (second word, default to "ui")
-3. Determine target directory:
-   - page → src/app/
-   - layout → src/components/layouts/
-   - ui → src/components/ui/
-4. Create component file with proper structure
-5. Create test file
-6. Create Storybook story (if ui component)
-7. Export from index.ts
-
-IMPORTANT: Use TypeScript with proper prop types.
-YOU MUST: Follow existing code patterns in the codebase.
-```
-
-**Usage:**
-```
-/create-component UserProfile page
-/create-component Button ui
-/create-component DashboardLayout layout
-```
-
----
-
-## Part 5: Advanced Skill Patterns
-
-### Pattern 1: Multi-Step Workflow
-
-Create skills for complex, multi-phase tasks:
-
-**`.claude/commands/release.md`**
-
-```markdown
-# Release New Version
-
-Create a new release following semantic versioning.
-
-## Phase 1: Preparation
-1. Check you're on main branch
-2. Ensure working directory is clean
-3. Run full test suite
-4. Update CHANGELOG.md
-
-## Phase 2: Version Bump
-1. Ask user for version type: major | minor | patch
-2. Update version in package.json
-3. Update version in any other relevant files
-4. Commit version bump
-
-## Phase 3: Create Release
-1. Create git tag with version number
-2. Push tag to remote
-3. Create GitHub release with changelog
-
-## Phase 4: Post-Release
-1. Announce on Slack (if available)
-2. Update documentation site
-3. Close related GitHub milestones
-
-IMPORTANT: Stop and confirm with user between phases.
-YOU MUST: Never skip the test suite step.
-```
-
-### Pattern 2: Code Generation Template
-
-Skills can encode your team's patterns:
-
-**`.claude/commands/api-endpoint.md`**
-
-```markdown
-# Create API Endpoint
-
-Generate a new API endpoint following our conventions.
-
-## Arguments
-Expecting: resource-name [method]
-- resource-name: lowercase-kebab-case resource
-- method: GET | POST | PUT | DELETE (default: GET)
-
-Parse from: $ARGUMENTS
-
-## Our API Conventions
-
-### File Structure
-```
-src/app/api/[resource]/
-├── route.ts          # GET/POST handlers
-├── [id]/route.ts     # GET/PUT/DELETE by ID
-└── schema.ts         # Zod validation schemas
-```
-
-### Required Patterns
-1. All inputs validated with Zod
-2. All responses use ApiResponse<T> wrapper
-3. Authentication via NextAuth middleware
-4. Rate limiting via our rateLimiter utility
-5. Error handling with AppError class
-
-### Template for route.ts
-```typescript
-import { NextRequest, NextResponse } from 'next/server'
-import { z } from 'zod'
-import { auth } from '@/lib/auth'
-import { ApiResponse } from '@/lib/api'
-import { rateLimiter } from '@/lib/rate-limit'
-
-const schema = z.object({
-  // Define schema
-})
-
-export async function GET(request: NextRequest) {
-  try {
-    // Rate limiting
-    await rateLimiter.check(request)
-
-    // Authentication
-    const session = await auth()
-    if (!session) {
-      return ApiResponse.unauthorized()
-    }
-
-    // Business logic
-    const data = await fetchData()
-
-    return ApiResponse.success(data)
-  } catch (error) {
-    return ApiResponse.error(error)
-  }
-}
-```
-
-## Instructions
-1. Create directory structure
-2. Generate route handlers
-3. Create Zod schemas
-4. Add tests in __tests__/
-5. Export types for client usage
-
-IMPORTANT: Follow existing patterns in src/app/api/users/ as reference.
-```
-
-### Pattern 3: Investigation & Debugging
-
-Skills for systematic debugging:
-
-**`.claude/commands/investigate-bug.md`**
-
-```markdown
-# Investigate Bug Report
-
-Systematically investigate and document a bug.
-
-## Bug Details
-Bug report or description: $ARGUMENTS
-
-## Investigation Process
-
-### Step 1: Understand
-1. Read the bug description carefully
-2. Identify expected vs actual behavior
-3. Note any error messages or screenshots
-4. Determine affected components/features
-
-### Step 2: Reproduce
-1. Set up reproduction environment
-2. Follow steps to reproduce
-3. Confirm the bug exists
-4. Note any variations in behavior
-
-### Step 3: Locate
-1. Search codebase for relevant files
-2. Add logging if needed to trace execution
-3. Identify the root cause
-4. Document the problematic code
-
-### Step 4: Document
-Create a bug analysis report:
-```markdown
-## Bug Analysis: [Brief Title]
-
-**Reported Behavior:** [What user sees]
-**Expected Behavior:** [What should happen]
-**Root Cause:** [Technical explanation]
-**Affected Files:** [List of files]
-**Proposed Fix:** [High-level solution]
-**Risk Assessment:** [Low/Medium/High]
-**Testing Plan:** [How to verify fix]
-```
-
-### Step 5: Propose Fix
-1. Outline the fix approach
-2. Identify any breaking changes
-3. Consider edge cases
-4. Plan test coverage
-
-IMPORTANT: Don't fix yet - wait for approval of the investigation report.
-YOU MUST: Consider security implications of bugs.
-```
-
-### Pattern 4: Code Review Checklist
-
-Systematic review process:
-
-**`.claude/commands/code-review.md`**
-
-```markdown
-# Comprehensive Code Review
-
-Review code changes thoroughly using our team checklist.
-
-## Target
-Review: $ARGUMENTS (branch name, PR number, or file paths)
-
-## Review Checklist
-
-### 1. Functionality
-- [ ] Code does what it's supposed to do
-- [ ] Edge cases are handled
-- [ ] Error states are managed gracefully
-- [ ] No obvious bugs or logic errors
-
-### 2. Code Quality
-- [ ] Follows project style guide
-- [ ] No unnecessary complexity
-- [ ] Good naming conventions
-- [ ] Appropriate comments (not over/under commented)
-- [ ] No dead code or debugging artifacts
-
-### 3. Performance
-- [ ] No N+1 queries
-- [ ] Appropriate caching
-- [ ] No memory leaks
-- [ ] Efficient algorithms for data size
-
-### 4. Security
-- [ ] Input validation on all user data
-- [ ] No SQL injection vulnerabilities
-- [ ] No XSS vulnerabilities
-- [ ] Proper authentication/authorization
-- [ ] Sensitive data handled correctly
-- [ ] No secrets in code
-
-### 5. Testing
-- [ ] Adequate test coverage
-- [ ] Tests are meaningful (not just for coverage)
-- [ ] Edge cases tested
-- [ ] Tests are maintainable
-
-### 6. Documentation
-- [ ] Complex logic is explained
-- [ ] Public APIs are documented
-- [ ] README updated if needed
-- [ ] Breaking changes noted
-
-## Output Format
-
-Provide review as:
-```markdown
-## Code Review: [Branch/PR]
-
-### Summary
-[One paragraph overview]
-
-### Approved: Yes/No/With Changes
-
-### Must Fix (Blockers)
-- [ ] Issue 1 - File:line - Description
-
-### Should Fix (Important)
-- [ ] Issue 1 - File:line - Description
-
-### Could Fix (Nice to Have)
-- [ ] Issue 1 - File:line - Description
-
-### Positive Notes
-- Good pattern in X
-- Clean implementation of Y
-```
-
-IMPORTANT: Be specific with line numbers and code references.
-YOU MUST: Explain WHY something is an issue, not just WHAT.
-```
-
-### Pattern 5: Documentation Generator
-
-Automate documentation tasks:
-
-**`.claude/commands/document-api.md`**
-
-```markdown
-# Generate API Documentation
-
-Generate comprehensive API documentation for endpoints.
-
-## Target
-Document: $ARGUMENTS (file path, folder, or "all")
-
-## Documentation Standards
-
-### For Each Endpoint
-```markdown
-## [METHOD] /api/path
-
-Brief description of what this endpoint does.
-
-### Authentication
-- Required: Yes/No
-- Type: Bearer token / API Key / Session
-
-### Request
-
-**Headers:**
-| Header | Required | Description |
-|--------|----------|-------------|
-| Authorization | Yes | Bearer token |
-
-**Query Parameters:**
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| limit | number | No | Max results (default: 20) |
-
-**Body:**
-```json
-{
-  "field": "type - description"
-}
-```
-
-### Response
-
-**Success (200):**
-```json
-{
-  "data": {},
-  "meta": {}
-}
-```
-
-**Errors:**
-| Code | Description |
-|------|-------------|
-| 400 | Invalid input |
-| 401 | Unauthorized |
-| 404 | Not found |
-
-### Example
-
-```bash
-curl -X POST https://api.example.com/path \
-  -H "Authorization: Bearer token" \
-  -d '{"field": "value"}'
-```
-```
-
-## Instructions
-1. Read all route files in target path
-2. Extract endpoint information
-3. Analyze request/response types
-4. Generate documentation in /docs/api/
-5. Create index with all endpoints
-6. Add examples based on actual schemas
-
-IMPORTANT: Use actual TypeScript types for accuracy.
-```
-
----
-
-## Part 6: Skill Organization & Best Practices
-
-### Directory Structure
-
-```
-.claude/
-└── commands/
-    ├── development/
-    │   ├── create-component.md
-    │   ├── create-hook.md
-    │   └── create-test.md
-    ├── deployment/
-    │   ├── deploy-staging.md
-    │   ├── deploy-production.md
-    │   └── rollback.md
-    ├── git/
-    │   ├── fix-issue.md
-    │   ├── create-pr.md
-    │   └── squash-commits.md
-    └── documentation/
-        ├── document-api.md
-        ├── update-readme.md
-        └── generate-changelog.md
-```
-
-<Callout type="info" title="Nested Skills">
-Skills in subdirectories are accessed via: `/development/create-component`
-</Callout>
-
-### Naming Conventions
-
-| Pattern | Example | Use For |
-|---------|---------|---------|
-| `verb-noun` | `create-component` | Action-oriented tasks |
-| `noun-action` | `api-document` | Resource-focused tasks |
-| `workflow-name` | `pr-review` | Multi-step workflows |
-| `check-thing` | `check-security` | Validation/audit tasks |
-
-### Writing Effective Skills
-
-**Do:**
-- Be specific about expected behavior
-- Include context about project conventions
-- Use `IMPORTANT:` and `YOU MUST:` for critical rules
-- Provide examples of expected output
-- Reference existing code patterns
-
-**Don't:**
-- Write vague instructions
-- Assume Claude knows project-specific details
-- Skip error handling instructions
-- Forget to specify output format
-
-### Sharing Skills with Your Team
-
-**Commit skills to git:**
+### Commit Skills to Git
 
 ```bash
 git add .claude/commands/
-git commit -m "feat: Add team workflow skills"
+git commit -m "feat: add team workflow skills"
 git push
 ```
 
-**Document in README:**
+### Document in README
 
 ```markdown
-## Claude Code Skills
+## Custom Commands
 
-This project includes custom Claude skills:
+This project includes Claude Code skills:
 
-| Skill | Description |
-|-------|-------------|
+| Command | Description |
+|---------|-------------|
 | `/deploy` | Deploy to production |
-| `/fix-issue [n]` | Fix GitHub issue #n |
-| `/create-component [name]` | Create new React component |
+| `/fix-issue [n]` | Fix GitHub issue |
+| `/create-component [name]` | Create React component |
 
-See `.claude/commands/` for full skill definitions.
+See `.claude/commands/` for details.
 ```
 
 ---
 
-## Part 7: Real-World Skill Examples
-
-### Example 1: Morning Standup Summary
-
-**`~/.claude/commands/standup.md`**
-
-```markdown
-# Morning Standup Summary
-
-Generate a summary for daily standup meeting.
-
-## Instructions
-
-1. Check git log for my commits yesterday
-2. Look at current branch and in-progress work
-3. Check for any failing tests
-4. Review open PRs I'm assigned to
-
-## Generate Summary
-
-Format:
-```
-## Standup - [Today's Date]
-
-### Yesterday
-- [Completed work from git commits]
-
-### Today
-- [Current branch/task]
-- [Any blockers or pending reviews]
-
-### Blockers
-- [Any issues preventing progress]
-```
-
-Keep it concise - suitable for a 2-minute verbal update.
-```
-
-### Example 2: End of Day Commit
-
-**`~/.claude/commands/eod.md`**
-
-```markdown
-# End of Day Wrap-Up
-
-Prepare end of day commit and status update.
-
-## Instructions
-
-1. Check git status for uncommitted changes
-2. Review what was accomplished today
-3. Create a WIP commit if needed
-4. Generate status update
-
-## If Uncommitted Changes Exist
-
-Create commit with message:
-```
-wip: [Brief description of in-progress work]
-
-- [List of changes]
-- [Current status]
-- [Next steps]
-```
-
-## Generate EOD Update
-
-```
-## EOD Update - [Date]
-
-### Completed
-- [List from today's commits]
-
-### In Progress
-- [Current work status]
-
-### Tomorrow
-- [Next priority items]
-```
-
-IMPORTANT: Never commit sensitive data or secrets.
-```
-
-### Example 3: Quick Security Audit
-
-**`.claude/commands/security-check.md`**
-
-```markdown
-# Quick Security Audit
-
-Run a quick security check on recent changes.
-
-## Check Areas
-
-### 1. Authentication & Authorization
-- Are auth checks present on all protected routes?
-- Are permissions verified correctly?
-- Is session handling secure?
-
-### 2. Input Validation
-- Is all user input validated?
-- Are SQL queries parameterized?
-- Is file upload validated?
-
-### 3. Data Exposure
-- Are sensitive fields filtered from responses?
-- Is PII handled according to policy?
-- Are errors sanitized before returning?
-
-### 4. Dependencies
-- Run `npm audit` and report issues
-- Check for known vulnerabilities
-- Flag any outdated security packages
-
-### 5. Secrets
-- Scan for hardcoded secrets
-- Verify .env files are gitignored
-- Check for exposed API keys
-
-## Output
-
-```markdown
-## Security Audit: [Date]
-
-### Status: PASS / FAIL / NEEDS REVIEW
-
-### Critical Issues
-- [Any blockers]
-
-### Warnings
-- [Non-critical concerns]
-
-### Recommendations
-- [Suggested improvements]
-
-### Audit Scope
-- Files checked: [count]
-- Dependencies scanned: [count]
-```
-
-IMPORTANT: Flag any critical issues immediately.
-```
-
-### Example 4: Database Migration Helper
-
-**`.claude/commands/db-migrate.md`**
-
-```markdown
-# Database Migration Helper
-
-Create and manage database migrations safely.
-
-## Arguments
-Action: $ARGUMENTS (create [name] | run | rollback | status)
-
-## For "create [name]"
-
-1. Generate migration file with timestamp
-2. Include up and down functions
-3. Add type-safe schema changes
-4. Include data migration if needed
-
-Template:
-```typescript
-import { Kysely, sql } from 'kysely'
-
-export async function up(db: Kysely<any>): Promise<void> {
-  // Schema changes
-}
-
-export async function down(db: Kysely<any>): Promise<void> {
-  // Rollback changes
-}
-```
-
-## For "run"
-
-1. Check current migration status
-2. Show migrations to be applied
-3. Ask for confirmation
-4. Run migrations
-5. Verify success
-
-## For "rollback"
-
-1. Show last applied migration
-2. Confirm rollback intent
-3. Execute rollback
-4. Verify rollback success
-
-## For "status"
-
-Show:
-- Applied migrations
-- Pending migrations
-- Current database version
-
-IMPORTANT: Always backup before migrations in production.
-YOU MUST: Test migrations on a copy of production data first.
-```
-
-### Example 5: Performance Profiler
-
-**`.claude/commands/profile.md`**
-
-```markdown
-# Performance Profiler
-
-Profile and analyze application performance.
-
-## Arguments
-Target: $ARGUMENTS (endpoint path, component name, or "full")
-
-## Profiling Steps
-
-### For API Endpoints
-1. Add timing middleware temporarily
-2. Run load test (10 requests)
-3. Measure response times
-4. Profile database queries
-5. Identify N+1 queries
-6. Check memory usage
-
-### For React Components
-1. Use React DevTools profiler
-2. Measure render times
-3. Identify unnecessary re-renders
-4. Check bundle size contribution
-5. Analyze memoization opportunities
-
-### For Full Application
-1. Run Lighthouse audit
-2. Check Core Web Vitals
-3. Analyze bundle size
-4. Profile startup time
-5. Check for memory leaks
-
-## Output
-
-```markdown
-## Performance Report: [Target]
-
-### Summary
-- Response time: Xms (target: <200ms)
-- Bundle size: Xkb (target: <100kb)
-- Database queries: X (target: <5)
-
-### Bottlenecks Identified
-1. [Issue] - Impact: High/Medium/Low
-   - Current: X
-   - Target: Y
-   - Suggested fix: [Description]
-
-### Optimization Recommendations
-1. [Recommendation with expected impact]
-
-### Quick Wins
-- [Easy improvements]
-```
-
-IMPORTANT: Remove profiling code after analysis.
-```
-
----
-
-## Part 8: Skill Debugging & Troubleshooting
+## Troubleshooting
 
 ### Skill Not Found
 
@@ -1457,14 +591,13 @@ Error: Unknown command /my-skill
 ```
 
 **Check:**
-1. File exists in `.claude/commands/` or `~/.claude/commands/`
-2. File has `.md` extension
-3. File name matches command (kebab-case)
-4. No typos in skill name
+- File exists in `.claude/commands/` or `~/.claude/commands/`
+- File has `.md` extension
+- Filename matches command (kebab-case)
 
-### Arguments Not Passing
+### Arguments Not Working
 
-**Verify your skill uses `$ARGUMENTS`:**
+Ensure you use `$ARGUMENTS`:
 
 ```markdown
 # Wrong
@@ -1474,114 +607,80 @@ Process the input: [user input here]
 Process the input: $ARGUMENTS
 ```
 
-### Skill Executes But Fails
+### Skill Fails Mid-Execution
 
-**Add explicit instructions:**
+Add more specific instructions:
 
 ```markdown
 # Before (vague)
 Fix the issue.
 
 # After (specific)
-1. Read the error message
-2. Locate the problematic file
-3. Understand the root cause
-4. Propose a fix
-5. Wait for approval before implementing
-```
-
-### Testing Skills
-
-Create a test skill to verify your setup:
-
-**`.claude/commands/test-skill.md`**
-
-```markdown
-# Test Skill
-
-This is a test skill to verify custom commands work.
-
-Arguments received: $ARGUMENTS
-
-If you can see this message, skills are working correctly!
-
-Please respond with:
-1. Confirmation that you read this skill
-2. The arguments you received
-3. Current working directory
-```
-
-**Usage:**
-```
-/test-skill hello world
+1. Read the issue description
+2. Locate the problematic code
+3. Propose a fix and wait for approval
+4. Implement only after approval
 ```
 
 ---
 
 ## Quick Reference
 
-### Skill Locations
+### Locations
 
 | Location | Command | Scope |
 |----------|---------|-------|
 | `.claude/commands/skill.md` | `/skill` | Project |
-| `.claude/commands/folder/skill.md` | `/folder/skill` | Project |
+| `.claude/commands/dir/skill.md` | `/dir/skill` | Project |
 | `~/.claude/commands/skill.md` | `/skill` | Global |
 
-### Template Placeholders
+### Template
 
-| Placeholder | Description |
-|-------------|-------------|
-| `$ARGUMENTS` | All arguments passed to skill |
+```markdown
+# Skill Name
 
-### Emphasis Keywords
+Brief description.
 
-Use in skill instructions:
+## Instructions
+
+1. Step one
+2. Step two
+3. Step three
+
+## Output Format
+
+Expected output format.
+
+IMPORTANT: Critical rule.
+YOU MUST: Required behavior.
+NEVER: Prohibited action.
+```
+
+### Keywords
 
 | Keyword | Effect |
 |---------|--------|
-| `IMPORTANT:` | High priority instruction |
-| `YOU MUST:` | Required behavior |
-| `NEVER:` | Prohibited action |
-| `CRITICAL:` | Absolute requirement |
-
-### Best Practices Checklist
-
-- [ ] Clear, specific instructions
-- [ ] Expected output format defined
-- [ ] Reference project conventions
-- [ ] Include example usage
-- [ ] Handle edge cases
-- [ ] Safety checks for destructive actions
-- [ ] Confirmation prompts for risky operations
+| `IMPORTANT:` | High priority |
+| `YOU MUST:` | Required |
+| `NEVER:` | Prohibited |
+| `CRITICAL:` | Absolute |
 
 ---
 
 ## Next Steps
 
-### Build Your Skills Library
+1. **Start simple** — Create 2-3 skills for daily tasks
+2. **Iterate** — Refine based on results
+3. **Share** — Commit for team benefit
+4. **Expand** — Add more as patterns emerge
 
-1. **Start simple** - Create 2-3 skills for tasks you do daily
-2. **Iterate** - Refine based on results
-3. **Share** - Commit skills for your team
-4. **Expand** - Add more as patterns emerge
-
-### Related Topics
-
-- [Best Practices](/advanced-topics/best-practices) - Optimize your Claude Code workflow
-- [MCP and Cursor](/advanced-topics/mcp-and-cursor) - Extend with external tools
-- [Automation Track](/automation) - Automate repetitive tasks
-
-### Resources
-
-- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code)
-- [Slash Commands Reference](https://docs.anthropic.com/en/docs/claude-code/slash-commands)
-- [Custom Commands Guide](https://docs.anthropic.com/en/docs/claude-code/tutorials/custom-slash-commands)
+**Related Topics:**
+- [Best Practices](./best-practices) — Optimize workflows
+- [MCP and Cursor](./mcp-and-cursor) — Extend capabilities
+- [Automation Track](/automation) — Automate tasks
 
 ---
 
-<Callout type="success" title="You're Now a Skills Power User!">
-Custom skills are what separate casual users from power users. Start building your library today - even one well-crafted skill can save hours of repetitive prompting.
+<Callout type="success" title="Your Skill Library Awaits!">
+Start with one skill that automates something you do weekly. Refine it until it works perfectly. Then add another. Within a month, you'll have a personal toolkit that saves hours. That's the power of skills.
 </Callout>
-
-**Remember:** The best skills encode your team's knowledge. Document your workflows as skills, and everyone benefits from collective expertise.

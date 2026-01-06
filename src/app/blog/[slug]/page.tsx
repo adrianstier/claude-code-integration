@@ -13,6 +13,7 @@ import {
   Step,
   Checklist,
   ChecklistItem,
+  Diagram,
 } from '@/components/mdx'
 
 interface BlogPostPageProps {
@@ -67,6 +68,7 @@ const components = {
   Step,
   Checklist,
   ChecklistItem,
+  Diagram,
   pre: ({ children }: { children?: React.ReactNode }) => {
     const child = (children as { props?: { children?: string; className?: string } })?.props
     const code = child?.children || ''

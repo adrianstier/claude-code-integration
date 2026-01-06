@@ -19,6 +19,7 @@ import {
   FolderNode,
   FileNode,
   Kbd,
+  Diagram,
 } from '@/components/mdx'
 import {
   getTrackPageMetadata,
@@ -153,6 +154,7 @@ const components = {
   FolderNode,
   FileNode,
   Kbd,
+  Diagram,
   // Map MDX code blocks to our CodeBlock component
   pre: ({ children }: { children?: React.ReactNode }) => {
     // Extract code content and language from children

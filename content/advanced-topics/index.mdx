@@ -7,81 +7,153 @@ duration: '2-3 hours'
 
 # Advanced Topics
 
-Take your Claude Code skills to the next level with advanced techniques, integrations, and best practices from Anthropic engineers.
+You know the basics. Now let's unlock the full power of Claude Code—the techniques that separate casual users from power users.
+
+<Diagram title="The Power User Stack" type="flowchart" caption="Each layer multiplies your effectiveness">
+{`flowchart TB
+    A[CLAUDE.md Files] --> B[Custom Skills]
+    B --> C[MCP Integrations]
+    C --> D[Multi-Claude Workflows]
+    D --> E[10x Productivity]
+`}
+</Diagram>
+
+<Callout type="tip" title="The 80/20 of Claude Code">
+Most users only scratch the surface. Master CLAUDE.md files and the Explore → Plan → Code → Commit workflow, and you'll outperform 80% of Claude Code users.
+</Callout>
+
+---
 
 ## What You'll Learn
 
-- Pro workflows and optimization strategies
-- CLAUDE.md customization and tool permissions
-- **Custom Skills** - slash commands and automations
-- MCP (Model Context Protocol) integrations
-- Multi-Claude workflows for complex tasks
-- Headless mode and automation patterns
+| Topic | What It Unlocks |
+|-------|-----------------|
+| **Best Practices** | Battle-tested workflows from Anthropic engineers |
+| **Custom Skills** | Your own slash commands for repetitive tasks |
+| **MCP Integrations** | Connect Claude to databases, APIs, tools |
+| **Multi-Claude Patterns** | Parallel verification, complex projects |
+
+---
 
 ## Prerequisites
 
-- Completed [Start Here](/start-here) setup
-- Familiarity with Claude Code basics
-- Some experience with terminal/command line
+<Checklist>
+  <ChecklistItem>Completed [Start Here](/start-here) setup</ChecklistItem>
+  <ChecklistItem>Comfortable with Claude Code basics</ChecklistItem>
+  <ChecklistItem>Some terminal/command line experience</ChecklistItem>
+</Checklist>
 
-## Time Required
+---
 
-2-3 hours to complete all sections
+## The Pro Workflow
+
+This is the most important thing you'll learn. Following this pattern prevents 80% of common issues.
+
+<Diagram title="Explore → Plan → Code → Commit" type="flowchart">
+{`flowchart LR
+    A[🔍 Explore] --> B[📋 Plan]
+    B --> C[💻 Code]
+    C --> D[✅ Commit]
+    D --> E{More work?}
+    E -->|Yes| A
+    E -->|No| F[🚀 Ship]
+`}
+</Diagram>
+
+### 1. Explore First
+
+Before writing code, understand what exists:
+
+```
+Read src/auth/login.ts and src/lib/jwt.ts to understand
+our current authentication flow.
+```
+
+Claude reads the code and summarizes. Now you both have context.
+
+### 2. Plan with Thinking
+
+Request a detailed plan before coding:
+
+```
+I need to add OAuth support. Think through how to implement this.
+```
+
+Use thinking modes for complex tasks:
+- `think` — Basic extended thinking
+- `think hard` — Deeper analysis
+- `think harder` — Very thorough
+- `ultrathink` — Maximum effort
+
+### 3. Code Systematically
+
+Work through the plan step by step:
+
+```
+Looks good! Start with step 1 - add OAuth provider configuration.
+```
+
+Don't skip steps. Don't rush ahead. Let Claude complete each piece.
+
+### 4. Commit Cleanly
+
+```
+This looks great! Create a commit with an appropriate message.
+```
+
+Claude analyzes changes and writes a meaningful commit message.
 
 ---
 
 ## Modules
 
-### Best Practices Guide
+<Steps>
+<Step title="Best Practices Guide">
 
-Learn battle-tested workflows from Anthropic engineers:
+Battle-tested workflows from Anthropic engineers and power users.
 
-- **Explore → Plan → Code → Commit** workflow
-- Test-Driven Development with Claude
+**You'll learn:**
+- CLAUDE.md customization
+- Tool permissions and security
+- TDD with Claude
 - Visual iteration for UI work
 - Git & GitHub mastery
-- Multi-Claude parallel verification
 
 [Read Best Practices →](./best-practices)
 
-### Claude Skills - Custom Commands
+</Step>
+<Step title="Claude Skills - Custom Commands">
 
-Master Claude's powerful Skills system for reusable automations:
+Create reusable slash commands for your workflows.
 
-- Built-in slash commands deep dive
-- Creating project-specific skills
-- User-level skills for personal workflows
-- Advanced skill patterns and templates
-- Real-world skill examples
+**You'll learn:**
+- Built-in commands reference
+- Creating project skills
+- User-level skills
+- Advanced patterns
+- Real-world examples
 
 [Master Skills →](./skills)
 
-### MCP and Cursor Integration
+</Step>
+<Step title="MCP and Cursor Integration">
 
-Extend Claude Code's capabilities with the Model Context Protocol:
+Extend Claude's capabilities with external tools.
 
-- Understanding MCP architecture
-- Installing and configuring MCP servers
-- Using Claude Code with Cursor IDE
-- Building custom tool integrations
+**You'll learn:**
+- Model Context Protocol basics
+- Installing MCP servers
+- Using Cursor IDE
+- Building custom integrations
 
 [Explore MCP →](./mcp-and-cursor)
 
----
-
-## Why Advanced Topics Matter
-
-Once you've mastered the basics, these advanced techniques can:
-
-- **10x your productivity** with optimized workflows
-- **Reduce errors** through systematic approaches
-- **Handle complex projects** with multi-Claude patterns
-- **Automate repetitive tasks** with headless mode
-- **Integrate deeply** with your existing tools
+</Step>
+</Steps>
 
 ---
 
-## Quick Tips
+## Quick Reference
 
 ### CLAUDE.md Files
 
@@ -96,53 +168,74 @@ Your secret weapon for project-specific instructions:
 
 ## Code Style
 IMPORTANT: Use TypeScript strict mode
-YOU MUST: Write tests before code
+YOU MUST: Write tests before implementation
+NEVER: Use `any` type
 ```
+
+**Where to place:**
+- Project root — Project-specific guidelines
+- Parent directory — Monorepo shared config
+- `~/.claude/CLAUDE.md` — Global preferences
 
 ### Thinking Modes
 
-Use extended thinking for complex tasks:
+| Mode | Use When |
+|------|----------|
+| `think` | Complex tasks, planning |
+| `think hard` | Architecture decisions |
+| `think harder` | Debugging tricky issues |
+| `ultrathink` | Critical, high-stakes code |
 
-- `think` - Basic extended thinking
-- `think hard` - Deeper analysis
-- `think harder` - Very thorough
-- `ultrathink` - Maximum effort
+### Essential Shortcuts
 
-### Keyboard Shortcuts
+| Shortcut | Action |
+|----------|--------|
+| `Escape` | Interrupt Claude |
+| `Escape Escape` | Edit last prompt |
+| `/clear` | Reset conversation context |
+| `#` | Update documentation |
+| `Tab` | File/folder completion |
 
-- `Escape` - Interrupt Claude
-- `Escape Escape` - Edit last prompt
-- `/clear` - Reset context
-- `#` - Update documentation
+### Custom Skills Quick Start
 
-### Custom Skills
-
-Create reusable commands in `.claude/commands/`:
+Create `.claude/commands/fix-issue.md`:
 
 ```markdown
-# File: .claude/commands/fix-issue.md
+# Fix GitHub Issue
 
-Fix GitHub issue #$ARGUMENTS:
+Fix issue #$ARGUMENTS from GitHub:
 1. Read the issue description
 2. Locate relevant code
 3. Implement the fix
 4. Create commit referencing issue
 ```
 
-Then use: `/fix-issue 1234`
+Use it: `/fix-issue 1234`
 
 ---
 
-## Next Steps
+## Why These Topics Matter
 
-Ready to level up? Start with the Best Practices guide:
+Once you master the basics, these advanced techniques can:
+
+- **10x your productivity** with optimized workflows
+- **Reduce errors** through systematic approaches
+- **Handle complex projects** with multi-Claude patterns
+- **Automate repetitive tasks** with custom skills
+- **Integrate deeply** with your existing tools
+
+---
+
+## Where to Start
+
+<Callout type="info" title="Recommended Path">
+Start with **Best Practices**—it covers the foundational workflows. Then move to **Skills** for custom automation. Finally, explore **MCP** when you're ready to extend Claude's capabilities.
+</Callout>
+
+Ready to level up?
 
 [Best Practices Guide →](./best-practices)
 
-Master custom commands and automations:
-
-[Claude Skills →](./skills)
-
-Or explore specific integrations:
-
-[MCP and Cursor →](./mcp-and-cursor)
+Or jump to specific topics:
+- [Claude Skills →](./skills)
+- [MCP and Cursor →](./mcp-and-cursor)

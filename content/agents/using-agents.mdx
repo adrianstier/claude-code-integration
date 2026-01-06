@@ -1,36 +1,49 @@
 ---
 title: 'Using Agents Effectively'
-description: 'Master prompting, tool selection, and output handling to get the best results from AI agents'
+description: 'Master prompting, debugging, and getting reliable results from AI agents'
 order: 2
 duration: '2-3 hours'
 ---
 
 # Using Agents Effectively
 
-Learn to work with AI agents like a pro. This guide covers prompting strategies, tool orchestration, debugging techniques, and patterns for getting reliable results.
+Building an agent is one thing. Getting reliable, high-quality results from it is another. This guide covers the techniques that separate frustrating agents from useful ones.
+
+<Diagram title="The Reliability Stack" type="flowchart" caption="Each layer improves agent performance">
+{`flowchart TB
+    A[Clear Prompts] --> B[Good Tool Descriptions]
+    B --> C[Output Validation]
+    C --> D[Error Recovery]
+    D --> E[Reliable Agent]
+`}
+</Diagram>
+
+---
 
 ## Prompting for Agents
 
+Agent prompts need more structure than chatbot prompts. They define personality, capabilities, and constraints.
+
 ### System Prompts
 
-Define the agent's personality and constraints:
+Tell the agent who it is and what it can do:
 
 ```python
-SYSTEM_PROMPT = """You are a helpful research assistant.
+SYSTEM_PROMPT = """You are a research assistant.
 
-Your capabilities:
+CAPABILITIES:
 - Search the web for information
 - Read and analyze documents
 - Take notes and organize findings
 - Generate comprehensive reports
 
-Guidelines:
+GUIDELINES:
 - Always cite your sources
 - Verify facts from multiple sources
 - Acknowledge uncertainty
 - Ask for clarification when needed
 
-Limitations:
+LIMITATIONS:
 - Cannot access private or paywalled content
 - Cannot make changes to external systems
 - Must respect rate limits on searches
@@ -41,12 +54,22 @@ Limitations:
 
 Be specific about what you want:
 
-**Bad prompt:**
+<Tabs>
+  <TabList>
+    <Tab>Bad</Tab>
+    <Tab>Good</Tab>
+  </TabList>
+  <TabPanel>
+
 ```
 Research AI agents
 ```
 
-**Good prompt:**
+Vague. What about AI agents? For what purpose? What format?
+
+  </TabPanel>
+  <TabPanel>
+
 ```
 Research the current state of AI agents in customer support.
 
@@ -65,18 +88,23 @@ Output format:
 Target length: 1500-2000 words
 ```
 
-### Few-shot Examples
+Specific scope, clear structure, defined output.
 
-Show the agent what you want:
+  </TabPanel>
+</Tabs>
+
+### Few-Shot Examples
+
+Show, don't just tell:
 
 ```python
-PROMPT_WITH_EXAMPLES = """
-Analyze customer feedback and extract key themes.
+PROMPT = """
+Analyze customer feedback and extract themes.
 
-Example input:
+EXAMPLE INPUT:
 "The app is fast but crashes when I try to export. Also wish it had dark mode."
 
-Example output:
+EXAMPLE OUTPUT:
 {
   "sentiment": "mixed",
   "themes": [
@@ -86,7 +114,7 @@ Example output:
   ]
 }
 
-Now analyze this feedback:
+NOW ANALYZE:
 "{user_input}"
 """
 ```
@@ -95,106 +123,82 @@ Now analyze this feedback:
 
 ## Tool Selection Strategies
 
-### Give Clear Tool Descriptions
+Agents pick tools based on descriptions. Write them carefully.
 
-Tools should be self-explanatory:
+### Write Clear Descriptions
 
 ```python
+# Good: specific about when to use
 {
     "name": "search_knowledge_base",
-    "description": """Search the company knowledge base for information.
+    "description": """Search company knowledge base.
 
-    Use this tool when:
-    - User asks about company policies
-    - User needs product documentation
-    - User asks 'how to' questions
+    USE FOR:
+    - Company policies
+    - Product documentation
+    - How-to questions
 
-    Do NOT use for:
-    - General knowledge questions
+    DO NOT USE FOR:
+    - General knowledge
     - External information
     - Real-time data
 
-    Returns: List of relevant articles with titles and snippets""",
-    "input_schema": {
-        "type": "object",
-        "properties": {
-            "query": {
-                "type": "string",
-                "description": "Search query - use specific keywords"
-            },
-            "category": {
-                "type": "string",
-                "enum": ["policies", "products", "procedures"],
-                "description": "Filter by category for better results"
-            }
-        },
-        "required": ["query"]
-    }
+    Returns: List of relevant articles with titles and snippets"""
+}
+
+# Bad: vague
+{
+    "name": "search",
+    "description": "Search for information"
 }
 ```
 
 ### Guide Tool Choice
 
-Help the agent pick the right tool:
+When you have multiple similar tools, help the agent decide:
 
 ```python
-TOOL_SELECTION_PROMPT = """
+TOOL_GUIDE = """
 Available tools and when to use them:
 
-1. **web_search**: For current events, general knowledge, external information
-2. **knowledge_base**: For company-specific information, policies, products
-3. **database_query**: For user data, analytics, specific records
-4. **calculator**: For any mathematical computations
+1. **web_search**: Current events, general knowledge, external info
+2. **knowledge_base**: Company-specific info, policies, products
+3. **database_query**: User data, analytics, specific records
+4. **calculator**: Any mathematical computation
 
 Decision tree:
-- Is it about our company? -> knowledge_base
-- Is it about the user's data? -> database_query
-- Does it need math? -> calculator
-- Otherwise -> web_search
+- About our company? → knowledge_base
+- About user data? → database_query
+- Needs math? → calculator
+- Otherwise → web_search
 """
 ```
 
-### Tool Composition
+### Design Composable Tools
 
-Design tools that work together:
+Tools that work together:
 
 ```python
-# Tools that build on each other
 RESEARCH_TOOLS = [
-    {
-        "name": "search_sources",
-        "description": "Find relevant sources for a topic"
-    },
-    {
-        "name": "read_source",
-        "description": "Extract information from a specific source"
-    },
-    {
-        "name": "take_note",
-        "description": "Save a note with source attribution"
-    },
-    {
-        "name": "get_notes",
-        "description": "Retrieve all notes taken so far"
-    },
-    {
-        "name": "write_report",
-        "description": "Generate report from notes"
-    }
+    {"name": "search_sources", "description": "Find relevant sources"},
+    {"name": "read_source", "description": "Extract info from a source"},
+    {"name": "take_note", "description": "Save a note with attribution"},
+    {"name": "get_notes", "description": "Retrieve all notes"},
+    {"name": "write_report", "description": "Generate report from notes"}
 ]
 ```
+
+The agent can naturally flow: search → read → note → repeat → report.
 
 ---
 
 ## Output Handling
 
-### Structured Outputs
-
-Request specific formats:
+### Request Structured Outputs
 
 ```python
-STRUCTURED_OUTPUT_PROMPT = """
-Analyze the provided data and return your findings in this exact JSON format:
+STRUCTURED_PROMPT = """
+Return your analysis in this exact JSON format:
 
 {
   "summary": "One paragraph overview",
@@ -205,57 +209,50 @@ Analyze the provided data and return your findings in this exact JSON format:
   "limitations": ["string"]
 }
 
-Important: Return ONLY the JSON, no additional text.
+Return ONLY the JSON, no additional text.
 """
 ```
 
-### Validation
-
-Validate agent outputs:
+### Validate Outputs
 
 ```python
 from pydantic import BaseModel, validator
 from typing import List, Literal
+import json
 
 class Finding(BaseModel):
     finding: str
     confidence: Literal["high", "medium", "low"]
     evidence: str
 
-class AnalysisResult(BaseModel):
+class Analysis(BaseModel):
     summary: str
     key_findings: List[Finding]
     recommendations: List[str]
     limitations: List[str]
 
     @validator('key_findings')
-    def at_least_one_finding(cls, v):
+    def needs_findings(cls, v):
         if len(v) < 1:
             raise ValueError("Must have at least one finding")
         return v
 
-def parse_agent_output(response: str) -> AnalysisResult:
-    """Parse and validate agent output."""
+def parse_output(response: str) -> Analysis:
     try:
         data = json.loads(response)
-        return AnalysisResult(**data)
+        return Analysis(**data)
     except json.JSONDecodeError:
-        raise ValueError("Agent did not return valid JSON")
-    except ValidationError as e:
-        raise ValueError(f"Invalid output format: {e}")
+        raise ValueError("Invalid JSON")
+    except Exception as e:
+        raise ValueError(f"Invalid format: {e}")
 ```
 
-### Streaming
-
-Handle streaming responses:
+### Handle Streaming
 
 ```python
-async def stream_agent_response(task: str):
-    """Stream agent response with tool call handling."""
-
+async def stream_response(task: str):
     async with client.messages.stream(
-        model="claude-sonnet-4-20250514",
-        max_tokens=4096,
+        model=MODEL,
         messages=[{"role": "user", "content": task}],
         tools=TOOLS
     ) as stream:
@@ -266,127 +263,113 @@ async def stream_agent_response(task: str):
 
             elif event.type == "content_block_start":
                 if event.content_block.type == "tool_use":
-                    yield {
-                        "type": "tool_start",
-                        "tool": event.content_block.name
-                    }
+                    yield {"type": "tool_start", "tool": event.content_block.name}
 ```
 
 ---
 
 ## Debugging Agents
 
-### Common Issues and Solutions
+Agents misbehave. Here's how to fix common problems.
 
-#### Issue: Agent not using tools
+### Problem: Agent Not Using Tools
 
-**Symptoms**: Agent makes up information instead of using tools
+**Symptom**: Agent makes up information instead of searching.
 
-**Solutions**:
+**Fixes**:
+
 ```python
-# 1. Make tools more prominent in system prompt
-SYSTEM = """You MUST use the provided tools to gather information.
-Do NOT rely on your training data for facts."""
+# 1. Stronger system prompt
+SYSTEM = """You MUST use tools to gather information.
+Do NOT rely on training data for facts."""
 
-# 2. Add explicit instructions in task
+# 2. Explicit task instructions
 TASK = """
 Research {topic}.
 
-IMPORTANT: Use the search tool for EVERY fact you include.
+IMPORTANT: Use web_search for EVERY fact you include.
 Do not include any information that doesn't come from a tool.
 """
 
-# 3. Require tool citation
+# 3. Require citations
 """After each fact, cite the tool call that provided it."""
 ```
 
-#### Issue: Agent stuck in loop
+### Problem: Infinite Loops
 
-**Symptoms**: Same tool called repeatedly with same inputs
+**Symptom**: Same tool called repeatedly with same inputs.
 
-**Solutions**:
+**Fix**:
+
 ```python
-# 1. Track and detect loops
 seen_calls = set()
+
 for call in tool_calls:
     key = (call.name, json.dumps(call.input, sort_keys=True))
+
     if key in seen_calls:
-        # Inject guidance
         messages.append({
             "role": "user",
-            "content": "You've already tried this. Try a different approach or provide your answer with available information."
+            "content": "You already tried this. Try something different or provide your answer."
         })
-    seen_calls.add(key)
+    else:
+        seen_calls.add(key)
+        # Execute tool...
 
-# 2. Limit iterations
-MAX_TOOL_CALLS = 10
-if len(tool_calls) >= MAX_TOOL_CALLS:
-    # Force completion
-    pass
+# Also: hard limit on iterations
+if iteration_count >= MAX_ITERATIONS:
+    break
 ```
 
-#### Issue: Hallucinated tool results
+### Problem: Hallucinated Tool Results
 
-**Symptoms**: Agent references tool results that don't exist
+**Symptom**: Agent references results that don't exist.
 
-**Solutions**:
+**Fix**:
+
 ```python
-# 1. Validate tool results exist
-def validate_citations(response: str, tool_results: list) -> bool:
-    """Check that all citations reference actual results."""
-    # Implementation
-    pass
-
-# 2. Use explicit result markers
-TOOL_RESULT_FORMAT = """
-[TOOL RESULT - {tool_name}]
+# Use explicit markers
+RESULT_FORMAT = """
+[TOOL RESULT: {tool_name}]
 {result}
 [END TOOL RESULT]
 
-Only use information that appears within TOOL RESULT markers.
+Only use information within TOOL RESULT markers.
 """
+
+# Validate citations reference actual results
+def validate_citations(response: str, tool_results: list) -> bool:
+    # Check all cited facts appear in tool_results
+    pass
 ```
 
 ### Debugging Tools
 
-#### Logging
+**Logging**:
 
 ```python
 import structlog
 
 logger = structlog.get_logger()
 
-def debug_agent_run(task: str):
+def debug_run(task: str):
     log = logger.bind(task_id=str(uuid4()))
+    log.debug("agent_start", task=task)
 
-    log.debug("starting_agent", task=task)
+    for i, step in enumerate(steps):
+        log.debug("step", num=i, tool=step.tool, input=step.input)
+        result = execute(step)
+        log.debug("result", num=i, result=result[:200])
 
-    for i, step in enumerate(agent_steps):
-        log.debug("agent_step",
-                  step=i,
-                  thinking=step.thinking,
-                  tool=step.tool,
-                  input=step.input)
-
-        result = execute_tool(step.tool, step.input)
-
-        log.debug("tool_result",
-                  step=i,
-                  tool=step.tool,
-                  result=result[:200])  # Truncate for logging
-
-    log.debug("agent_complete", steps=len(agent_steps))
+    log.debug("agent_done", total_steps=len(steps))
 ```
 
-#### Visual Debugging
+**Visual trace**:
 
 ```python
-def visualize_agent_trace(trace: list):
-    """Create visual representation of agent execution."""
-
-    output = []
+def print_trace(trace: list):
     for i, step in enumerate(trace):
-        output.append(f"""
+        print(f"""
 Step {i + 1}:
   Thinking: {step.thinking[:100]}...
   Tool: {step.tool}
@@ -394,33 +377,31 @@ Step {i + 1}:
   Result: {step.result[:100]}...
   Duration: {step.duration:.2f}s
 """)
-
-    return "\n".join(output)
 ```
 
 ---
 
-## Prompt Engineering Patterns
+## Advanced Prompting Patterns
 
 ### Chain of Thought
 
-Make the agent think step-by-step:
+Make the agent show its work:
 
 ```python
 COT_PROMPT = """
-Solve this problem step by step:
+Solve this step by step:
 
 {problem}
 
-Work through it like this:
-1. Understand what is being asked
+Process:
+1. Understand what's being asked
 2. Identify what information you need
-3. Gather that information using tools
+3. Gather information using tools
 4. Analyze the information
 5. Form your conclusion
 6. Verify your answer
 
-Show your work at each step.
+Show your reasoning at each step.
 """
 ```
 
@@ -429,8 +410,8 @@ Show your work at each step.
 Have the agent check its own work:
 
 ```python
-SELF_CRITIQUE_PROMPT = """
-After completing the task, critique your own work:
+SELF_CRITIQUE = """
+After completing the task, critique your work:
 
 1. Did you fully address the question?
 2. Are your sources reliable and cited?
@@ -441,12 +422,12 @@ Based on your critique, revise if needed.
 """
 ```
 
-### Reflection
+### Reflection on Errors
 
 Help the agent learn from mistakes:
 
 ```python
-REFLECTION_PROMPT = """
+REFLECTION = """
 The previous attempt had issues:
 {error_description}
 
@@ -463,117 +444,73 @@ Now try again with these learnings.
 
 ## Advanced Patterns
 
-### Multi-turn Refinement
-
-Iterate to improve results:
+### Iterative Refinement
 
 ```python
-def iterative_refinement(task: str, max_iterations: int = 3) -> str:
-    """Refine agent output through multiple passes."""
+def iterative_refine(task: str, max_rounds: int = 3) -> str:
+    output = agent.run(task)
 
-    current_output = agent.run(task)
-
-    for i in range(max_iterations):
-        # Ask for critique
+    for _ in range(max_rounds):
         critique_prompt = f"""
-        Here is an attempt at: {task}
+        Task: {task}
 
         Attempt:
-        {current_output}
+        {output}
 
-        Critique this attempt. Be specific about:
-        - What's good
-        - What's missing or wrong
-        - How to improve it
-
-        Then provide an improved version.
+        Critique this and provide an improved version.
         """
 
         response = agent.run(critique_prompt)
 
-        # Extract improved version
-        if "improved version" in response.lower():
-            current_output = extract_improved_version(response)
-        else:
-            break  # No improvements needed
+        if "no improvements needed" in response.lower():
+            break
 
-    return current_output
+        output = extract_improved_version(response)
+
+    return output
 ```
 
 ### Parallel Exploration
 
-Explore multiple approaches simultaneously:
-
 ```python
-async def parallel_exploration(task: str, num_approaches: int = 3) -> str:
-    """Try multiple approaches in parallel and select best."""
-
+async def parallel_explore(task: str, approaches: int = 3) -> str:
     # Generate different approaches
-    approach_prompt = f"""
-    For this task: {task}
-
-    Generate {num_approaches} different approaches to solving it.
-    Format as:
-    APPROACH 1: ...
-    APPROACH 2: ...
-    """
-
+    approach_prompt = f"Generate {approaches} different ways to solve: {task}"
     approaches = await agent.run(approach_prompt)
 
-    # Execute each approach in parallel
+    # Execute in parallel
     results = await asyncio.gather(*[
-        agent.run(f"Execute this approach: {approach}")
-        for approach in parse_approaches(approaches)
+        agent.run(f"Execute this approach: {a}")
+        for a in parse_approaches(approaches)
     ])
 
-    # Select best result
+    # Select best
     selection_prompt = f"""
     Task: {task}
 
-    Here are {len(results)} different results:
+    Results from {len(results)} approaches:
     {format_results(results)}
 
-    Select the best one and explain why.
+    Select the best and explain why.
     """
-
     return await agent.run(selection_prompt)
 ```
 
 ### Human-in-the-Loop
 
-Include human checkpoints:
-
 ```python
-def run_with_approval(task: str, checkpoints: list) -> str:
-    """Run agent with human approval at key points."""
+SENSITIVE_ACTIONS = ["delete_file", "send_email", "make_payment"]
 
-    messages = [{"role": "user", "content": task}]
+def execute_with_approval(tool: str, params: dict) -> str:
+    if tool in SENSITIVE_ACTIONS:
+        print(f"Agent wants to: {tool}")
+        print(f"Parameters: {params}")
+        approved = input("Approve? (y/n): ")
 
-    while True:
-        response = agent.step(messages)
+        if approved.lower() != 'y':
+            return "Action not approved by user."
 
-        # Check if at a checkpoint
-        if should_checkpoint(response, checkpoints):
-            # Present to human
-            print(f"Agent wants to: {describe_action(response)}")
-            approved = input("Approve? (y/n): ")
-
-            if approved.lower() != 'y':
-                # Add human guidance
-                guidance = input("Guidance: ")
-                messages.append({
-                    "role": "user",
-                    "content": f"Do not do that. Instead: {guidance}"
-                })
-                continue
-
-        # Execute
-        messages = execute_step(response, messages)
-
-        if response.stop_reason == "end_turn":
-            break
-
-    return extract_final_response(messages)
+    return execute_tool(tool, params)
 ```
 
 ---
@@ -606,20 +543,20 @@ def run_with_approval(task: str, checkpoints: list) -> str:
 
 ---
 
-## Common Use Case Recipes
+## Common Recipes
 
 ### Research Question
 
 ```python
-def research_question(question: str) -> str:
+def research(question: str) -> str:
     return agent.run(f"""
-    Research this question thoroughly: {question}
+    Research: {question}
 
     Process:
     1. Search for 3-5 authoritative sources
-    2. Read and extract key information from each
-    3. Identify areas of agreement and disagreement
-    4. Synthesize into a comprehensive answer
+    2. Read and extract key information
+    3. Identify agreement and disagreement
+    4. Synthesize into comprehensive answer
 
     Requirements:
     - Cite every factual claim
@@ -627,53 +564,53 @@ def research_question(question: str) -> str:
     - Include diverse perspectives
     - Acknowledge limitations
 
-    Format: Start with summary, then detailed findings, then sources.
+    Format: Summary → Detailed findings → Sources
     """)
 ```
 
 ### Code Generation
 
 ```python
-def generate_code(specification: str) -> str:
+def generate_code(spec: str) -> str:
     return agent.run(f"""
-    Generate code for: {specification}
+    Generate code for: {spec}
 
     Process:
-    1. Clarify requirements (ask if needed)
-    2. Design the solution approach
-    3. Write the code with comments
+    1. Clarify requirements
+    2. Design approach
+    3. Write code with comments
     4. Add error handling
     5. Write example usage
 
     Output:
-    - Code block with full implementation
-    - Brief explanation of approach
+    - Full implementation
+    - Approach explanation
     - Example usage
-    - Notes on dependencies or limitations
+    - Dependencies/limitations
     """)
 ```
 
 ### Data Analysis
 
 ```python
-def analyze_data(question: str, data_context: str) -> str:
+def analyze_data(question: str, context: str) -> str:
     return agent.run(f"""
-    Analyze this data to answer: {question}
+    Analyze data to answer: {question}
 
-    Data context: {data_context}
+    Context: {context}
 
     Process:
-    1. Understand the question and data available
-    2. Write and execute analysis queries
-    3. Interpret the results
+    1. Understand question and available data
+    2. Write and execute analysis
+    3. Interpret results
     4. Generate visualizations if helpful
     5. Form conclusions
 
     Output:
-    - Direct answer to the question
+    - Direct answer
     - Supporting analysis
-    - Visualizations (describe or generate)
-    - Caveats and limitations
+    - Visualizations
+    - Caveats
     """)
 ```
 
@@ -681,18 +618,18 @@ def analyze_data(question: str, data_context: str) -> str:
 
 ## Next Steps
 
-Now that you can use agents effectively:
-
-1. **[Building Agents](./building-agents)**: Create custom agents
-2. **[Agent Products](./agent-products)**: Ship production systems
+1. **[Building Agents](./building-agents)** — Create custom agents
+2. **[Agent Products](./agent-products)** — Ship production systems
 
 ### Practice
 
-1. Take an existing agent and optimize its prompts
-2. Add detailed logging and analyze its behavior
-3. Implement output validation for your use case
-4. Build a self-critiquing version
+- Optimize prompts on an existing agent
+- Add logging and analyze behavior
+- Implement output validation
+- Build a self-critiquing agent
 
 ---
 
-**Master the craft!** Effective agent use is about clear communication, proper tooling, and continuous refinement. The more you work with agents, the better you'll understand how to get reliable results.
+<Callout type="success">
+**Master the craft!** Good agent use is about clear communication, proper tooling, and continuous refinement. The more you work with agents, the better you'll get at extracting reliable results.
+</Callout>
