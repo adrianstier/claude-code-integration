@@ -42,7 +42,8 @@ function getFileIcon(filename: string) {
   return <File className="h-4 w-4 text-gray-400 dark:text-gray-500" />
 }
 
-export function FileTree({ children, className }: FileTreeProps) {
+// FileTree component with static properties for dot notation
+function FileTreeComponent({ children, className }: FileTreeProps) {
   return (
     <div
       className={cn(
@@ -57,7 +58,7 @@ export function FileTree({ children, className }: FileTreeProps) {
   )
 }
 
-export function FolderNode({ name, children, defaultOpen = false, className }: FolderNodeProps) {
+function FolderNodeComponent({ name, children, defaultOpen = false, className }: FolderNodeProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const hasChildren = Children.count(children) > 0
 
@@ -96,7 +97,7 @@ export function FolderNode({ name, children, defaultOpen = false, className }: F
   )
 }
 
-export function FileNode({ name, highlight = false, className }: FileNodeProps) {
+function FileNodeComponent({ name, highlight = false, className }: FileNodeProps) {
   return (
     <li
       className={cn(
@@ -114,3 +115,12 @@ export function FileNode({ name, highlight = false, className }: FileNodeProps) 
     </li>
   )
 }
+
+// Attach static properties for dot notation (FileTree.Folder, FileTree.File)
+FileTreeComponent.Folder = FolderNodeComponent
+FileTreeComponent.File = FileNodeComponent
+
+// Export both naming conventions
+export const FileTree = FileTreeComponent
+export const FolderNode = FolderNodeComponent
+export const FileNode = FileNodeComponent

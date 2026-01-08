@@ -95,28 +95,28 @@ Set up the project structure with components/, lib/, and hooks/ folders.
 ```
 
 <FileTree>
-  <FileTree.Folder name="task-manager" defaultOpen>
-    <FileTree.Folder name="src" defaultOpen>
-      <FileTree.Folder name="app" defaultOpen>
-        <FileTree.File name="layout.tsx" />
-        <FileTree.File name="page.tsx" />
-      </FileTree.Folder>
-      <FileTree.Folder name="components" defaultOpen>
-        <FileTree.File name="TaskList.tsx" />
-        <FileTree.File name="TaskItem.tsx" />
-        <FileTree.File name="TaskForm.tsx" />
-        <FileTree.File name="FilterBar.tsx" />
-      </FileTree.Folder>
-      <FileTree.Folder name="lib">
-        <FileTree.File name="types.ts" />
-      </FileTree.Folder>
-      <FileTree.Folder name="hooks">
-        <FileTree.File name="useTasks.ts" />
-      </FileTree.Folder>
-    </FileTree.Folder>
-    <FileTree.File name="tailwind.config.js" />
-    <FileTree.File name="package.json" />
-  </FileTree.Folder>
+  <FolderNode name="task-manager" defaultOpen>
+    <FolderNode name="src" defaultOpen>
+      <FolderNode name="app" defaultOpen>
+        <FileNode name="layout.tsx" />
+        <FileNode name="page.tsx" />
+      </FolderNode>
+      <FolderNode name="components" defaultOpen>
+        <FileNode name="TaskList.tsx" />
+        <FileNode name="TaskItem.tsx" />
+        <FileNode name="TaskForm.tsx" />
+        <FileNode name="FilterBar.tsx" />
+      </FolderNode>
+      <FolderNode name="lib">
+        <FileNode name="types.ts" />
+      </FolderNode>
+      <FolderNode name="hooks">
+        <FileNode name="useTasks.ts" />
+      </FolderNode>
+    </FolderNode>
+    <FileNode name="tailwind.config.js" />
+    <FileNode name="package.json" />
+  </FolderNode>
 </FileTree>
 
 ### Step 2: Define Your Data
