@@ -47,10 +47,10 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
       { url: '/icon.svg', type: 'image/svg+xml' },
     ],
-    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
   },
   other: {
     'google-site-verification': 'CQhdFkuB-aPgF3irSWBz5UwZEe7kHb3BxpSfAR0h0WA',
