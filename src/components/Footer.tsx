@@ -12,6 +12,7 @@ const footerLinks = {
   resources: [
     { name: 'Blog & Updates', href: '/blog' },
     { name: 'Git & GitHub', href: '/git-github' },
+    { name: 'Glossary', href: '/glossary' },
     { name: 'Claude Code Docs', href: 'https://docs.claude.com/en/docs/claude-code/overview', external: true },
     { name: 'VS Code Docs', href: 'https://code.visualstudio.com/docs', external: true },
   ],

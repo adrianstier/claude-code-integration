@@ -12,7 +12,7 @@
 
 ### Project Status: READY TO LAUNCH
 
-The technical platform is **production-ready** and critical business decisions have been **resolved**. The PM can now proceed with launch planning.
+The technical platform is **production-ready** and all pre-launch action items have been **completed**. The PM can proceed with deployment.
 
 ---
 
@@ -31,33 +31,42 @@ The technical platform is **production-ready** and critical business decisions h
 
 ## Remaining Action Items
 
-### Pre-Launch (Required)
+### Pre-Launch (Required) - ALL COMPLETED
 
 | # | Action | Owner | Status |
 |---|--------|-------|--------|
-| 1 | Add "Coming Soon" badges to incomplete tracks | Dev | Pending |
-| 2 | Add "not affiliated with Anthropic" disclaimer | Dev | Pending |
-| 3 | Configure GA4 with enhanced event tracking | Dev | Pending |
-| 4 | Set up step/module completion tracking | Dev | Pending |
-| 5 | Review homepage - balance researcher vs. general messaging | Content | Pending |
+| 1 | Add "Coming Soon" badges to incomplete tracks | Dev | **Done** |
+| 2 | Add "not affiliated with Anthropic" disclaimer | Dev | **Done** |
+| 3 | Configure GA4 with enhanced event tracking | Dev | **Done** |
+| 4 | Set up step/module completion tracking | Dev | **Done** |
+| 5 | Review homepage - balance researcher vs. general messaging | Content | **Done** |
 
-### Pre-Launch (Recommended)
+### Pre-Launch (Recommended) - ALL COMPLETED
 
 | # | Action | Owner | Status |
 |---|--------|-------|--------|
-| 6 | Add scroll depth tracking | Dev | Pending |
-| 7 | Track "copy code" button clicks | Dev | Pending |
-| 8 | Connect newsletter signup to email service | Dev | Pending |
+| 6 | Add scroll depth tracking | Dev | **Done** |
+| 7 | Track "copy code" button clicks | Dev | **Done** |
+| 8 | Connect newsletter signup to email service | Dev | **Done** |
+
+### Additional Features Added
+
+| # | Feature | Description |
+|---|---------|-------------|
+| 9 | Glossary page | 30+ terms with alphabetical navigation |
+| 10 | Progress tracking UI | Completion checkboxes on all articles |
+| 11 | Mobile menu cleanup | Removed researcher-only links |
 
 ### Post-Launch (V1.5 Planning)
 
 | # | Action | Owner | Status |
 |---|--------|-------|--------|
-| 9 | Implement user accounts for premium access | Dev | Future |
-| 10 | Identify premium content candidates from data | Owner | Future |
-| 11 | Research ad network options (Carbon Ads, etc.) | Owner | Future |
-| 12 | Build App Builder tutorials (2+) | Content | Future |
-| 13 | Build Automation examples (3+) | Content | Future |
+| 12 | Implement user accounts for premium access | Dev | Future |
+| 13 | Identify premium content candidates from data | Owner | Future |
+| 14 | Research ad network options (Carbon Ads, etc.) | Owner | Future |
+| 15 | Build App Builder tutorials (2+) | Content | Future |
+| 16 | Build Automation examples (3+) | Content | Future |
+| 17 | P4 accessibility improvements | Dev | Future |
 
 ---
 

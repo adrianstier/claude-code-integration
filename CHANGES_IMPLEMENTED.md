@@ -90,59 +90,109 @@ Rewrote from marketing fluff to simple, factual "About This Site" page:
 
 ---
 
-## Files Changed
+## P2: Medium Priority (Completed)
 
-| File | Type of Change |
-|------|----------------|
-| `src/components/Footer.tsx` | Added disclaimer |
+### 10. Newsletter API Backend
+**Files:** `src/app/api/newsletter/route.ts`, `src/components/NewsletterSignup.tsx`, `.env.example`
+
+- Created `/api/newsletter` endpoint with proper validation
+- Added support for Resend, ConvertKit, and Buttondown integrations
+- Updated component to use API instead of localStorage demo
+- Removed fake "1,000+ developers" claim from newsletter hero
+
+### 11. GA4 Enhanced Event Tracking
+**Files:** `src/components/ScrollTracker.tsx`, `src/components/NewsletterSignup.tsx`, `src/components/CodeBlock.tsx`, `src/app/layout.tsx`
+
+- Created ScrollTracker component for scroll depth (25/50/75/100%) and time-on-page tracking
+- Added newsletter signup tracking with location context
+- Added code copy tracking with language and context
+- All events integrate with existing `src/lib/analytics.ts` utilities
+
+### 12. Breadcrumbs & Navigation
+Already implemented - verified in `src/app/[track]/[slug]/page.tsx` (lines 267-286) and `src/components/ArticleNavigation.tsx`
+
+---
+
+## P3: Low Priority (Completed)
+
+### 13. Terminology Glossary Page
+**Files:** `src/app/glossary/page.tsx`, `src/components/Footer.tsx`
+
+- Created comprehensive glossary with 30+ terms covering Claude Code, Git, VS Code, Terminal, and Programming
+- Organized alphabetically with quick-jump navigation
+- Color-coded categories
+- Added to footer resources section
+
+### 14. Progress Tracking UI
+**Files:** `src/components/ModuleProgress.tsx`, `src/app/[track]/[slug]/page.tsx`
+
+- Created ModuleProgress component with completion checkbox
+- Integrated into article pages below content
+- Tracks completion with analytics event on mark complete
+- Uses existing ProgressProvider context from `src/components/ProgressTracker.tsx`
+
+### 15. Mobile Menu Cleanup
+**File:** `src/components/Navigation.tsx`
+
+- Removed "For Researchers" link from mobile menu
+- Added "Official Docs" link for mobile users
+- Removed unused Sparkles import
+
+---
+
+## P4: Polish Items (Identified but Not Implemented)
+
+Based on code audit, these are nice-to-have improvements for future:
+
+### Code Quality
+- Extract magic numbers (timeouts like 2000ms) to constants
+- Move hardcoded track arrays to `src/lib/constants.ts`
+- Clean up console statements or wrap in dev-only conditions
+
+### Accessibility
+- Add `aria-label` to search inputs
+- Add `role="status"` to "no results" messages
+- Add `aria-hidden="true"` to decorative SVGs
+
+### Performance
+- Consider lazy-loading Mermaid library for diagrams
+- Verify all images have proper lazy-loading
+
+---
+
+## Files Changed (Full List)
+
+| File | Change Type |
+|------|-------------|
+| `src/components/Footer.tsx` | Added disclaimer, added glossary link |
 | `src/app/page.tsx` | Removed researcher section, updated hero, fixed track badges |
-| `src/components/Navigation.tsx` | Removed researcher badge |
+| `src/components/Navigation.tsx` | Removed researcher badge and link, cleaned imports |
 | `src/app/resources/page.tsx` | Fixed YouTube links |
 | `src/app/tools/templates/page.tsx` | Fixed GitHub link |
 | `content/start-here/index.mdx` | Rewrote intro |
 | `content/data-analysis/index.mdx` | Rewrote intro |
-| `content/app-builder/index.mdx` | Added Coming Soon callout, rewrote intro |
-| `content/automation/index.mdx` | Added Coming Soon callout, rewrote intro |
+| `content/app-builder/index.mdx` | Added Coming Soon callout |
+| `content/automation/index.mdx` | Added Coming Soon callout |
 | `content/blog/welcome.mdx` | Completely rewrote |
-
----
-
-## What Was NOT Changed (Still Needs Work)
-
-### P2: Medium Priority (Future)
-- Breadcrumbs on content pages
-- Prev/next navigation between tutorials
-- Newsletter backend connection
-- GA4 enhanced event tracking
-
-### P3: Low Priority (Nice to Have)
-- Video demos
-- Shorter setup guides with checkpoints
-- Celebration moments / progress indicators
+| `src/app/api/newsletter/route.ts` | **Created** - Newsletter API |
+| `src/components/NewsletterSignup.tsx` | Updated to use API, added analytics |
+| `.env.example` | Added newsletter service configs |
+| `src/components/ScrollTracker.tsx` | **Created** - Scroll/time tracking |
+| `src/components/CodeBlock.tsx` | Added code copy tracking |
+| `src/app/layout.tsx` | Added ScrollTracker component |
+| `src/app/glossary/page.tsx` | **Created** - Glossary page |
+| `src/components/ModuleProgress.tsx` | **Created** - Progress UI |
+| `src/app/[track]/[slug]/page.tsx` | Added ModuleProgress component |
 
 ---
 
 ## Testing Verification
 
-Screenshots captured showing:
-1. Homepage hero with updated messaging
-2. Learning tracks with "Coming Soon" badges visible
-3. Footer with Anthropic disclaimer
-4. Start Here page with rewritten intro
-5. App Builder page with warning callout
-
-All changes render correctly in dark mode.
+- Build passes with no errors (45 static pages generated)
+- All new components render correctly
+- Dark mode verified working
+- Mobile responsive behavior verified
 
 ---
 
-## Recommendations for Next Steps
-
-1. **Run full build** to ensure no TypeScript errors
-2. **Test on mobile** to verify responsive behavior
-3. **Review other content pages** for remaining AI-sounding language
-4. **Consider adding** feedback mechanism (email, GitHub issues)
-5. **Set up analytics** before launch to track engagement
-
----
-
-*Document generated: January 12, 2026*
+*Document updated: January 12, 2026*

@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Mail, CheckCircle2, Loader2, ArrowRight } from 'lucide-react'
+import { trackNewsletterSignup } from '@/lib/analytics'
 
 interface NewsletterSignupProps {
   variant?: 'default' | 'compact' | 'hero'
@@ -27,26 +28,29 @@ export default function NewsletterSignup({
 
     setStatus('loading')
 
-    // Simulate API call - replace with your actual newsletter API
-    // Examples: ConvertKit, Mailchimp, Buttondown, Resend
     try {
-      // For now, we'll store in localStorage as a demo
-      // Replace this with your actual newsletter signup API
-      const subscribers = JSON.parse(localStorage.getItem('newsletter_subscribers') || '[]')
-      if (subscribers.includes(email)) {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.status === 409) {
         setStatus('error')
         setMessage('You are already subscribed!')
         return
       }
-      subscribers.push(email)
-      localStorage.setItem('newsletter_subscribers', JSON.stringify(subscribers))
 
-      // Simulate network delay
-      await new Promise((resolve) => setTimeout(resolve, 800))
+      if (!response.ok) {
+        throw new Error(data.error || 'Subscription failed')
+      }
 
       setStatus('success')
-      setMessage('Thanks for subscribing! Check your inbox for confirmation.')
+      setMessage('Thanks for subscribing!')
       setEmail('')
+      trackNewsletterSignup(variant)
     } catch {
       setStatus('error')
       setMessage('Something went wrong. Please try again.')
@@ -148,7 +152,7 @@ export default function NewsletterSignup({
           )}
 
           <p className="mt-4 text-sm text-claude-200">
-            Join 1,000+ developers learning with Claude Code
+            Join developers learning with Claude Code
           </p>
         </div>
       </div>

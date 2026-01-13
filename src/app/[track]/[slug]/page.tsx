@@ -37,6 +37,7 @@ import {
 } from '@/lib/metadata'
 import SocialShare, { FloatingShareBar } from '@/components/SocialShare'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import { ModuleProgress } from '@/components/ModuleProgress'
 
 interface PageProps {
   params: {
@@ -329,6 +330,15 @@ export default async function ContentPage({ params }: PageProps) {
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <MDXRemote source={mdxContent} components={components} />
               </div>
+            </div>
+
+            {/* Module Progress */}
+            <div className="mt-6">
+              <ModuleProgress
+                moduleId={`${track}/${slug}`}
+                trackName={trackNames[track] || track}
+                moduleName={frontmatter.title}
+              />
             </div>
 
             {/* Article Navigation */}

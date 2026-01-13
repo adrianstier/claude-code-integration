@@ -11,7 +11,6 @@ import {
   Menu,
   X,
   ChevronRight,
-  Sparkles,
   Terminal
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -188,14 +187,6 @@ export default function Navigation() {
           {/* Mobile CTAs */}
           <div className="mt-6 space-y-3 border-t border-ink-100 dark:border-ink-800 pt-6">
             <Link
-              href="/start-here/claude-code-for-researchers"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center justify-center gap-2 rounded-xl bg-primary-50 dark:bg-primary-950/50 px-4 py-3 text-sm font-semibold text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-200 dark:ring-primary-800"
-            >
-              <Sparkles className="h-4 w-4" />
-              <span>For Researchers</span>
-            </Link>
-            <Link
               href="/start-here"
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center justify-center gap-2 rounded-xl bg-ink-900 dark:bg-paper-50 px-4 py-3 text-sm font-semibold text-paper-50 dark:text-ink-900 shadow-md"
@@ -203,6 +194,15 @@ export default function Navigation() {
               <span>Get Started</span>
               <ChevronRight className="h-4 w-4" />
             </Link>
+            <a
+              href="https://docs.claude.com/en/docs/claude-code/overview"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-center gap-2 rounded-xl bg-ink-100 dark:bg-ink-800 px-4 py-3 text-sm font-medium text-ink-700 dark:text-ink-200"
+            >
+              <span>Official Docs</span>
+            </a>
           </div>
         </div>
       </div>

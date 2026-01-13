@@ -6,6 +6,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { ProgressProvider } from '@/components/ProgressTracker'
 import { ThemeProvider } from '@/components/ThemeProvider'
+import ScrollTracker from '@/components/ScrollTracker'
 import {
   getBaseMetadata,
   generateWebsiteSchema,
@@ -157,6 +158,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <ThemeProvider>
           <ProgressProvider>
+            <ScrollTracker />
             <a href="#main-content" className="skip-to-main">
               Skip to main content
             </a>

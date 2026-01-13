@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Check, Copy, Terminal, FileCode } from 'lucide-react'
+import { trackCodeCopy } from '@/lib/analytics'
 
 interface CodeBlockProps {
   code: string
@@ -28,6 +29,7 @@ export default function CodeBlock({
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code.trim())
     setCopied(true)
+    trackCodeCopy(language, filename || title || 'inline')
     setTimeout(() => setCopied(false), 2000)
   }
 
