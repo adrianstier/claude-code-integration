@@ -15,7 +15,6 @@ import {
   Layout,
   Server,
   Bot,
-  ExternalLink,
 } from 'lucide-react'
 
 interface Template {
@@ -592,7 +591,7 @@ export default function TemplatesPage() {
           ))}
         </div>
 
-        {/* Contributing Note */}
+        {/* Feedback Note */}
         <div className="mt-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-claude-100 dark:bg-claude-900/30 text-claude-600 dark:text-claude-400">
@@ -600,20 +599,11 @@ export default function TemplatesPage() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100">
-                Want to contribute a template?
+                Have a template idea?
               </h3>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                We welcome community contributions! Submit your project templates via GitHub.
+                We're always looking to add useful templates. Share your ideas and we may include them in a future update.
               </p>
-              <a
-                href="https://github.com/anthropics/claude-code"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-claude-600 dark:text-claude-400 hover:text-claude-700 dark:hover:text-claude-300"
-              >
-                View on GitHub
-                <ExternalLink className="h-3 w-3" />
-              </a>
             </div>
           </div>
         </div>

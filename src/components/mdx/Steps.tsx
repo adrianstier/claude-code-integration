@@ -77,7 +77,7 @@ interface ChecklistItemProps {
 
 export function Checklist({ children, className }: ChecklistProps) {
   return (
-    <ul className={cn('my-6 space-y-3', className)} role="list">
+    <ul className={cn('my-6 space-y-3 list-none pl-0 ml-0', className)} role="list" style={{ listStyle: 'none' }}>
       {children}
     </ul>
   )
@@ -85,13 +85,13 @@ export function Checklist({ children, className }: ChecklistProps) {
 
 export function ChecklistItem({ children, checked = false, className }: ChecklistItemProps) {
   return (
-    <li className={cn('flex items-start gap-3', className)}>
+    <li className={cn('flex items-start gap-3 pl-0 ml-0', className)} style={{ listStyle: 'none' }}>
       <div
         className={cn(
           'mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg border-2 transition-all duration-200',
           checked
             ? 'border-sage-500 bg-sage-500 text-white shadow-sm'
-            : 'border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900'
+            : 'border-ink-300 dark:border-ink-600 bg-paper-50 dark:bg-ink-800'
         )}
       >
         {checked && <Check className="h-3.5 w-3.5" strokeWidth={3} />}

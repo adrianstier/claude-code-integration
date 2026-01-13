@@ -99,15 +99,6 @@ export default function Navigation() {
 
           {/* Right section */}
           <div className="hidden lg:flex lg:items-center lg:gap-3">
-            {/* Researcher badge */}
-            <Link
-              href="/start-here/claude-code-for-researchers"
-              className="group flex items-center gap-2 rounded-full bg-primary-50 dark:bg-primary-950/50 px-3.5 py-1.5 text-sm font-medium text-primary-700 dark:text-primary-300 ring-1 ring-inset ring-primary-200 dark:ring-primary-800 transition-all hover:bg-primary-100 dark:hover:bg-primary-900/50 hover:ring-primary-300 dark:hover:ring-primary-700"
-            >
-              <Sparkles className="h-3.5 w-3.5 animate-pulse-soft" />
-              <span>For Researchers</span>
-            </Link>
-
             {/* External docs link */}
             <a
               href="https://docs.claude.com/en/docs/claude-code/overview"

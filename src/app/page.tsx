@@ -9,7 +9,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Terminal,
-  Sparkles,
   BookOpen,
   Code2,
   GitBranch,
@@ -17,7 +16,6 @@ import {
   Keyboard,
   Play,
   Users,
-  TrendingUp
 } from 'lucide-react'
 import { siteConfig, generateFAQSchema } from '@/lib/metadata'
 
@@ -143,9 +141,9 @@ const learningTracks = [
     bgColor: 'bg-plum-50 dark:bg-plum-950/30',
     borderColor: 'border-plum-200 dark:border-plum-800',
     iconBg: 'bg-plum-100 dark:bg-plum-900/50',
-    duration: 'Varies',
-    tag: 'Advanced',
-    tagColor: 'bg-plum-100 dark:bg-plum-900/40 text-plum-700 dark:text-plum-300',
+    duration: 'Coming Soon',
+    tag: 'Preview',
+    tagColor: 'bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-ink-400',
   },
   {
     title: 'Automation',
@@ -156,9 +154,9 @@ const learningTracks = [
     bgColor: 'bg-amber-50 dark:bg-amber-950/30',
     borderColor: 'border-amber-200 dark:border-amber-800',
     iconBg: 'bg-amber-100 dark:bg-amber-900/50',
-    duration: '2-3 hours',
-    tag: 'Practical',
-    tagColor: 'bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-300',
+    duration: 'Coming Soon',
+    tag: 'Preview',
+    tagColor: 'bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-ink-400',
   },
   {
     title: 'AI Agents',
@@ -217,14 +215,14 @@ export default function Home() {
             <div className="text-center max-w-4xl mx-auto">
               {/* Announcement badge */}
               <Link
-                href="/start-here/claude-code-for-researchers"
+                href="/start-here"
                 className="group inline-flex items-center gap-2.5 rounded-full bg-paper-100 dark:bg-ink-900 px-4 py-2 text-sm font-medium text-ink-700 dark:text-ink-200 ring-1 ring-inset ring-ink-200 dark:ring-ink-700 transition-all hover:ring-primary-300 dark:hover:ring-primary-700 hover:bg-paper-200 dark:hover:bg-ink-800 mb-8"
               >
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary-500 opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-primary-600" />
                 </span>
-                <span>New: Claude Code Guide for Researchers</span>
+                <span>New to Claude Code? Start here</span>
                 <ArrowRight className="h-3.5 w-3.5 text-ink-400 transition-transform group-hover:translate-x-0.5" />
               </Link>
 
@@ -240,8 +238,8 @@ export default function Home() {
               </h1>
 
               <p className="text-xl sm:text-2xl text-ink-600 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-10">
-                Master AI-powered development with hands-on tutorials for VS Code, Git/GitHub, Python, and R.{' '}
-                <span className="text-ink-900 dark:text-paper-50 font-medium">Build real projects, not just tutorials.</span>
+                Step-by-step tutorials for VS Code, Git/GitHub, Python, and R.{' '}
+                <span className="text-ink-900 dark:text-paper-50 font-medium">No experience required.</span>
               </p>
 
               {/* CTA Buttons */}
@@ -269,14 +267,14 @@ export default function Home() {
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage-100 dark:bg-sage-900/40">
                     <CheckCircle2 className="h-4 w-4 text-sage-600 dark:text-sage-400" />
                   </div>
-                  <span>Free & Open Source</span>
+                  <span>Free</span>
                 </div>
                 <div className="hidden sm:block h-4 w-px bg-ink-200 dark:bg-ink-700" />
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cobalt-100 dark:bg-cobalt-900/40">
-                    <TrendingUp className="h-4 w-4 text-cobalt-600 dark:text-cobalt-400" />
+                    <BookOpen className="h-4 w-4 text-cobalt-600 dark:text-cobalt-400" />
                   </div>
-                  <span>Production Ready</span>
+                  <span>Step-by-Step</span>
                 </div>
                 <div className="hidden sm:block h-4 w-px bg-ink-200 dark:bg-ink-700" />
                 <div className="flex items-center gap-2">
@@ -354,86 +352,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Researcher Highlight Section */}
-        <section className="relative py-16">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-cobalt-600 via-cobalt-700 to-plum-700 p-8 sm:p-12 lg:p-16">
-              {/* Background pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 32 32\' width=\'32\' height=\'32\' fill=\'none\' stroke=\'%23fff\'%3e%3cpath d=\'M0 .5H31.5V32\'/%3e%3c/svg%3e")' }} />
-              </div>
-
-              <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                {/* Content */}
-                <div>
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-4 py-1.5 text-sm font-semibold text-white mb-6">
-                    <Sparkles className="h-4 w-4" />
-                    <span>NEW: For Academic Researchers</span>
-                  </div>
-
-                  <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-4">
-                    Claude Code for Researchers
-                  </h2>
-
-                  <p className="text-lg text-white/90 leading-relaxed mb-8">
-                    A comprehensive guide designed specifically for academic researchers, analysts, and scientists who want to accelerate their work with AI-powered coding assistance.
-                  </p>
-
-                  <ul className="space-y-3 mb-8">
-                    {[
-                      'Data analysis workflows with Python & R',
-                      'Literature review automation and synthesis',
-                      'Statistical analysis and visualization',
-                      'Reproducible research best practices',
-                    ].map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-white/90">
-                        <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href="/start-here/claude-code-for-researchers"
-                    className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-cobalt-700 shadow-lg transition-all hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <span>Read the Researcher Guide</span>
-                    <ArrowRight className="h-5 w-5" />
-                  </Link>
-                </div>
-
-                {/* Code preview */}
-                <div className="hidden lg:block">
-                  <div className="rounded-2xl bg-ink-950 p-6 shadow-2xl ring-1 ring-white/10">
-                    <div className="flex items-center gap-2 mb-4">
-                      <div className="h-3 w-3 rounded-full bg-red-400" />
-                      <div className="h-3 w-3 rounded-full bg-amber-400" />
-                      <div className="h-3 w-3 rounded-full bg-sage-400" />
-                      <span className="ml-3 text-xs text-ink-400 font-mono">analysis.py</span>
-                    </div>
-                    <pre className="text-sm font-mono leading-relaxed overflow-x-auto">
-                      <code>
-                        <span className="text-plum-400"># Load and clean survey data</span>{'\n'}
-                        <span className="text-cobalt-400">import</span> <span className="text-paper-200">pandas</span> <span className="text-cobalt-400">as</span> <span className="text-paper-200">pd</span>{'\n'}
-                        {'\n'}
-                        <span className="text-paper-200">df</span> <span className="text-primary-400">=</span> <span className="text-paper-200">pd</span><span className="text-ink-400">.</span><span className="text-amber-400">read_csv</span><span className="text-ink-400">(</span><span className="text-sage-400">&quot;survey_data.csv&quot;</span><span className="text-ink-400">)</span>{'\n'}
-                        <span className="text-paper-200">df</span> <span className="text-primary-400">=</span> <span className="text-paper-200">df</span><span className="text-ink-400">.</span><span className="text-amber-400">dropna</span><span className="text-ink-400">(</span><span className="text-paper-200">subset</span><span className="text-primary-400">=</span><span className="text-ink-400">[</span><span className="text-sage-400">&quot;response&quot;</span><span className="text-ink-400">])</span>{'\n'}
-                        {'\n'}
-                        <span className="text-plum-400"># Run sentiment analysis</span>{'\n'}
-                        <span className="text-cobalt-400">from</span> <span className="text-paper-200">transformers</span> <span className="text-cobalt-400">import</span> <span className="text-paper-200">pipeline</span>{'\n'}
-                        <span className="text-paper-200">analyzer</span> <span className="text-primary-400">=</span> <span className="text-amber-400">pipeline</span><span className="text-ink-400">(</span><span className="text-sage-400">&quot;sentiment-analysis&quot;</span><span className="text-ink-400">)</span>{'\n'}
-                        {'\n'}
-                        <span className="text-paper-200">df</span><span className="text-ink-400">[</span><span className="text-sage-400">&quot;sentiment&quot;</span><span className="text-ink-400">]</span> <span className="text-primary-400">=</span> <span className="text-paper-200">df</span><span className="text-ink-400">[</span><span className="text-sage-400">&quot;response&quot;</span><span className="text-ink-400">]</span><span className="text-ink-400">.</span><span className="text-amber-400">apply</span><span className="text-ink-400">(</span>{'\n'}
-                        {'    '}<span className="text-cobalt-400">lambda</span> <span className="text-paper-200">x</span><span className="text-ink-400">:</span> <span className="text-paper-200">analyzer</span><span className="text-ink-400">(</span><span className="text-paper-200">x</span><span className="text-ink-400">)[</span><span className="text-amber-400">0</span><span className="text-ink-400">][</span><span className="text-sage-400">&quot;label&quot;</span><span className="text-ink-400">]</span>{'\n'}
-                        <span className="text-ink-400">)</span>
-                      </code>
-                    </pre>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Tools Section */}
         <section className="relative py-24">

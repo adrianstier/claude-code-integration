@@ -217,6 +217,16 @@
     @apply absolute left-0 top-[0.65em] h-1.5 w-1.5 rounded-full bg-primary-500;
   }
 
+  /* Remove bullet points from checklist items */
+  .prose ul[role="list"] > li {
+    @apply pl-0;
+  }
+
+  .prose ul[role="list"] > li::before {
+    content: none;
+    display: none;
+  }
+
   .prose ol > li {
     @apply relative pl-8;
     counter-increment: list-counter;

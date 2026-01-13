@@ -142,15 +142,9 @@ const resources = {
   ],
   videos: [
     {
-      title: 'Claude Code Introduction',
-      description: 'Official introduction to Claude Code',
-      url: 'https://www.youtube.com/results?search_query=claude+code+anthropic',
-      icon: Video,
-    },
-    {
-      title: 'AI Coding Tutorials',
-      description: 'Video tutorials on coding with AI',
-      url: 'https://www.youtube.com/results?search_query=ai+coding+assistant',
+      title: 'Anthropic YouTube Channel',
+      description: 'Official videos from Anthropic about Claude',
+      url: 'https://www.youtube.com/@anthropic-ai',
       icon: Video,
     },
   ],

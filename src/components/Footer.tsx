@@ -157,30 +157,28 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-ink-100 dark:border-ink-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-ink-500 dark:text-ink-400">
-            &copy; {new Date().getFullYear()} Claude Code Learning.{' '}
-            <a
-              href="https://opensource.org/licenses/MIT"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
-            >
-              MIT License
-            </a>
+        <div className="mt-12 pt-8 border-t border-ink-100 dark:border-ink-800">
+          {/* Disclaimer */}
+          <p className="text-xs text-ink-400 dark:text-ink-500 text-center mb-6">
+            This is an independent community resource. Not affiliated with or endorsed by Anthropic.
           </p>
-          <p className="text-xs text-ink-400 dark:text-ink-500">
-            Built with{' '}
-            <a
-              href="https://docs.claude.com/en/docs/claude-code/overview"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
-            >
-              Claude Code
-            </a>
-            {' '}& Next.js
-          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-sm text-ink-500 dark:text-ink-400">
+              &copy; {new Date().getFullYear()} Claude Code Learning.{' '}
+              <a
+                href="https://opensource.org/licenses/MIT"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-600 dark:text-primary-400 hover:text-primary-500 dark:hover:text-primary-300 transition-colors"
+              >
+                MIT License
+              </a>
+            </p>
+            <p className="text-xs text-ink-400 dark:text-ink-500">
+              Built with Next.js
+            </p>
+          </div>
         </div>
       </div>
     </footer>
