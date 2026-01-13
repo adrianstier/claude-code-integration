@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Book, Search, ArrowLeft } from 'lucide-react'
+import { Book, ArrowLeft } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Glossary | Claude Code Learning Hub',

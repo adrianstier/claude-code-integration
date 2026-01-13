@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { Twitter, Linkedin, Link2, Check, MessageCircle } from 'lucide-react'
 import { trackSocialShare } from '@/lib/analytics'
+import { TIMING } from '@/lib/constants'
+import logger from '@/lib/logger'
 
 interface SocialShareProps {
   title: string
@@ -32,9 +34,9 @@ export default function SocialShare({ title, url }: SocialShareProps) {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       trackSocialShare('copy_link', title, url)
-      setTimeout(() => setCopied(false), 2000)
+      setTimeout(() => setCopied(false), TIMING.COPY_FEEDBACK)
     } catch (err) {
-      console.error('Failed to copy:', err)
+      logger.error('Failed to copy:', err)
     }
   }
 
@@ -131,9 +133,9 @@ export function FloatingShareBar({ title, url }: { title: string; url: string })
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setTimeout(() => setCopied(false), TIMING.COPY_FEEDBACK)
     } catch (err) {
-      console.error('Failed to copy:', err)
+      logger.error('Failed to copy:', err)
     }
   }
 

@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import { getReadingTime } from './utils'
+import logger from './logger'
 
 export interface Frontmatter {
   title: string
@@ -84,7 +85,7 @@ export function getContentBySlug(
       lastModified: (data as Frontmatter).lastUpdated || stats.mtime.toISOString(),
     }
   } catch (error) {
-    console.error(`Error reading file ${directory}/${slug}:`, error)
+    logger.error(`Error reading file ${directory}/${slug}:`, error)
     return null
   }
 }

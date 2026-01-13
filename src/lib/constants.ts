@@ -2,13 +2,47 @@ export const SITE_NAME = 'Claude Code Learning'
 export const SITE_DESCRIPTION =
   'Learn Claude Code, VS Code, Git/GitHub, Python, and R for real-world projects'
 
+// UI timing constants (in milliseconds)
+export const TIMING = {
+  COPY_FEEDBACK: 2000,       // How long "Copied!" message shows
+  SCROLL_CHECK: 10000,       // Interval for checking time-on-page
+  DEBOUNCE_DEFAULT: 300,     // Default debounce delay
+  ANIMATION_FAST: 150,       // Fast animations
+  ANIMATION_NORMAL: 300,     // Normal animations
+} as const
+
+// All learning tracks
 export const TRACKS = {
   START_HERE: 'start-here',
   DATA_ANALYSIS: 'data-analysis',
   APP_BUILDER: 'app-builder',
   AUTOMATION: 'automation',
   GIT_GITHUB: 'git-github',
+  AGENTS: 'agents',
+  ADVANCED_TOPICS: 'advanced-topics',
 } as const
+
+// Track slugs array for iteration
+export const ALL_TRACK_SLUGS = [
+  'start-here',
+  'data-analysis',
+  'app-builder',
+  'automation',
+  'git-github',
+  'agents',
+  'advanced-topics',
+] as const
+
+// Track display names
+export const TRACK_NAMES: Record<string, string> = {
+  'start-here': 'Start Here',
+  'data-analysis': 'Data Analysis',
+  'app-builder': 'App Builder',
+  'automation': 'Automation',
+  'git-github': 'Git & GitHub',
+  'agents': 'AI Agents',
+  'advanced-topics': 'Advanced Topics',
+}
 
 export const PLATFORMS = {
   MAC: 'mac',

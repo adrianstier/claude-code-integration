@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Check, Copy, Terminal, FileCode } from 'lucide-react'
 import { trackCodeCopy } from '@/lib/analytics'
+import { TIMING } from '@/lib/constants'
 
 interface CodeBlockProps {
   code: string
@@ -30,7 +31,7 @@ export default function CodeBlock({
     await navigator.clipboard.writeText(code.trim())
     setCopied(true)
     trackCodeCopy(language, filename || title || 'inline')
-    setTimeout(() => setCopied(false), 2000)
+    setTimeout(() => setCopied(false), TIMING.COPY_FEEDBACK)
   }
 
   const languageConfig: Record<

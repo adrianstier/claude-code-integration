@@ -424,6 +424,7 @@ export default function SnippetsPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search snippets..."
+              aria-label="Search code snippets"
               className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-3 pl-10 pr-4 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-1 focus:ring-claude-500"
             />
           </div>
@@ -453,8 +454,8 @@ export default function SnippetsPage() {
         {/* Snippets */}
         <div className="space-y-6">
           {filteredSnippets.length === 0 ? (
-            <div className="text-center py-12">
-              <Code className="mx-auto h-12 w-12 text-gray-400" />
+            <div className="text-center py-12" role="status" aria-live="polite">
+              <Code className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
               <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-gray-100">
                 No snippets found
               </h3>

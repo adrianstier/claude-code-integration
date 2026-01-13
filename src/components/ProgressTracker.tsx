@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
+import logger from '@/lib/logger'
 
 interface Progress {
   completedModules: string[]
@@ -54,7 +55,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       // Log error and reset to defaults on corruption
-      console.error('Error loading progress, resetting to defaults:', error instanceof Error ? error.message : error)
+      logger.error('Error loading progress, resetting to defaults:', error instanceof Error ? error.message : error)
       const initial = {
         ...defaultProgress,
         startedAt: new Date().toISOString(),
@@ -64,7 +65,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(initial))
       } catch {
         // localStorage may be unavailable (private browsing, etc)
-        console.warn('localStorage unavailable, progress will not persist')
+        logger.warn('localStorage unavailable, progress will not persist')
       }
     }
     setIsLoaded(true)

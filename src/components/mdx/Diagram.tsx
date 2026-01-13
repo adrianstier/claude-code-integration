@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
+import logger from '@/lib/logger'
 import mermaid from 'mermaid'
 import { GitBranch, Workflow, GitMerge, Database, Maximize2, Minimize2 } from 'lucide-react'
 
@@ -148,7 +149,7 @@ export default function Diagram({
         setSvg(renderedSvg)
         setError(null)
       } catch (err) {
-        console.error('Mermaid rendering error:', err)
+        logger.error('Mermaid rendering error:', err)
         setError(err instanceof Error ? err.message : 'Failed to render diagram')
       }
     }

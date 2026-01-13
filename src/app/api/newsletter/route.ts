@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import logger from '@/lib/logger'
 
 // Simple in-memory store for demo (replace with database in production)
 // This provides a working API without external dependencies
@@ -83,14 +84,14 @@ export async function POST(request: NextRequest) {
     subscribers.add(normalizedEmail)
 
     // Log for verification (visible in server logs)
-    console.log(`[Newsletter] New subscriber: ${normalizedEmail}`)
+    logger.log(`[Newsletter] New subscriber: ${normalizedEmail}`)
 
     return NextResponse.json(
       { message: 'Successfully subscribed', email: normalizedEmail },
       { status: 201 }
     )
   } catch (error) {
-    console.error('[Newsletter] Subscription error:', error)
+    logger.error('[Newsletter] Subscription error:', error)
     return NextResponse.json(
       { error: 'Failed to subscribe. Please try again.' },
       { status: 500 }

@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { trackScrollDepth, trackTimeOnPage } from '@/lib/analytics'
+import { TIMING } from '@/lib/constants'
 
 // Tracks scroll depth and time on page for analytics
 export default function ScrollTracker() {
@@ -53,7 +54,7 @@ export default function ScrollTracker() {
 
     // Set up listeners
     window.addEventListener('scroll', handleScroll, { passive: true })
-    const timeInterval = setInterval(handleTimeTracking, 10000) // Check every 10 seconds
+    const timeInterval = setInterval(handleTimeTracking, TIMING.SCROLL_CHECK)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)

@@ -38,6 +38,7 @@ import {
 import SocialShare, { FloatingShareBar } from '@/components/SocialShare'
 import NewsletterSignup from '@/components/NewsletterSignup'
 import { ModuleProgress } from '@/components/ModuleProgress'
+import { ALL_TRACK_SLUGS, TRACK_NAMES } from '@/lib/constants'
 
 interface PageProps {
   params: {
@@ -136,10 +137,9 @@ const components = {
 }
 
 export async function generateStaticParams() {
-  const tracks = ['start-here', 'data-analysis', 'app-builder', 'automation', 'git-github', 'agents', 'advanced-topics']
   const params: { track: string; slug: string }[] = []
 
-  for (const track of tracks) {
+  for (const track of ALL_TRACK_SLUGS) {
     const content = getAllContent(track)
     for (const item of content) {
       if (item.slug !== 'index') {
@@ -165,16 +165,8 @@ function getAdjacentContent(track: string, currentSlug: string) {
   }
 }
 
-// Track display names
-const trackNames: Record<string, string> = {
-  'start-here': 'Start Here',
-  'data-analysis': 'Data Analysis',
-  'app-builder': 'App Builder',
-  'automation': 'Automation',
-  'git-github': 'Git & GitHub',
-  'agents': 'AI Agents',
-  'advanced-topics': 'Advanced Topics',
-}
+// Use TRACK_NAMES from constants (aliased for backwards compatibility in this file)
+const trackNames = TRACK_NAMES
 
 export default async function ContentPage({ params }: PageProps) {
   const { track, slug } = params
