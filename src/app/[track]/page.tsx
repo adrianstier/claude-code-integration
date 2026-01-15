@@ -20,6 +20,11 @@ import {
   FileNode,
   Kbd,
   Diagram,
+  InfoTable,
+  InfoCard,
+  InfoGrid,
+  InfoRow,
+  InfoRows,
 } from '@/components/mdx'
 import {
   getTrackPageMetadata,
@@ -155,6 +160,11 @@ const components = {
   FileNode,
   Kbd,
   Diagram,
+  InfoTable,
+  InfoCard,
+  InfoGrid,
+  InfoRow,
+  InfoRows,
   // Map MDX code blocks to our CodeBlock component
   pre: ({ children }: { children?: React.ReactNode }) => {
     // Extract code content and language from children

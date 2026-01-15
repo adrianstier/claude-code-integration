@@ -79,15 +79,22 @@ Claude fixes issue #1234 end-to-end.
 
 Always available, highest priority:
 
-| Command | What It Does | When to Use |
-|---------|--------------|-------------|
-| `/help` | Show all commands | Discovering features |
-| `/clear` | Reset conversation | Switching tasks |
-| `/init` | Generate CLAUDE.md | New projects |
-| `/compact` | Compress context | Long sessions |
-| `/review` | AI code review | Before commits |
-| `/memory` | Edit CLAUDE.md | Updating context |
-| `/permissions` | Manage tools | Security config |
+<InfoTable
+  columns={[
+    { key: 'command', header: 'Command' },
+    { key: 'does', header: 'What It Does' },
+    { key: 'when', header: 'When to Use' },
+  ]}
+  rows={[
+    { command: '/help', does: 'Show all commands', when: 'Discovering features' },
+    { command: '/clear', does: 'Reset conversation', when: 'Switching tasks' },
+    { command: '/init', does: 'Generate CLAUDE.md', when: 'New projects' },
+    { command: '/compact', does: 'Compress context', when: 'Long sessions' },
+    { command: '/review', does: 'AI code review', when: 'Before commits' },
+    { command: '/memory', does: 'Edit CLAUDE.md', when: 'Updating context' },
+    { command: '/permissions', does: 'Manage tools', when: 'Security config' },
+  ]}
+/>
 
 ### Project Skills
 
@@ -569,16 +576,20 @@ git push
 ```markdown
 ## Custom Commands
 
-This project includes Claude Code skills:
-
-| Command | Description |
-|---------|-------------|
-| `/deploy` | Deploy to production |
-| `/fix-issue [n]` | Fix GitHub issue |
-| `/create-component [name]` | Create React component |
-
-See `.claude/commands/` for details.
+This project includes Claude Code skills. See `.claude/commands/` for details.
 ```
+
+<InfoTable
+  columns={[
+    { key: 'command', header: 'Command' },
+    { key: 'desc', header: 'Description' },
+  ]}
+  rows={[
+    { command: '/deploy', desc: 'Deploy to production' },
+    { command: '/fix-issue [n]', desc: 'Fix GitHub issue' },
+    { command: '/create-component [name]', desc: 'Create React component' },
+  ]}
+/>
 
 ---
 
@@ -628,11 +639,18 @@ Fix the issue.
 
 ### Locations
 
-| Location | Command | Scope |
-|----------|---------|-------|
-| `.claude/commands/skill.md` | `/skill` | Project |
-| `.claude/commands/dir/skill.md` | `/dir/skill` | Project |
-| `~/.claude/commands/skill.md` | `/skill` | Global |
+<InfoTable
+  columns={[
+    { key: 'location', header: 'Location' },
+    { key: 'command', header: 'Command' },
+    { key: 'scope', header: 'Scope' },
+  ]}
+  rows={[
+    { location: '.claude/commands/skill.md', command: '/skill', scope: 'Project' },
+    { location: '.claude/commands/dir/skill.md', command: '/dir/skill', scope: 'Project' },
+    { location: '~/.claude/commands/skill.md', command: '/skill', scope: 'Global' },
+  ]}
+/>
 
 ### Template
 
@@ -658,12 +676,18 @@ NEVER: Prohibited action.
 
 ### Keywords
 
-| Keyword | Effect |
-|---------|--------|
-| `IMPORTANT:` | High priority |
-| `YOU MUST:` | Required |
-| `NEVER:` | Prohibited |
-| `CRITICAL:` | Absolute |
+<InfoTable
+  columns={[
+    { key: 'keyword', header: 'Keyword' },
+    { key: 'effect', header: 'Effect' },
+  ]}
+  rows={[
+    { keyword: 'IMPORTANT:', effect: 'High priority' },
+    { keyword: 'YOU MUST:', effect: 'Required' },
+    { keyword: 'NEVER:', effect: 'Prohibited' },
+    { keyword: 'CRITICAL:', effect: 'Absolute' },
+  ]}
+/>
 
 ---
 

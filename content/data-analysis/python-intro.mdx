@@ -86,13 +86,19 @@ You'll see `(venv)` in your prompt—that means it's active.
 pip install pandas numpy matplotlib jupyter seaborn
 ```
 
-| Package | What It Does |
-|---------|--------------|
-| pandas | Data manipulation (your main tool) |
-| numpy | Numerical operations |
-| matplotlib | Basic plotting |
-| seaborn | Beautiful statistical plots |
-| jupyter | Interactive notebooks |
+<InfoTable
+  columns={[
+    { key: 'package', header: 'Package' },
+    { key: 'does', header: 'What It Does' },
+  ]}
+  rows={[
+    { package: 'pandas', does: 'Data manipulation (your main tool)' },
+    { package: 'numpy', does: 'Numerical operations' },
+    { package: 'matplotlib', does: 'Basic plotting' },
+    { package: 'seaborn', does: 'Beautiful statistical plots' },
+    { package: 'jupyter', does: 'Interactive notebooks' },
+  ]}
+/>
 
 </Step>
 <Step title="Create Project Structure">
@@ -212,13 +218,19 @@ Real data is messy. Here's how to fix common problems.
 
 ### Common Issues (And How to Fix Them)
 
-| Problem | Solution |
-|---------|----------|
-| Missing values | `df.dropna()` or `df.fillna(value)` |
-| Wrong data types | `pd.to_datetime(df['date'])` |
-| Duplicates | `df.drop_duplicates()` |
-| Inconsistent text | `df['name'].str.lower().str.strip()` |
-| Outliers | Filter or cap values |
+<InfoTable
+  columns={[
+    { key: 'problem', header: 'Problem' },
+    { key: 'solution', header: 'Solution' },
+  ]}
+  rows={[
+    { problem: 'Missing values', solution: 'df.dropna() or df.fillna(value)' },
+    { problem: 'Wrong data types', solution: "pd.to_datetime(df['date'])" },
+    { problem: 'Duplicates', solution: 'df.drop_duplicates()' },
+    { problem: 'Inconsistent text', solution: "df['name'].str.lower().str.strip()" },
+    { problem: 'Outliers', solution: 'Filter or cap values' },
+  ]}
+/>
 
 ### Ask Claude to Clean Your Data
 
@@ -445,12 +457,18 @@ This opens a browser. Create a new Python 3 notebook.
 
 ### Notebook Best Practices
 
-| Do | Don't |
-|----|-------|
-| Use markdown headers | Run cells out of order |
-| Keep cells small and focused | Put all code in one cell |
-| Restart and run all before sharing | Leave broken cells |
-| Include explanatory text | Assume code is self-explanatory |
+<InfoTable
+  columns={[
+    { key: 'do', header: 'Do' },
+    { key: 'dont', header: "Don't" },
+  ]}
+  rows={[
+    { do: 'Use markdown headers', dont: 'Run cells out of order' },
+    { do: 'Keep cells small and focused', dont: 'Put all code in one cell' },
+    { do: 'Restart and run all before sharing', dont: 'Leave broken cells' },
+    { do: 'Include explanatory text', dont: 'Assume code is self-explanatory' },
+  ]}
+/>
 
 <Callout type="tip">
 **Ask Claude to structure your notebook:**
@@ -567,13 +585,19 @@ df['category'] = df['category'].astype('category')
 
 You've got the fundamentals. Here's where to go deeper:
 
-| Want to... | Learn |
-|------------|-------|
-| Build dashboards | Streamlit, Dash |
-| More statistics | scipy, statsmodels |
-| Machine learning | scikit-learn |
-| Bigger data | Dask, PySpark |
-| Automate reports | See [Automation Track](/automation) |
+<InfoTable
+  columns={[
+    { key: 'want', header: 'Want to...' },
+    { key: 'learn', header: 'Learn' },
+  ]}
+  rows={[
+    { want: 'Build dashboards', learn: 'Streamlit, Dash' },
+    { want: 'More statistics', learn: 'scipy, statsmodels' },
+    { want: 'Machine learning', learn: 'scikit-learn' },
+    { want: 'Bigger data', learn: 'Dask, PySpark' },
+    { want: 'Automate reports', learn: <a href="/automation">Automation Track</a> },
+  ]}
+/>
 
 ---
 

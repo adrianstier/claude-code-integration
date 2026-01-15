@@ -228,12 +228,19 @@ function AgentStatus({ jobId }) {
 
 Design for failures:
 
-| State | Message | Actions |
-|-------|---------|---------|
-| Timeout | "Taking longer than expected" | Wait, Cancel |
-| Tool failure | "Couldn't access X" | Retry, Skip |
-| Uncertain | "Found conflicting info" | Show both |
-| Can't help | "Outside my capabilities" | Contact human |
+<InfoTable
+  columns={[
+    { key: 'state', header: 'State' },
+    { key: 'message', header: 'Message' },
+    { key: 'actions', header: 'Actions' },
+  ]}
+  rows={[
+    { state: 'Timeout', message: '"Taking longer than expected"', actions: 'Wait, Cancel' },
+    { state: 'Tool failure', message: '"Couldn\'t access X"', actions: 'Retry, Skip' },
+    { state: 'Uncertain', message: '"Found conflicting info"', actions: 'Show both' },
+    { state: "Can't help", message: '"Outside my capabilities"', actions: 'Contact human' },
+  ]}
+/>
 
 ### Trust Building
 
@@ -340,13 +347,20 @@ spec:
 
 ### Key Metrics
 
-| Metric | Description | Alert If |
-|--------|-------------|----------|
-| Completion rate | % tasks completed | < 95% |
-| Latency (p95) | Time to response | > 30s |
-| Tool failure rate | % tool calls failed | > 5% |
-| Token usage | Tokens per task | > budget |
-| User satisfaction | Ratings | < 4/5 |
+<InfoTable
+  columns={[
+    { key: 'metric', header: 'Metric' },
+    { key: 'desc', header: 'Description' },
+    { key: 'alert', header: 'Alert If' },
+  ]}
+  rows={[
+    { metric: 'Completion rate', desc: '% tasks completed', alert: '< 95%' },
+    { metric: 'Latency (p95)', desc: 'Time to response', alert: '> 30s' },
+    { metric: 'Tool failure rate', desc: '% tool calls failed', alert: '> 5%' },
+    { metric: 'Token usage', desc: 'Tokens per task', alert: '> budget' },
+    { metric: 'User satisfaction', desc: 'Ratings', alert: '< 4/5' },
+  ]}
+/>
 
 ### Structured Logging
 
@@ -609,12 +623,18 @@ AI content creation for marketers.
 
 ### MVP Timeline
 
-| Week | Focus |
-|------|-------|
-| 1 | Core agent + basic API |
-| 2 | User system + tracking |
-| 3 | Templates + formats |
-| 4 | Deploy + monitor |
+<InfoTable
+  columns={[
+    { key: 'week', header: 'Week' },
+    { key: 'focus', header: 'Focus' },
+  ]}
+  rows={[
+    { week: '1', focus: 'Core agent + basic API' },
+    { week: '2', focus: 'User system + tracking' },
+    { week: '3', focus: 'Templates + formats' },
+    { week: '4', focus: 'Deploy + monitor' },
+  ]}
+/>
 
 ### Architecture
 
@@ -652,12 +672,18 @@ class ContentAgent:
 
 ### Practice Projects
 
-| Project | Goal |
-|---------|------|
-| Ship an MVP | Pick an idea, deploy in 4 weeks |
-| Add monetization | Implement usage-based pricing |
-| Scale to 100 users | Handle concurrent load |
-| Reduce costs 50% | Optimize token usage |
+<InfoTable
+  columns={[
+    { key: 'project', header: 'Project' },
+    { key: 'goal', header: 'Goal' },
+  ]}
+  rows={[
+    { project: 'Ship an MVP', goal: 'Pick an idea, deploy in 4 weeks' },
+    { project: 'Add monetization', goal: 'Implement usage-based pricing' },
+    { project: 'Scale to 100 users', goal: 'Handle concurrent load' },
+    { project: 'Reduce costs 50%', goal: 'Optimize token usage' },
+  ]}
+/>
 
 ---
 

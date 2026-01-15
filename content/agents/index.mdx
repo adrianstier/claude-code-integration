@@ -48,13 +48,20 @@ Every agent follows the same loop:
 `}
 </Diagram>
 
-| Phase | What Happens | Example |
-|-------|--------------|---------|
-| **Observe** | Gather context | Read the user's question, check current data |
-| **Think** | Reason about the situation | "I need to search for recent data first" |
-| **Plan** | Break into steps | Search → Read → Analyze → Write |
-| **Act** | Execute using tools | Call search API, read documents |
-| **Reflect** | Evaluate results | "Do I have enough information?" |
+<InfoTable
+  columns={[
+    { key: 'phase', header: 'Phase' },
+    { key: 'what', header: 'What Happens' },
+    { key: 'example', header: 'Example' },
+  ]}
+  rows={[
+    { phase: <strong>Observe</strong>, what: 'Gather context', example: "Read the user's question, check current data" },
+    { phase: <strong>Think</strong>, what: 'Reason about the situation', example: '"I need to search for recent data first"' },
+    { phase: <strong>Plan</strong>, what: 'Break into steps', example: 'Search → Read → Analyze → Write' },
+    { phase: <strong>Act</strong>, what: 'Execute using tools', example: 'Call search API, read documents' },
+    { phase: <strong>Reflect</strong>, what: 'Evaluate results', example: '"Do I have enough information?"' },
+  ]}
+/>
 
 ---
 
@@ -64,12 +71,19 @@ Every agent follows the same loop:
 
 Built for one job, done exceptionally well:
 
-| Agent | What It Does | Tools It Uses |
-|-------|--------------|---------------|
-| **Code Reviewer** | Analyzes PRs for bugs, security, style | Read, Grep, Glob |
-| **Research Agent** | Gathers and synthesizes information | Web search, Document reader |
-| **Data Analyst** | Queries databases, generates insights | SQL, Python, Charts |
-| **Support Agent** | Handles tickets, searches knowledge base | KB search, CRM |
+<InfoTable
+  columns={[
+    { key: 'agent', header: 'Agent' },
+    { key: 'does', header: 'What It Does' },
+    { key: 'tools', header: 'Tools It Uses' },
+  ]}
+  rows={[
+    { agent: <strong>Code Reviewer</strong>, does: 'Analyzes PRs for bugs, security, style', tools: 'Read, Grep, Glob' },
+    { agent: <strong>Research Agent</strong>, does: 'Gathers and synthesizes information', tools: 'Web search, Document reader' },
+    { agent: <strong>Data Analyst</strong>, does: 'Queries databases, generates insights', tools: 'SQL, Python, Charts' },
+    { agent: <strong>Support Agent</strong>, does: 'Handles tickets, searches knowledge base', tools: 'KB search, CRM' },
+  ]}
+/>
 
 ### General-Purpose Agents
 
@@ -112,12 +126,18 @@ Complex tasks need specialized workers. Sub-agents handle specific pieces of wor
 
 ### Why Sub-Agents?
 
-| Benefit | Why It Matters |
-|---------|----------------|
-| **Context Isolation** | Each sub-agent works with only relevant information—no overload |
-| **Parallelization** | Run multiple sub-agents simultaneously |
-| **Tool Restrictions** | Limit what each sub-agent can do for safety |
-| **Specialization** | Each sub-agent has tailored prompts for its domain |
+<InfoTable
+  columns={[
+    { key: 'benefit', header: 'Benefit' },
+    { key: 'why', header: 'Why It Matters' },
+  ]}
+  rows={[
+    { benefit: <strong>Context Isolation</strong>, why: 'Each sub-agent works with only relevant information—no overload' },
+    { benefit: <strong>Parallelization</strong>, why: 'Run multiple sub-agents simultaneously' },
+    { benefit: <strong>Tool Restrictions</strong>, why: 'Limit what each sub-agent can do for safety' },
+    { benefit: <strong>Specialization</strong>, why: 'Each sub-agent has tailored prompts for its domain' },
+  ]}
+/>
 
 ### Built-in Sub-Agents
 
@@ -149,11 +169,18 @@ Be thorough but constructive. Explain *why* something is a problem.
 
 ### Common Tool Combinations
 
-| Agent Type | Tools | Best For |
-|------------|-------|----------|
-| Read-only | `Read, Grep, Glob` | Analysis, review, research |
-| Test runner | `Bash, Read, Grep` | Test execution, CI tasks |
-| Code modifier | `Read, Edit, Write, Grep, Glob` | Refactoring, generation |
+<InfoTable
+  columns={[
+    { key: 'type', header: 'Agent Type' },
+    { key: 'tools', header: 'Tools' },
+    { key: 'best', header: 'Best For' },
+  ]}
+  rows={[
+    { type: 'Read-only', tools: 'Read, Grep, Glob', best: 'Analysis, review, research' },
+    { type: 'Test runner', tools: 'Bash, Read, Grep', best: 'Test execution, CI tasks' },
+    { type: 'Code modifier', tools: 'Read, Edit, Write, Grep, Glob', best: 'Refactoring, generation' },
+  ]}
+/>
 
 ---
 
@@ -229,12 +256,19 @@ Agents need memory to maintain context across steps and conversations.
 
 ### Memory Strategies
 
-| Strategy | Best For | How It Works |
-|----------|----------|--------------|
-| RAG | Knowledge bases | Search stored documents |
-| Summarization | Long conversations | Compress old context |
-| Key-value store | Facts and preferences | Quick lookup |
-| Vector database | Semantic search | Find similar past content |
+<InfoTable
+  columns={[
+    { key: 'strategy', header: 'Strategy' },
+    { key: 'best', header: 'Best For' },
+    { key: 'how', header: 'How It Works' },
+  ]}
+  rows={[
+    { strategy: 'RAG', best: 'Knowledge bases', how: 'Search stored documents' },
+    { strategy: 'Summarization', best: 'Long conversations', how: 'Compress old context' },
+    { strategy: 'Key-value store', best: 'Facts and preferences', how: 'Quick lookup' },
+    { strategy: 'Vector database', best: 'Semantic search', how: 'Find similar past content' },
+  ]}
+/>
 
 ---
 
@@ -357,13 +391,20 @@ def research_agent(question: str) -> str:
 
 ### Common Pitfalls
 
-| Problem | Symptom | Fix |
-|---------|---------|-----|
-| Infinite loops | Same action repeated | Detect loops, add exit conditions |
-| Tool misuse | Wrong tool for task | Better tool descriptions |
-| Context overflow | Degraded performance | Summarize, use sub-agents |
-| Hallucination | Made-up tool results | Validate results, require citations |
-| Cost explosion | Huge API bills | Token budgets, caching |
+<InfoTable
+  columns={[
+    { key: 'problem', header: 'Problem' },
+    { key: 'symptom', header: 'Symptom' },
+    { key: 'fix', header: 'Fix' },
+  ]}
+  rows={[
+    { problem: 'Infinite loops', symptom: 'Same action repeated', fix: 'Detect loops, add exit conditions' },
+    { problem: 'Tool misuse', symptom: 'Wrong tool for task', fix: 'Better tool descriptions' },
+    { problem: 'Context overflow', symptom: 'Degraded performance', fix: 'Summarize, use sub-agents' },
+    { problem: 'Hallucination', symptom: 'Made-up tool results', fix: 'Validate results, require citations' },
+    { problem: 'Cost explosion', symptom: 'Huge API bills', fix: 'Token budgets, caching' },
+  ]}
+/>
 
 ### Safety First
 
@@ -377,12 +418,24 @@ def research_agent(question: str) -> str:
 
 ## Real-World Applications
 
-| Domain | Use Cases |
-|--------|-----------|
-| **Software** | Code review, bug triage, doc generation, test creation |
-| **Support** | Ticket routing, knowledge search, escalation, follow-up |
-| **Analysis** | Report generation, anomaly detection, trend analysis |
-| **Content** | Drafting, social scheduling, email campaigns, translation |
+<InfoGrid columns={2}>
+  <InfoCard
+    title="Software"
+    description="Code review, bug triage, doc generation, test creation"
+  />
+  <InfoCard
+    title="Support"
+    description="Ticket routing, knowledge search, escalation, follow-up"
+  />
+  <InfoCard
+    title="Analysis"
+    description="Report generation, anomaly detection, trend analysis"
+  />
+  <InfoCard
+    title="Content"
+    description="Drafting, social scheduling, email campaigns, translation"
+  />
+</InfoGrid>
 
 ---
 

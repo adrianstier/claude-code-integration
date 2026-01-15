@@ -35,12 +35,24 @@ By the end of this track, you'll have:
 
 **Here's what each piece does:**
 
-| Tool | What It Does | Why You Need It |
-|------|--------------|-----------------|
-| **VS Code** | Your code editor | Where you write and read code |
-| **Git** | Version control | Never lose work, undo mistakes |
-| **GitHub** | Cloud backup + collaboration | Share code, work with others |
-| **Claude Code** | AI coding partner | Understands your whole project |
+<InfoGrid columns={2}>
+  <InfoCard
+    title="VS Code"
+    description="Your code editor — where you write and read code"
+  />
+  <InfoCard
+    title="Git"
+    description="Version control — never lose work, undo mistakes"
+  />
+  <InfoCard
+    title="GitHub"
+    description="Cloud backup + collaboration — share code, work with others"
+  />
+  <InfoCard
+    title="Claude Code"
+    description="AI coding partner — understands your whole project"
+  />
+</InfoGrid>
 
 ## Choose Your Platform
 
@@ -108,12 +120,32 @@ Claude Code runs locally in VS Code but connects to Anthropic's API. Your code s
 
 Once you've finished setup, pick the track that matches your goals:
 
-| Track | Best For | You'll Build |
-|-------|----------|--------------|
-| [Data Analysis](/data-analysis) | Researchers, analysts | Data pipelines, visualizations, reports |
-| [App Builder](/app-builder) | Developers, entrepreneurs | Web apps, APIs, dashboards |
-| [Automation](/automation) | Anyone doing repetitive tasks | Scripts, workflows, bots |
-| [Git & GitHub](/git-github) | Everyone | Version control fundamentals |
+<InfoGrid columns={2}>
+  <InfoCard
+    title="Data Analysis"
+    description="Data pipelines, visualizations, reports"
+    meta="Best for: Researchers, analysts"
+    href="/data-analysis"
+  />
+  <InfoCard
+    title="App Builder"
+    description="Web apps, APIs, dashboards"
+    meta="Best for: Developers, entrepreneurs"
+    href="/app-builder"
+  />
+  <InfoCard
+    title="Automation"
+    description="Scripts, workflows, bots"
+    meta="Best for: Anyone doing repetitive tasks"
+    href="/automation"
+  />
+  <InfoCard
+    title="Git & GitHub"
+    description="Version control fundamentals"
+    meta="Best for: Everyone"
+    href="/git-github"
+  />
+</InfoGrid>
 
 <Callout type="tip">
 **New to coding?** Start with [Git & GitHub](/git-github) after setup. Understanding version control early saves headaches later.

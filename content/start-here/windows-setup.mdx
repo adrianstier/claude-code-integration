@@ -130,14 +130,20 @@ Think of Git as an "infinite undo" for your entire project—but better, because
 
 Most defaults are fine, but watch for these:
 
-| Option | Choose |
-|--------|--------|
-| Default editor | **Use Visual Studio Code** |
-| PATH environment | **Git from command line and 3rd-party software** |
-| HTTPS transport | **Use the OpenSSL library** |
-| Line ending | **Checkout Windows-style, commit Unix-style** |
-| Terminal | **Use Windows' default console window** |
-| Credential helper | **Git Credential Manager** |
+<InfoTable
+  columns={[
+    { key: 'option', header: 'Option' },
+    { key: 'choose', header: 'Choose' },
+  ]}
+  rows={[
+    { option: 'Default editor', choose: <strong>Use Visual Studio Code</strong> },
+    { option: 'PATH environment', choose: <strong>Git from command line and 3rd-party software</strong> },
+    { option: 'HTTPS transport', choose: <strong>Use the OpenSSL library</strong> },
+    { option: 'Line ending', choose: <strong>Checkout Windows-style, commit Unix-style</strong> },
+    { option: 'Terminal', choose: <strong>Use Windows' default console window</strong> },
+    { option: 'Credential helper', choose: <strong>Git Credential Manager</strong> },
+  ]}
+/>
 
 </Step>
 <Step title="Configure Your Identity">
@@ -547,26 +553,39 @@ If `python` isn't found:
 
 ## Quick Reference: Keyboard Shortcuts
 
-| Action | Shortcut |
-|--------|----------|
-| Open Command Palette (VS Code) | `Ctrl + Shift + P` |
-| Open Extensions (VS Code) | `Ctrl + Shift + X` |
-| Open Terminal in VS Code | ``Ctrl + ` `` |
-| New Terminal Tab | `Ctrl + Shift + T` |
-| Clear Terminal | `cls` command |
-| Cancel Running Command | `Ctrl + C` |
+<InfoTable
+  columns={[
+    { key: 'action', header: 'Action' },
+    { key: 'shortcut', header: 'Shortcut' },
+  ]}
+  rows={[
+    { action: 'Open Command Palette (VS Code)', shortcut: <><Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>P</Kbd></> },
+    { action: 'Open Extensions (VS Code)', shortcut: <><Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>X</Kbd></> },
+    { action: 'Open Terminal in VS Code', shortcut: <><Kbd>Ctrl</Kbd> + <Kbd>`</Kbd></> },
+    { action: 'New Terminal Tab', shortcut: <><Kbd>Ctrl</Kbd> + <Kbd>Shift</Kbd> + <Kbd>T</Kbd></> },
+    { action: 'Clear Terminal', shortcut: 'cls command' },
+    { action: 'Cancel Running Command', shortcut: <><Kbd>Ctrl</Kbd> + <Kbd>C</Kbd></> },
+  ]}
+/>
 
 ---
 
 ## Windows vs Mac: Quick Differences
 
-| Concept | Windows | Mac |
-|---------|---------|-----|
-| Terminal | Windows Terminal / PowerShell | Terminal.app |
-| Path separator | `\` (backslash) | `/` (forward slash) |
-| Home folder | `~` or `$env:USERPROFILE` | `~` |
-| Open VS Code | `code .` | `code .` |
-| Package manager | winget (or Chocolatey) | Homebrew |
+<InfoTable
+  columns={[
+    { key: 'concept', header: 'Concept' },
+    { key: 'windows', header: 'Windows' },
+    { key: 'mac', header: 'Mac' },
+  ]}
+  rows={[
+    { concept: 'Terminal', windows: 'Windows Terminal / PowerShell', mac: 'Terminal.app' },
+    { concept: 'Path separator', windows: '\\ (backslash)', mac: '/ (forward slash)' },
+    { concept: 'Home folder', windows: '~ or $env:USERPROFILE', mac: '~' },
+    { concept: 'Open VS Code', windows: 'code .', mac: 'code .' },
+    { concept: 'Package manager', windows: 'winget (or Chocolatey)', mac: 'Homebrew' },
+  ]}
+/>
 
 <Callout type="note">
 Git commands are identical on both platforms. When you see Mac examples using `/`, Windows usually accepts both `/` and `\`.

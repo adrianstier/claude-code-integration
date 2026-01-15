@@ -333,12 +333,19 @@ processing large files. Help me optimize it to handle datasets over 10GB."
 
 ### Speed and Efficiency
 
-| Task | Traditional Approach | With Claude Code |
-|------|---------------------|------------------|
-| Data cleaning script | 2-4 hours | 15-30 minutes |
-| Debugging complex code | Hours of Stack Overflow | Minutes of conversation |
-| Learning new library | Days of documentation | Guided examples in minutes |
-| Creating visualizations | Trial and error | Describe what you want |
+<InfoTable
+  columns={[
+    { key: 'task', header: 'Task' },
+    { key: 'traditional', header: 'Traditional Approach' },
+    { key: 'claude', header: 'With Claude Code' },
+  ]}
+  rows={[
+    { task: 'Data cleaning script', traditional: '2-4 hours', claude: '15-30 minutes' },
+    { task: 'Debugging complex code', traditional: 'Hours of Stack Overflow', claude: 'Minutes of conversation' },
+    { task: 'Learning new library', traditional: 'Days of documentation', claude: 'Guided examples in minutes' },
+    { task: 'Creating visualizations', traditional: 'Trial and error', claude: 'Describe what you want' },
+  ]}
+/>
 
 ### Reproducibility
 
@@ -374,12 +381,19 @@ Anthropic's servers for processing.
 
 ### Technical Limitations
 
-| Limitation | Details | Workaround |
-|------------|---------|------------|
-| **Context window** | ~200K tokens per conversation | Break large analyses into steps |
-| **No internet access** | Can't fetch live data or APIs | Download data first, then analyze |
-| **Computation limits** | Complex ML training may timeout | Use for prototyping, run production elsewhere |
-| **Package knowledge** | May not know very new packages | Provide documentation or examples |
+<InfoTable
+  columns={[
+    { key: 'limitation', header: 'Limitation' },
+    { key: 'details', header: 'Details' },
+    { key: 'workaround', header: 'Workaround' },
+  ]}
+  rows={[
+    { limitation: <strong>Context window</strong>, details: '~200K tokens per conversation', workaround: 'Break large analyses into steps' },
+    { limitation: <strong>No internet access</strong>, details: "Can't fetch live data or APIs", workaround: 'Download data first, then analyze' },
+    { limitation: <strong>Computation limits</strong>, details: 'Complex ML training may timeout', workaround: 'Use for prototyping, run production elsewhere' },
+    { limitation: <strong>Package knowledge</strong>, details: 'May not know very new packages', workaround: 'Provide documentation or examples' },
+  ]}
+/>
 
 ### Research-Specific Considerations
 

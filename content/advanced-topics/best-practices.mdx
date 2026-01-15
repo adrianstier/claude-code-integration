@@ -74,21 +74,34 @@ NEVER: Use `any` type—use `unknown` instead.
 
 Claude pays extra attention to these:
 
-| Keyword | Effect |
-|---------|--------|
-| `IMPORTANT:` | High priority instruction |
-| `YOU MUST:` | Required behavior |
-| `NEVER:` | Prohibited action |
-| `CRITICAL:` | Absolute requirement |
+<InfoTable
+  columns={[
+    { key: 'keyword', header: 'Keyword' },
+    { key: 'effect', header: 'Effect' },
+  ]}
+  rows={[
+    { keyword: 'IMPORTANT:', effect: 'High priority instruction' },
+    { keyword: 'YOU MUST:', effect: 'Required behavior' },
+    { keyword: 'NEVER:', effect: 'Prohibited action' },
+    { keyword: 'CRITICAL:', effect: 'Absolute requirement' },
+  ]}
+/>
 
 #### Where to Place CLAUDE.md
 
-| Location | Scope | Use Case |
-|----------|-------|----------|
-| `~/.claude/CLAUDE.md` | Global | Personal preferences |
-| `../CLAUDE.md` | Parent dir | Monorepo shared config |
-| `./CLAUDE.md` | Project root | Project-specific rules |
-| `./src/CLAUDE.md` | Subdirectory | Module-specific overrides |
+<InfoTable
+  columns={[
+    { key: 'location', header: 'Location' },
+    { key: 'scope', header: 'Scope' },
+    { key: 'usecase', header: 'Use Case' },
+  ]}
+  rows={[
+    { location: '~/.claude/CLAUDE.md', scope: 'Global', usecase: 'Personal preferences' },
+    { location: '../CLAUDE.md', scope: 'Parent dir', usecase: 'Monorepo shared config' },
+    { location: './CLAUDE.md', scope: 'Project root', usecase: 'Project-specific rules' },
+    { location: './src/CLAUDE.md', scope: 'Subdirectory', usecase: 'Module-specific overrides' },
+  ]}
+/>
 
 #### Generate Automatically
 
@@ -542,23 +555,35 @@ done
 
 ### Hidden Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Cmd/Ctrl + K` | Clear screen |
-| `Escape` | Interrupt Claude |
-| `Escape Escape` | Edit last prompt |
-| `#` | Update documentation |
-| `/` | Slash commands menu |
-| `Tab` | File/folder completion |
+<InfoTable
+  columns={[
+    { key: 'shortcut', header: 'Shortcut' },
+    { key: 'action', header: 'Action' },
+  ]}
+  rows={[
+    { shortcut: 'Cmd/Ctrl + K', action: 'Clear screen' },
+    { shortcut: 'Escape', action: 'Interrupt Claude' },
+    { shortcut: 'Escape Escape', action: 'Edit last prompt' },
+    { shortcut: '#', action: 'Update documentation' },
+    { shortcut: '/', action: 'Slash commands menu' },
+    { shortcut: 'Tab', action: 'File/folder completion' },
+  ]}
+/>
 
 ### Magic Phrases
 
-| Phrase | Effect |
-|--------|--------|
-| `think` / `think hard` | Extended thinking |
-| `IMPORTANT:` | Emphasis in instructions |
-| `/init` | Generate CLAUDE.md |
-| `/clear` | Reset context |
+<InfoTable
+  columns={[
+    { key: 'phrase', header: 'Phrase' },
+    { key: 'effect', header: 'Effect' },
+  ]}
+  rows={[
+    { phrase: 'think / think hard', effect: 'Extended thinking' },
+    { phrase: 'IMPORTANT:', effect: 'Emphasis in instructions' },
+    { phrase: '/init', effect: 'Generate CLAUDE.md' },
+    { phrase: '/clear', effect: 'Reset context' },
+  ]}
+/>
 
 ### Debugging Claude
 

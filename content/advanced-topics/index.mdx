@@ -26,12 +26,24 @@ Most users only scratch the surface. Master CLAUDE.md files and the Explore → 
 
 ## What You'll Learn
 
-| Topic | What It Unlocks |
-|-------|-----------------|
-| **Best Practices** | Battle-tested workflows from Anthropic engineers |
-| **Custom Skills** | Your own slash commands for repetitive tasks |
-| **MCP Integrations** | Connect Claude to databases, APIs, tools |
-| **Multi-Claude Patterns** | Parallel verification, complex projects |
+<InfoGrid columns={2}>
+  <InfoCard
+    title="Best Practices"
+    description="Battle-tested workflows from Anthropic engineers"
+  />
+  <InfoCard
+    title="Custom Skills"
+    description="Your own slash commands for repetitive tasks"
+  />
+  <InfoCard
+    title="MCP Integrations"
+    description="Connect Claude to databases, APIs, tools"
+  />
+  <InfoCard
+    title="Multi-Claude Patterns"
+    description="Parallel verification, complex projects"
+  />
+</InfoGrid>
 
 ---
 
@@ -179,22 +191,34 @@ NEVER: Use `any` type
 
 ### Thinking Modes
 
-| Mode | Use When |
-|------|----------|
-| `think` | Complex tasks, planning |
-| `think hard` | Architecture decisions |
-| `think harder` | Debugging tricky issues |
-| `ultrathink` | Critical, high-stakes code |
+<InfoTable
+  columns={[
+    { key: 'mode', header: 'Mode' },
+    { key: 'when', header: 'Use When' },
+  ]}
+  rows={[
+    { mode: 'think', when: 'Complex tasks, planning' },
+    { mode: 'think hard', when: 'Architecture decisions' },
+    { mode: 'think harder', when: 'Debugging tricky issues' },
+    { mode: 'ultrathink', when: 'Critical, high-stakes code' },
+  ]}
+/>
 
 ### Essential Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Escape` | Interrupt Claude |
-| `Escape Escape` | Edit last prompt |
-| `/clear` | Reset conversation context |
-| `#` | Update documentation |
-| `Tab` | File/folder completion |
+<InfoTable
+  columns={[
+    { key: 'shortcut', header: 'Shortcut' },
+    { key: 'action', header: 'Action' },
+  ]}
+  rows={[
+    { shortcut: 'Escape', action: 'Interrupt Claude' },
+    { shortcut: 'Escape Escape', action: 'Edit last prompt' },
+    { shortcut: '/clear', action: 'Reset conversation context' },
+    { shortcut: '#', action: 'Update documentation' },
+    { shortcut: 'Tab', action: 'File/folder completion' },
+  ]}
+/>
 
 ### Custom Skills Quick Start
 

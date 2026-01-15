@@ -61,14 +61,20 @@ MCP is Anthropic's open standard for connecting Claude to external data sources 
 
 ### What MCPs Enable
 
-| MCP Server | What Claude Can Do |
-|------------|-------------------|
-| **Filesystem** | Read/write any files you authorize |
-| **PostgreSQL** | Query databases, analyze schemas |
-| **GitHub** | Create PRs, read issues, analyze repos |
-| **Web Search** | Search the internet in real-time |
-| **Slack** | Read/send messages, search history |
-| **Google Drive** | Access documents, spreadsheets |
+<InfoTable
+  columns={[
+    { key: 'server', header: 'MCP Server' },
+    { key: 'can', header: 'What Claude Can Do' },
+  ]}
+  rows={[
+    { server: <strong>Filesystem</strong>, can: 'Read/write any files you authorize' },
+    { server: <strong>PostgreSQL</strong>, can: 'Query databases, analyze schemas' },
+    { server: <strong>GitHub</strong>, can: 'Create PRs, read issues, analyze repos' },
+    { server: <strong>Web Search</strong>, can: 'Search the internet in real-time' },
+    { server: <strong>Slack</strong>, can: 'Read/send messages, search history' },
+    { server: <strong>Google Drive</strong>, can: 'Access documents, spreadsheets' },
+  ]}
+/>
 
 ### Installing MCP Servers
 
@@ -156,12 +162,19 @@ Cursor is an AI-first code editor built on VS Code. It has Claude deeply integra
 
 ### Key Features
 
-| Feature | Shortcut | What It Does |
-|---------|----------|--------------|
-| Inline Edit | `Cmd+K` | Edit selected code with AI |
-| Chat | `Cmd+L` | Ask questions, get explanations |
-| Composer | `Cmd+Shift+L` | Multi-file editing |
-| Tab Complete | `Tab` | Accept AI suggestions |
+<InfoTable
+  columns={[
+    { key: 'feature', header: 'Feature' },
+    { key: 'shortcut', header: 'Shortcut' },
+    { key: 'does', header: 'What It Does' },
+  ]}
+  rows={[
+    { feature: 'Inline Edit', shortcut: 'Cmd+K', does: 'Edit selected code with AI' },
+    { feature: 'Chat', shortcut: 'Cmd+L', does: 'Ask questions, get explanations' },
+    { feature: 'Composer', shortcut: 'Cmd+Shift+L', does: 'Multi-file editing' },
+    { feature: 'Tab Complete', shortcut: 'Tab', does: 'Accept AI suggestions' },
+  ]}
+/>
 
 ### Installing Cursor
 
@@ -484,23 +497,35 @@ claude mcp restart <server-name>
 
 ### Cursor Shortcuts
 
-| Shortcut | Action |
-|----------|--------|
-| `Cmd+K` | Inline edit |
-| `Cmd+L` | Open chat |
-| `Cmd+Shift+L` | Composer mode |
-| `Tab` | Accept suggestion |
-| `Escape` | Dismiss |
+<InfoTable
+  columns={[
+    { key: 'shortcut', header: 'Shortcut' },
+    { key: 'action', header: 'Action' },
+  ]}
+  rows={[
+    { shortcut: 'Cmd+K', action: 'Inline edit' },
+    { shortcut: 'Cmd+L', action: 'Open chat' },
+    { shortcut: 'Cmd+Shift+L', action: 'Composer mode' },
+    { shortcut: 'Tab', action: 'Accept suggestion' },
+    { shortcut: 'Escape', action: 'Dismiss' },
+  ]}
+/>
 
 ### Popular MCPs
 
-| MCP | Use Case |
-|-----|----------|
-| `server-filesystem` | File access |
-| `server-postgres` | PostgreSQL queries |
-| `server-github` | GitHub operations |
-| `server-brave-search` | Web search |
-| `server-slack` | Slack integration |
+<InfoTable
+  columns={[
+    { key: 'mcp', header: 'MCP' },
+    { key: 'use', header: 'Use Case' },
+  ]}
+  rows={[
+    { mcp: 'server-filesystem', use: 'File access' },
+    { mcp: 'server-postgres', use: 'PostgreSQL queries' },
+    { mcp: 'server-github', use: 'GitHub operations' },
+    { mcp: 'server-brave-search', use: 'Web search' },
+    { mcp: 'server-slack', use: 'Slack integration' },
+  ]}
+/>
 
 ---
 

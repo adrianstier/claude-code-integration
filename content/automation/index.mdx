@@ -31,13 +31,20 @@ A 5-minute daily task costs you 30+ hours per year. Spend 2 hours automating it,
 
 ## What You'll Automate
 
-| Task Type | Time Saved | What You'll Build |
-|-----------|------------|-------------------|
-| File organization | 2-5 hrs/week | Smart file sorter |
-| Report generation | 3-8 hrs/week | Auto-reporter |
-| Data pipelines | 5-20 hrs/week | ETL automation |
-| Scheduled backups | Peace of mind | Backup scripts |
-| Code formatting | Ongoing friction | VS Code tasks |
+<InfoTable
+  columns={[
+    { key: 'type', header: 'Task Type' },
+    { key: 'saved', header: 'Time Saved' },
+    { key: 'build', header: "What You'll Build" },
+  ]}
+  rows={[
+    { type: 'File organization', saved: '2-5 hrs/week', build: 'Smart file sorter' },
+    { type: 'Report generation', saved: '3-8 hrs/week', build: 'Auto-reporter' },
+    { type: 'Data pipelines', saved: '5-20 hrs/week', build: 'ETL automation' },
+    { type: 'Scheduled backups', saved: 'Peace of mind', build: 'Backup scripts' },
+    { type: 'Code formatting', saved: 'Ongoing friction', build: 'VS Code tasks' },
+  ]}
+/>
 
 ---
 
@@ -458,14 +465,21 @@ Add to `keybindings.json`:
 
 ### Cron Syntax Quick Reference
 
-| Schedule | Expression | Example Use |
-|----------|------------|-------------|
-| Every minute | `* * * * *` | Health checks |
-| Every 5 minutes | `*/5 * * * *` | Data sync |
-| Every hour | `0 * * * *` | Log rotation |
-| Daily at 9 AM | `0 9 * * *` | Morning reports |
-| Monday at 9 AM | `0 9 * * 1` | Weekly summary |
-| First of month | `0 9 1 * *` | Monthly cleanup |
+<InfoTable
+  columns={[
+    { key: 'schedule', header: 'Schedule' },
+    { key: 'expression', header: 'Expression' },
+    { key: 'use', header: 'Example Use' },
+  ]}
+  rows={[
+    { schedule: 'Every minute', expression: '* * * * *', use: 'Health checks' },
+    { schedule: 'Every 5 minutes', expression: '*/5 * * * *', use: 'Data sync' },
+    { schedule: 'Every hour', expression: '0 * * * *', use: 'Log rotation' },
+    { schedule: 'Daily at 9 AM', expression: '0 9 * * *', use: 'Morning reports' },
+    { schedule: 'Monday at 9 AM', expression: '0 9 * * 1', use: 'Weekly summary' },
+    { schedule: 'First of month', expression: '0 9 1 * *', use: 'Monthly cleanup' },
+  ]}
+/>
 
 ### Cron Commands
 
@@ -635,13 +649,20 @@ PATH=/usr/local/bin:/usr/bin:/bin
 
 Ready to automate more? Try these:
 
-| Project | Difficulty | What You'll Learn |
-|---------|------------|-------------------|
-| **Email Sorter** | Medium | Gmail API, rules engine |
-| **Backup Script** | Easy | File operations, cloud sync |
-| **Web Scraper** | Medium | HTTP requests, parsing |
-| **API Monitor** | Medium | Health checks, alerts |
-| **Invoice Generator** | Hard | PDF generation, templates |
+<InfoTable
+  columns={[
+    { key: 'project', header: 'Project' },
+    { key: 'difficulty', header: 'Difficulty' },
+    { key: 'learn', header: "What You'll Learn" },
+  ]}
+  rows={[
+    { project: <strong>Email Sorter</strong>, difficulty: 'Medium', learn: 'Gmail API, rules engine' },
+    { project: <strong>Backup Script</strong>, difficulty: 'Easy', learn: 'File operations, cloud sync' },
+    { project: <strong>Web Scraper</strong>, difficulty: 'Medium', learn: 'HTTP requests, parsing' },
+    { project: <strong>API Monitor</strong>, difficulty: 'Medium', learn: 'Health checks, alerts' },
+    { project: <strong>Invoice Generator</strong>, difficulty: 'Hard', learn: 'PDF generation, templates' },
+  ]}
+/>
 
 ### Start Here
 

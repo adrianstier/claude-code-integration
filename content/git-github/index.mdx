@@ -42,13 +42,19 @@ By the end of this guide, you'll be able to:
 
 Without Git, you're one mistake away from disaster. With Git:
 
-| Without Git | With Git |
-|-------------|----------|
-| "final_v2_REAL_final.docx" | One file, complete history |
-| Accidentally delete code, it's gone | Undo any change, any time |
-| Can't experiment (might break things) | Branch, experiment, delete if it fails |
-| "What changed last week?" | See exactly who changed what, when |
-| Collaborating = emailing files | Multiple people work on same codebase |
+<InfoTable
+  columns={[
+    { key: 'without', header: 'Without Git' },
+    { key: 'with', header: 'With Git' },
+  ]}
+  rows={[
+    { without: '"final_v2_REAL_final.docx"', with: 'One file, complete history' },
+    { without: "Accidentally delete code, it's gone", with: 'Undo any change, any time' },
+    { without: "Can't experiment (might break things)", with: 'Branch, experiment, delete if it fails' },
+    { without: '"What changed last week?"', with: 'See exactly who changed what, when' },
+    { without: 'Collaborating = emailing files', with: 'Multiple people work on same codebase' },
+  ]}
+/>
 
 ### Key Concepts (Plain English)
 
@@ -68,14 +74,20 @@ Without Git, you're one mistake away from disaster. With Git:
 `}
 </Diagram>
 
-| Term | What It Actually Means |
-|------|------------------------|
-| **Repository (repo)** | A project folder that Git is tracking |
-| **Commit** | A saved checkpoint of your project |
-| **Branch** | A parallel universe of your code |
-| **Remote** | Your repo on GitHub (in the cloud) |
-| **Push** | Upload your commits to GitHub |
-| **Pull** | Download new commits from GitHub |
+<InfoTable
+  columns={[
+    { key: 'term', header: 'Term' },
+    { key: 'meaning', header: 'What It Actually Means' },
+  ]}
+  rows={[
+    { term: <strong>Repository (repo)</strong>, meaning: 'A project folder that Git is tracking' },
+    { term: <strong>Commit</strong>, meaning: 'A saved checkpoint of your project' },
+    { term: <strong>Branch</strong>, meaning: 'A parallel universe of your code' },
+    { term: <strong>Remote</strong>, meaning: 'Your repo on GitHub (in the cloud)' },
+    { term: <strong>Push</strong>, meaning: 'Upload your commits to GitHub' },
+    { term: <strong>Pull</strong>, meaning: 'Download new commits from GitHub' },
+  ]}
+/>
 
 ---
 
@@ -198,14 +210,20 @@ Optional longer explanation
 
 ### Types
 
-| Type | When to Use |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `refactor` | Code restructuring (no behavior change) |
-| `test` | Adding or fixing tests |
-| `chore` | Maintenance (dependencies, configs) |
+<InfoTable
+  columns={[
+    { key: 'type', header: 'Type' },
+    { key: 'when', header: 'When to Use' },
+  ]}
+  rows={[
+    { type: 'feat', when: 'New feature' },
+    { type: 'fix', when: 'Bug fix' },
+    { type: 'docs', when: 'Documentation changes' },
+    { type: 'refactor', when: 'Code restructuring (no behavior change)' },
+    { type: 'test', when: 'Adding or fixing tests' },
+    { type: 'chore', when: 'Maintenance (dependencies, configs)' },
+  ]}
+/>
 
 ### Examples
 

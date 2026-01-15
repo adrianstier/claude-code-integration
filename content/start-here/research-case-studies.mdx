@@ -91,12 +91,19 @@ Save as both PNG and PDF."
 
 ### Time Comparison
 
-| Task | Traditional | With Claude Code |
-|------|-------------|------------------|
-| Data quality assessment | 45 min | 3 min |
-| Cleaning script | 2-3 hours | 15 min |
-| Publication figure | 1-2 hours | 10 min |
-| **Total** | **4-5 hours** | **~30 min** |
+<InfoTable
+  columns={[
+    { key: 'task', header: 'Task' },
+    { key: 'traditional', header: 'Traditional' },
+    { key: 'claude', header: 'With Claude Code' },
+  ]}
+  rows={[
+    { task: 'Data quality assessment', traditional: '45 min', claude: '3 min' },
+    { task: 'Cleaning script', traditional: '2-3 hours', claude: '15 min' },
+    { task: 'Publication figure', traditional: '1-2 hours', claude: '10 min' },
+    { task: <strong>Total</strong>, traditional: <strong>4-5 hours</strong>, claude: <strong>~30 min</strong> },
+  ]}
+/>
 
 ---
 

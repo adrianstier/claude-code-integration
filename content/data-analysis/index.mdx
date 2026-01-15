@@ -133,14 +133,20 @@ Every data project follows the same pattern:
 
 At each step, Claude helps you:
 
-| Step | What Claude Does |
-|------|------------------|
-| **Get data** | Write import code, handle file formats |
-| **Clean** | Generate cleaning code, explain why |
-| **Explore** | Suggest analyses, write aggregations |
-| **Visualize** | Create charts, customize styling |
-| **Model** | Build models, explain results |
-| **Document** | Write reports, explain findings |
+<InfoTable
+  columns={[
+    { key: 'step', header: 'Step' },
+    { key: 'what', header: 'What Claude Does' },
+  ]}
+  rows={[
+    { step: <strong>Get data</strong>, what: 'Write import code, handle file formats' },
+    { step: <strong>Clean</strong>, what: 'Generate cleaning code, explain why' },
+    { step: <strong>Explore</strong>, what: 'Suggest analyses, write aggregations' },
+    { step: <strong>Visualize</strong>, what: 'Create charts, customize styling' },
+    { step: <strong>Model</strong>, what: 'Build models, explain results' },
+    { step: <strong>Document</strong>, what: 'Write reports, explain findings' },
+  ]}
+/>
 
 ---
 
@@ -162,10 +168,17 @@ These are the kinds of problems you'll solve:
 
 ## Time Commitment
 
-| Track | Duration | Prerequisites |
-|-------|----------|---------------|
-| Python | 4-6 hours | [Start Here](/start-here) complete |
-| R | 4-6 hours | [Start Here](/start-here) complete |
+<InfoTable
+  columns={[
+    { key: 'track', header: 'Track' },
+    { key: 'duration', header: 'Duration' },
+    { key: 'prereqs', header: 'Prerequisites' },
+  ]}
+  rows={[
+    { track: 'Python', duration: '4-6 hours', prereqs: <a href="/start-here">Start Here</a> },
+    { track: 'R', duration: '4-6 hours', prereqs: <a href="/start-here">Start Here</a> },
+  ]}
+/>
 
 <Callout type="tip">
 **Work in chunks.** Each section is 30-60 minutes. You don't need to finish in one sitting.

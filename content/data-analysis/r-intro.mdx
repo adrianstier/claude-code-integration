@@ -720,12 +720,18 @@ Add `theme(text = element_text(size = 14))`
 
 You've got the R fundamentals. Here's where to go deeper:
 
-| Want to... | Learn |
-|------------|-------|
-| Automate reports | RMarkdown, Quarto |
-| Build dashboards | Shiny |
-| Machine learning | tidymodels |
-| Bigger data | data.table, arrow |
+<InfoTable
+  columns={[
+    { key: 'want', header: 'Want to...' },
+    { key: 'learn', header: 'Learn' },
+  ]}
+  rows={[
+    { want: 'Automate reports', learn: 'RMarkdown, Quarto' },
+    { want: 'Build dashboards', learn: 'Shiny' },
+    { want: 'Machine learning', learn: 'tidymodels' },
+    { want: 'Bigger data', learn: 'data.table, arrow' },
+  ]}
+/>
 
 ---
 

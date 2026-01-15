@@ -14,15 +14,22 @@ Use Claude Code for **doing** (writing code, running tests, git operations) and 
 
 ## Quick Comparison
 
-| Feature | Claude Code (CLI) | Claude.com (Web) |
-|---------|-------------------|------------------|
-| **File Access** | Direct read/write to your files | Copy/paste only |
-| **Code Execution** | Run bash commands, tests, builds | No execution capability |
-| **Git Integration** | Full git operations (commit, push, PR) | No git access |
-| **Context** | Sees your entire codebase | Limited to conversation |
-| **Persistence** | CLAUDE.md files for project memory | Conversation history only |
-| **Tool Use** | MCP servers, custom tools | Web search, artifacts |
-| **Best For** | Development tasks | Brainstorming, learning |
+<InfoTable
+  columns={[
+    { key: 'feature', header: 'Feature' },
+    { key: 'code', header: 'Claude Code (CLI)' },
+    { key: 'web', header: 'Claude.com (Web)' },
+  ]}
+  rows={[
+    { feature: <strong>File Access</strong>, code: 'Direct read/write to your files', web: 'Copy/paste only' },
+    { feature: <strong>Code Execution</strong>, code: 'Run bash commands, tests, builds', web: 'No execution capability' },
+    { feature: <strong>Git Integration</strong>, code: 'Full git operations (commit, push, PR)', web: 'No git access' },
+    { feature: <strong>Context</strong>, code: 'Sees your entire codebase', web: 'Limited to conversation' },
+    { feature: <strong>Persistence</strong>, code: 'CLAUDE.md files for project memory', web: 'Conversation history only' },
+    { feature: <strong>Tool Use</strong>, code: 'MCP servers, custom tools', web: 'Web search, artifacts' },
+    { feature: <strong>Best For</strong>, code: 'Development tasks', web: 'Brainstorming, learning' },
+  ]}
+/>
 
 ## When to Use Claude Code
 
@@ -279,15 +286,22 @@ claude "Set up NextAuth with GitHub and Google providers.
 
 ## Summary
 
-| Task Type | Best Tool | Why |
-|-----------|-----------|-----|
-| Writing code | Claude Code | Direct file access |
-| Running commands | Claude Code | Bash execution |
-| Git operations | Claude Code | Full git integration |
-| Learning concepts | Claude Web | Detailed explanations |
-| Brainstorming | Claude Web | No context constraints |
-| Code review | Either | Depends on file access needs |
-| Documentation | Either | Web for drafts, Code for files |
+<InfoTable
+  columns={[
+    { key: 'task', header: 'Task Type' },
+    { key: 'tool', header: 'Best Tool' },
+    { key: 'why', header: 'Why' },
+  ]}
+  rows={[
+    { task: 'Writing code', tool: 'Claude Code', why: 'Direct file access' },
+    { task: 'Running commands', tool: 'Claude Code', why: 'Bash execution' },
+    { task: 'Git operations', tool: 'Claude Code', why: 'Full git integration' },
+    { task: 'Learning concepts', tool: 'Claude Web', why: 'Detailed explanations' },
+    { task: 'Brainstorming', tool: 'Claude Web', why: 'No context constraints' },
+    { task: 'Code review', tool: 'Either', why: 'Depends on file access needs' },
+    { task: 'Documentation', tool: 'Either', why: 'Web for drafts, Code for files' },
+  ]}
+/>
 
 The key insight: **Claude Code is for doing, Claude Web is for thinking**. Use both together for maximum productivity.
 

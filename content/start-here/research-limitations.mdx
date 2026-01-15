@@ -77,16 +77,23 @@ show me how to verify each one with my data."
 
 Claude Code is fast but not free (your time has value). Sometimes an RA is better:
 
-| Task | Claude Code | Research Assistant |
-|------|-------------|-------------------|
-| One-off quick analysis | **Better** | Overkill |
-| Repetitive manual coding | **Better** | More expensive |
-| Data entry/transcription | Comparable | **Better** for quality |
-| Literature synthesis | Good start | **Better** for depth |
-| Participant recruitment | Can't do | **Required** |
-| Lab management | Can't do | **Required** |
-| Ongoing project support | Limited | **Better** |
-| Training/mentorship | Can't replace | **Essential** |
+<InfoTable
+  columns={[
+    { key: 'task', header: 'Task' },
+    { key: 'claude', header: 'Claude Code' },
+    { key: 'ra', header: 'Research Assistant' },
+  ]}
+  rows={[
+    { task: 'One-off quick analysis', claude: <strong>Better</strong>, ra: 'Overkill' },
+    { task: 'Repetitive manual coding', claude: <strong>Better</strong>, ra: 'More expensive' },
+    { task: 'Data entry/transcription', claude: 'Comparable', ra: <strong>Better for quality</strong> },
+    { task: 'Literature synthesis', claude: 'Good start', ra: <strong>Better for depth</strong> },
+    { task: 'Participant recruitment', claude: "Can't do", ra: <strong>Required</strong> },
+    { task: 'Lab management', claude: "Can't do", ra: <strong>Required</strong> },
+    { task: 'Ongoing project support', claude: 'Limited', ra: <strong>Better</strong> },
+    { task: 'Training/mentorship', claude: "Can't replace", ra: <strong>Essential</strong> },
+  ]}
+/>
 
 **Hire an RA when:**
 - The task requires human judgment on ambiguous cases
