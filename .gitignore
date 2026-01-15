@@ -22,7 +22,7 @@ dist/
 # Database
 *.sqlite
 *.db
-data/
+/data/
 migrations/applied/
 
 # IDE
