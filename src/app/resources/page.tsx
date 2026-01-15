@@ -1,278 +1,151 @@
-import { Metadata } from 'next'
+'use client'
+
+import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { ExternalLink, Search, Sparkles } from 'lucide-react'
+
+// Import shared data layer
+import { RESOURCES, SECTION_CONFIG, CATEGORY_FILTERS, CATEGORY_ORDER } from '@/data/resources'
 import {
-  BookOpen,
-  ExternalLink,
-  Github,
-  FileText,
-  Video,
-  Code2,
-  Wrench,
-  GraduationCap,
-  Lightbulb,
-  Users,
-  Terminal,
-  FolderOpen,
-  PenTool,
-  Server,
-} from 'lucide-react'
-import { siteConfig } from '@/lib/metadata'
+  getIconComponent,
+  filterResources,
+  groupResourcesByCategory,
+} from '@/lib/resources'
+import type { Resource, ResourceCategory, SkillLevel } from '@/types/resources'
 
-export const metadata: Metadata = {
-  title: 'Resources - Claude Code Learning Hub',
-  description:
-    'Curated collection of Claude Code resources, tutorials, documentation, tools, and community links. Everything you need to master AI-powered development.',
-  keywords: [
-    'Claude Code resources',
-    'Claude Code documentation',
-    'AI coding tools',
-    'developer resources',
-    'programming tutorials',
-    'Claude Code community',
-  ],
-  openGraph: {
-    title: 'Resources - Claude Code Learning Hub',
-    description:
-      'Curated collection of Claude Code resources, tutorials, documentation, tools, and community links.',
-    url: `${siteConfig.url}/resources`,
-  },
-  alternates: {
-    canonical: `${siteConfig.url}/resources`,
-  },
+// =============================================================================
+// Configuration
+// =============================================================================
+
+const skillLevelColors: Record<SkillLevel, string> = {
+  beginner: 'bg-sage-100 text-sage-700 dark:bg-sage-900/50 dark:text-sage-300',
+  intermediate: 'bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300',
+  advanced: 'bg-plum-100 text-plum-700 dark:bg-plum-900/50 dark:text-plum-300',
 }
 
-const resources = {
-  quickReference: [
-    {
-      title: 'Cheatsheets',
-      description: '7 quick reference guides for Claude Code, Git, Terminal, Python, and more',
-      url: '/tools/cheatsheets',
-      internal: true,
-      icon: FileText,
-    },
-    {
-      title: 'Code Snippets',
-      description: 'Copy-paste code patterns for common tasks',
-      url: '/tools/snippets',
-      internal: true,
-      icon: Code2,
-    },
-    {
-      title: 'Slash Commands',
-      description: 'Built-in commands to speed up your workflow',
-      url: '/tools/slash-commands',
-      internal: true,
-      icon: Terminal,
-    },
-  ],
-  projectTools: [
-    {
-      title: 'Project Templates',
-      description: '6 starter templates for web apps, data science, automation, and more',
-      url: '/tools/templates',
-      internal: true,
-      icon: FolderOpen,
-    },
-    {
-      title: 'CLAUDE.md Generator',
-      description: 'Create a CLAUDE.md file for your project',
-      url: '/tools/claude-md-generator',
-      internal: true,
-      icon: PenTool,
-    },
-    {
-      title: 'MCP Server Explorer',
-      description: 'Browse and configure MCP servers',
-      url: '/tools/mcp-explorer',
-      internal: true,
-      icon: Server,
-    },
-  ],
-  official: [
-    {
-      title: 'Claude Code Documentation',
-      description: 'Official documentation for Claude Code by Anthropic',
-      url: 'https://docs.anthropic.com/en/docs/claude-code/overview',
-      icon: BookOpen,
-    },
-    {
-      title: 'Claude Code GitHub',
-      description: 'Official Claude Code repository with examples and issues',
-      url: 'https://github.com/anthropics/claude-code',
-      icon: Github,
-    },
-    {
-      title: 'Anthropic API Documentation',
-      description: 'Full API reference for building with Claude',
-      url: 'https://docs.anthropic.com/en/api/getting-started',
-      icon: Code2,
-    },
-    {
-      title: 'Claude Prompt Engineering',
-      description: 'Best practices for writing effective prompts',
-      url: 'https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview',
-      icon: Lightbulb,
-    },
-  ],
-  externalTools: [
-    {
-      title: 'VS Code',
-      description: 'The recommended code editor for Claude Code',
-      url: 'https://code.visualstudio.com/',
-      icon: Code2,
-    },
-    {
-      title: 'Git',
-      description: 'Version control system - essential for any project',
-      url: 'https://git-scm.com/',
-      icon: Github,
-    },
-    {
-      title: 'Node.js',
-      description: 'JavaScript runtime for running scripts and servers',
-      url: 'https://nodejs.org/',
-      icon: Wrench,
-    },
-    {
-      title: 'Python',
-      description: 'Popular language for data analysis and automation',
-      url: 'https://www.python.org/',
-      icon: Code2,
-    },
-  ],
-  learning: [
-    {
-      title: 'Our Start Here Guide',
-      description: 'Complete setup guide for beginners',
-      url: '/start-here',
-      internal: true,
-      icon: GraduationCap,
-    },
-    {
-      title: 'Data Analysis Track',
-      description: 'Learn Python and R for data science',
-      url: '/data-analysis',
-      internal: true,
-      icon: FileText,
-    },
-    {
-      title: 'Git & GitHub Guide',
-      description: 'Master version control from scratch',
-      url: '/git-github',
-      internal: true,
-      icon: Github,
-    },
-    {
-      title: 'AI Agents Track',
-      description: 'Build autonomous AI agents',
-      url: '/agents',
-      internal: true,
-      icon: Lightbulb,
-    },
-    {
-      title: 'Best Practices Guide',
-      description: 'Tips and techniques for working effectively with Claude Code',
-      url: '/advanced-topics/best-practices',
-      internal: true,
-      icon: Lightbulb,
-    },
-  ],
-  community: [
-    {
-      title: 'Anthropic Support',
-      description: 'Official support channel for Claude products',
-      url: 'https://support.anthropic.com/',
-      icon: Users,
-    },
-    {
-      title: 'r/ClaudeAI Subreddit',
-      description: 'Reddit community discussing Claude',
-      url: 'https://reddit.com/r/ClaudeAI',
-      icon: Users,
-    },
-    {
-      title: 'Claude Discord',
-      description: 'Community Discord for Claude users',
-      url: 'https://discord.gg/anthropic',
-      icon: Users,
-    },
-  ],
-  videos: [
-    {
-      title: 'Anthropic YouTube Channel',
-      description: 'Official videos from Anthropic about Claude',
-      url: 'https://www.youtube.com/@anthropic-ai',
-      icon: Video,
-    },
-  ],
-}
+// =============================================================================
+// Components
+// =============================================================================
 
-function ResourceCard({
-  title,
-  description,
-  url,
-  icon: Icon,
-  internal = false,
-}: {
-  title: string
-  description: string
-  url: string
-  icon: React.ComponentType<{ className?: string }>
-  internal?: boolean
-}) {
+function ResourceCard({ resource }: { resource: Resource }) {
+  const { title, description, url, icon, internal, isNew, skillLevel } = resource
+  const Icon = getIconComponent(icon)
   const Component = internal ? Link : 'a'
-  const externalProps = internal
-    ? {}
-    : { target: '_blank', rel: 'noopener noreferrer' }
+  const externalProps = internal ? {} : { target: '_blank', rel: 'noopener noreferrer' }
 
   return (
     <Component
       href={url}
       {...externalProps}
-      className="group flex items-start gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 transition-all hover:border-claude-300 dark:hover:border-claude-600 hover:shadow-lg"
+      className="group relative flex items-start gap-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 transition-all hover:border-claude-300 dark:hover:border-claude-600 hover:shadow-lg"
     >
+      {/* New Badge */}
+      {isNew && (
+        <span className="absolute -top-2 -right-2 inline-flex items-center gap-1 rounded-full bg-amber-100 dark:bg-amber-900/50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300 z-10">
+          <Sparkles className="h-3 w-3" aria-hidden="true" />
+          New
+        </span>
+      )}
+
+      {/* Icon */}
       <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-claude-100 dark:bg-claude-900/50 text-claude-600 dark:text-claude-400 transition-colors group-hover:bg-claude-200 dark:group-hover:bg-claude-900">
-        <Icon className="h-5 w-5" />
+        <Icon className="h-5 w-5" aria-hidden="true" />
       </div>
+
+      {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-claude-600 dark:group-hover:text-claude-400 transition-colors">
             {title}
           </h3>
           {!internal && (
-            <ExternalLink className="h-4 w-4 text-gray-400 group-hover:text-claude-500" />
+            <ExternalLink
+              className="h-4 w-4 text-gray-400 group-hover:text-claude-500"
+              aria-hidden="true"
+            />
+          )}
+          {skillLevel && (
+            <span
+              className={`rounded-full px-2 py-0.5 text-xs font-medium capitalize ${skillLevelColors[skillLevel]}`}
+            >
+              {skillLevel}
+            </span>
           )}
         </div>
-        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-          {description}
-        </p>
+        <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{description}</p>
       </div>
     </Component>
   )
 }
 
 function ResourceSection({
-  title,
-  children,
+  categoryId,
+  resources,
 }: {
-  title: string
-  children: React.ReactNode
+  categoryId: ResourceCategory
+  resources: Resource[]
 }) {
+  const config = SECTION_CONFIG[categoryId]
+  const SectionIcon = getIconComponent(config.icon)
+
+  if (resources.length === 0) return null
+
   return (
-    <section className="mb-12">
-      <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white">
-        {title}
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2">{children}</div>
+    <section id={`section-${categoryId}`} className="mb-12 scroll-mt-32" aria-labelledby={`heading-${categoryId}`}>
+      <div className="mb-6">
+        <div className="flex items-center gap-3 mb-2">
+          <div
+            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-sm font-medium ${config.colorClass}`}
+          >
+            <SectionIcon className="h-4 w-4" aria-hidden="true" />
+            <span>{config.title}</span>
+          </div>
+        </div>
+        <p id={`heading-${categoryId}`} className="text-gray-600 dark:text-gray-400">
+          {config.description}
+        </p>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {resources.map((resource) => (
+          <ResourceCard key={resource.id} resource={resource} />
+        ))}
+      </div>
     </section>
   )
 }
 
+// =============================================================================
+// Main Page Component
+// =============================================================================
+
 export default function ResourcesPage() {
+  const [searchQuery, setSearchQuery] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState<ResourceCategory | 'all'>('all')
+
+  // Filter resources using shared utility
+  const filteredResources = useMemo(() => {
+    return filterResources(RESOURCES, selectedCategory, searchQuery)
+  }, [searchQuery, selectedCategory])
+
+  // Group filtered resources by category using shared utility
+  const groupedResources = useMemo(() => {
+    return groupResourcesByCategory(filteredResources)
+  }, [filteredResources])
+
+  // Get visible sections for sticky nav
+  const visibleSections = CATEGORY_ORDER.filter(
+    (id) => groupedResources[id].length > 0
+  )
+
+  // Get icons for quick start and filters
+  const GraduationCapIcon = getIconComponent('GraduationCap')
+  const BookOpenIcon = getIconComponent('BookOpen')
+  const GitBranchIcon = getIconComponent('GitBranch')
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-12">
+      <div className="mb-8">
         <nav className="mb-6 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
           <Link
             href="/"
@@ -288,23 +161,20 @@ export default function ResourcesPage() {
           Resources
         </h1>
         <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
-          A curated collection of resources to help you master Claude Code and
-          AI-powered development. From official documentation to community
-          tools.
+          A curated collection of resources to help you master Claude Code and AI-powered
+          development. From official documentation to community tools.
         </p>
       </div>
 
-      {/* Quick Links */}
-      <div className="mb-12 rounded-2xl bg-gradient-to-br from-claude-50 to-orange-50 dark:from-gray-800 dark:to-gray-800 p-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          Quick Start
-        </h2>
+      {/* Quick Start */}
+      <div className="mb-8 rounded-2xl bg-gradient-to-br from-claude-50 to-orange-50 dark:from-gray-800 dark:to-gray-800 p-8">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Start</h2>
         <div className="flex flex-wrap gap-3">
           <Link
             href="/start-here"
             className="inline-flex items-center gap-2 rounded-lg bg-claude-600 px-4 py-2 text-sm font-medium text-white hover:bg-claude-500 transition-colors"
           >
-            <GraduationCap className="h-4 w-4" />
+            <GraduationCapIcon className="h-4 w-4" aria-hidden="true" />
             Start Learning
           </Link>
           <a
@@ -313,9 +183,9 @@ export default function ResourcesPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg bg-white dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:border-claude-300 dark:hover:border-claude-600 transition-colors"
           >
-            <BookOpen className="h-4 w-4" />
+            <BookOpenIcon className="h-4 w-4" aria-hidden="true" />
             Official Docs
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
           </a>
           <a
             href="https://github.com/anthropics/claude-code"
@@ -323,61 +193,118 @@ export default function ResourcesPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-lg bg-white dark:bg-gray-700 px-4 py-2 text-sm font-medium text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600 hover:border-claude-300 dark:hover:border-claude-600 transition-colors"
           >
-            <Github className="h-4 w-4" />
+            <GitBranchIcon className="h-4 w-4" aria-hidden="true" />
             GitHub
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3" aria-hidden="true" />
           </a>
         </div>
       </div>
 
-      {/* Resource Sections */}
-      <ResourceSection title="Quick Reference">
-        {resources.quickReference.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
+      {/* Search and Filters */}
+      <div className="mb-6 space-y-4">
+        {/* Search Input */}
+        <div className="relative">
+          <Search
+            className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
+            aria-hidden="true"
+          />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search resources..."
+            aria-label="Search resources"
+            className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-3 pl-10 pr-4 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-claude-500 focus:outline-none focus:ring-1 focus:ring-claude-500"
+          />
+        </div>
 
-      <ResourceSection title="Project Tools">
-        {resources.projectTools.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
+        {/* Category Filters */}
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
+          {CATEGORY_FILTERS.map((cat) => {
+            const Icon = getIconComponent(cat.icon)
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
+                className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                  selectedCategory === cat.id
+                    ? 'bg-claude-600 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
+                }`}
+              >
+                <Icon className="h-4 w-4" aria-hidden="true" />
+                {cat.name}
+              </button>
+            )
+          })}
+        </div>
 
-      <ResourceSection title="Our Learning Tracks">
-        {resources.learning.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
+        {/* Results Count */}
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Showing {filteredResources.length} of {RESOURCES.length} resources
+        </p>
+      </div>
 
-      <ResourceSection title="Official Documentation">
-        {resources.official.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
+      {/* Sticky Section Navigation */}
+      {filteredResources.length > 0 && visibleSections.length > 1 && (
+        <nav
+          className="sticky top-16 z-10 -mx-4 px-4 py-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 mb-8"
+          aria-label="Resource sections"
+        >
+          <div className="flex gap-4 overflow-x-auto">
+            {visibleSections.map((id) => {
+              const config = SECTION_CONFIG[id]
+              return (
+                <a
+                  key={id}
+                  href={`#section-${id}`}
+                  className="whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                >
+                  {config.title}
+                  <span className="ml-1 text-gray-400">({groupedResources[id].length})</span>
+                </a>
+              )
+            })}
+          </div>
+        </nav>
+      )}
 
-      <ResourceSection title="External Tools">
-        {resources.externalTools.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
-
-      <ResourceSection title="Community & Support">
-        {resources.community.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
-
-      <ResourceSection title="Video Resources">
-        {resources.videos.map((resource) => (
-          <ResourceCard key={resource.url} {...resource} />
-        ))}
-      </ResourceSection>
+      {/* Resource Sections or Empty State */}
+      {filteredResources.length === 0 ? (
+        <div className="text-center py-16" role="status" aria-live="polite">
+          <Search className="mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
+          <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
+            No resources found
+          </h3>
+          <p className="mt-2 text-gray-500 dark:text-gray-400">
+            Try adjusting your search or filter criteria
+          </p>
+          <button
+            onClick={() => {
+              setSearchQuery('')
+              setSelectedCategory('all')
+            }}
+            className="mt-4 text-claude-600 dark:text-claude-400 hover:text-claude-500 font-medium"
+          >
+            Clear all filters
+          </button>
+        </div>
+      ) : (
+        <>
+          {CATEGORY_ORDER.map((categoryId) => (
+            <ResourceSection
+              key={categoryId}
+              categoryId={categoryId}
+              resources={groupedResources[categoryId]}
+            />
+          ))}
+        </>
+      )}
 
       {/* Contribute Section */}
       <div className="mt-16 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-          Know a great resource?
-        </h2>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">Know a great resource?</h2>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
           Help us improve this list by suggesting resources that helped you.
         </p>
@@ -387,9 +314,9 @@ export default function ResourcesPage() {
           rel="noopener noreferrer"
           className="mt-4 inline-flex items-center gap-2 text-claude-600 dark:text-claude-400 hover:text-claude-500 dark:hover:text-claude-300 font-medium"
         >
-          <Github className="h-4 w-4" />
+          <GitBranchIcon className="h-4 w-4" aria-hidden="true" />
           Suggest a resource on GitHub
-          <ExternalLink className="h-4 w-4" />
+          <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </a>
       </div>
     </div>

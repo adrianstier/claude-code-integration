@@ -134,9 +134,6 @@ export default function RootLayout({
           href={`${siteConfig.url}/blog/feed.xml`}
         />
 
-        {/* Preload critical assets */}
-        <link rel="preload" as="image" href="/og-image.png" />
-
         {/* Google Analytics */}
         {GA_MEASUREMENT_ID && (
           <>
