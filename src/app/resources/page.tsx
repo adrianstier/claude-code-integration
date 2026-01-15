@@ -11,6 +11,10 @@ import {
   GraduationCap,
   Lightbulb,
   Users,
+  Terminal,
+  FolderOpen,
+  PenTool,
+  Server,
 } from 'lucide-react'
 import { siteConfig } from '@/lib/metadata'
 
@@ -38,6 +42,52 @@ export const metadata: Metadata = {
 }
 
 const resources = {
+  quickReference: [
+    {
+      title: 'Cheatsheets',
+      description: '7 quick reference guides for Claude Code, Git, Terminal, Python, and more',
+      url: '/tools/cheatsheets',
+      internal: true,
+      icon: FileText,
+    },
+    {
+      title: 'Code Snippets',
+      description: 'Copy-paste code patterns for common tasks',
+      url: '/tools/snippets',
+      internal: true,
+      icon: Code2,
+    },
+    {
+      title: 'Slash Commands',
+      description: 'Built-in commands to speed up your workflow',
+      url: '/tools/slash-commands',
+      internal: true,
+      icon: Terminal,
+    },
+  ],
+  projectTools: [
+    {
+      title: 'Project Templates',
+      description: '6 starter templates for web apps, data science, automation, and more',
+      url: '/tools/templates',
+      internal: true,
+      icon: FolderOpen,
+    },
+    {
+      title: 'CLAUDE.md Generator',
+      description: 'Create a CLAUDE.md file for your project',
+      url: '/tools/claude-md-generator',
+      internal: true,
+      icon: PenTool,
+    },
+    {
+      title: 'MCP Server Explorer',
+      description: 'Browse and configure MCP servers',
+      url: '/tools/mcp-explorer',
+      internal: true,
+      icon: Server,
+    },
+  ],
   official: [
     {
       title: 'Claude Code Documentation',
@@ -64,7 +114,7 @@ const resources = {
       icon: Lightbulb,
     },
   ],
-  tools: [
+  externalTools: [
     {
       title: 'VS Code',
       description: 'The recommended code editor for Claude Code',
@@ -116,6 +166,13 @@ const resources = {
       title: 'AI Agents Track',
       description: 'Build autonomous AI agents',
       url: '/agents',
+      internal: true,
+      icon: Lightbulb,
+    },
+    {
+      title: 'Best Practices Guide',
+      description: 'Tips and techniques for working effectively with Claude Code',
+      url: '/advanced-topics/best-practices',
       internal: true,
       icon: Lightbulb,
     },
@@ -274,8 +331,14 @@ export default function ResourcesPage() {
       </div>
 
       {/* Resource Sections */}
-      <ResourceSection title="Official Documentation">
-        {resources.official.map((resource) => (
+      <ResourceSection title="Quick Reference">
+        {resources.quickReference.map((resource) => (
+          <ResourceCard key={resource.url} {...resource} />
+        ))}
+      </ResourceSection>
+
+      <ResourceSection title="Project Tools">
+        {resources.projectTools.map((resource) => (
           <ResourceCard key={resource.url} {...resource} />
         ))}
       </ResourceSection>
@@ -286,13 +349,19 @@ export default function ResourcesPage() {
         ))}
       </ResourceSection>
 
-      <ResourceSection title="Essential Tools">
-        {resources.tools.map((resource) => (
+      <ResourceSection title="Official Documentation">
+        {resources.official.map((resource) => (
           <ResourceCard key={resource.url} {...resource} />
         ))}
       </ResourceSection>
 
-      <ResourceSection title="Community">
+      <ResourceSection title="External Tools">
+        {resources.externalTools.map((resource) => (
+          <ResourceCard key={resource.url} {...resource} />
+        ))}
+      </ResourceSection>
+
+      <ResourceSection title="Community & Support">
         {resources.community.map((resource) => (
           <ResourceCard key={resource.url} {...resource} />
         ))}
