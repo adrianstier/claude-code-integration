@@ -278,14 +278,14 @@ export default async function TrackPage({ params }: TrackPageProps) {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         <nav
-          className="mb-8 flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400"
+          className="mb-8 flex items-center space-x-2 text-sm text-ink-600 dark:text-ink-300"
           aria-label="Breadcrumb"
         >
-          <Link href="/" className="hover:text-claude-600 dark:hover:text-claude-400">
+          <Link href="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
             Home
           </Link>
           <span aria-hidden="true">/</span>
-          <span className="capitalize text-gray-900 dark:text-white" aria-current="page">
+          <span className="capitalize text-ink-900 dark:text-paper-50 font-medium" aria-current="page">
             {track.replaceAll('-', ' ')}
           </span>
         </nav>

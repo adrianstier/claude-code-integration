@@ -235,7 +235,6 @@ export default function Home() {
           {/* Background decorations */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-bl from-primary-200/30 via-transparent to-transparent dark:from-primary-900/20 rounded-full blur-3xl translate-x-1/3 -translate-y-1/3" />
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-cobalt-200/20 via-transparent to-transparent dark:from-cobalt-900/10 rounded-full blur-3xl -translate-x-1/3 translate-y-1/3" />
           </div>
 
           <div className="relative mx-auto max-w-7xl px-4 pt-20 pb-24 sm:px-6 lg:px-8 lg:pt-32 lg:pb-32">
@@ -256,12 +255,7 @@ export default function Home() {
               {/* Main headline */}
               <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-ink-900 dark:text-paper-50 mb-6">
                 Learn{' '}
-                <span className="relative">
-                  <span className="text-gradient dark:text-gradient-dark">Claude Code</span>
-                  <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary-300 dark:text-primary-700" viewBox="0 0 200 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M2 8.5C50 2.5 150 2.5 198 8.5" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
-                  </svg>
-                </span>
+                <span className="text-gradient dark:text-gradient-dark">Claude Code</span>
               </h1>
 
               <p className="text-xl sm:text-2xl text-ink-600 dark:text-ink-300 leading-relaxed max-w-2xl mx-auto mb-10">
@@ -291,23 +285,17 @@ export default function Home() {
               {/* Social proof */}
               <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm text-ink-500 dark:text-ink-400">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sage-100 dark:bg-sage-900/40">
-                    <CheckCircle2 className="h-4 w-4 text-sage-600 dark:text-sage-400" />
-                  </div>
+                  <CheckCircle2 className="h-4 w-4 text-ink-400" />
                   <span>Free</span>
                 </div>
                 <div className="hidden sm:block h-4 w-px bg-ink-200 dark:bg-ink-700" />
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cobalt-100 dark:bg-cobalt-900/40">
-                    <BookOpen className="h-4 w-4 text-cobalt-600 dark:text-cobalt-400" />
-                  </div>
+                  <BookOpen className="h-4 w-4 text-ink-400" />
                   <span>Step-by-Step</span>
                 </div>
                 <div className="hidden sm:block h-4 w-px bg-ink-200 dark:bg-ink-700" />
                 <div className="flex items-center gap-2">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-100 dark:bg-primary-900/40">
-                    <Users className="h-4 w-4 text-primary-600 dark:text-primary-400" />
-                  </div>
+                  <Users className="h-4 w-4 text-ink-400" />
                   <span>Beginner Friendly</span>
                 </div>
               </div>
@@ -340,16 +328,11 @@ export default function Home() {
                   <Link
                     key={track.title}
                     href={track.href}
-                    className="group relative flex flex-col rounded-2xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-6 shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1 hover:border-ink-200 dark:hover:border-ink-700"
-                    style={{ animationDelay: `${index * 50}ms` }}
+                    className="group relative flex flex-col rounded-2xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-6 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-ink-200 dark:hover:border-ink-700"
                   >
-                    {/* Gradient overlay on hover */}
-                    <div className={`absolute inset-0 rounded-2xl bg-gradient-to-br ${track.gradient} opacity-0 transition-opacity duration-300 group-hover:opacity-5`} />
-
                     {/* Icon */}
-                    <div className={`relative flex h-12 w-12 items-center justify-center rounded-xl ${track.iconBg} mb-4`}>
-                      <Icon className={`h-6 w-6 bg-gradient-to-br ${track.gradient} bg-clip-text`} style={{ color: 'transparent', backgroundClip: 'text', WebkitBackgroundClip: 'text' }} />
-                      <Icon className={`absolute h-6 w-6 text-ink-900 dark:text-paper-50`} />
+                    <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${track.iconBg} mb-4`}>
+                      <Icon className="h-6 w-6 text-ink-900 dark:text-paper-50" />
                     </div>
 
                     {/* Content */}
@@ -405,7 +388,7 @@ export default function Home() {
                   <Link
                     key={tool.title}
                     href={tool.href}
-                    className="group relative flex flex-col rounded-2xl border-2 border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-8 transition-all duration-300 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg"
+                    className="group relative flex flex-col rounded-2xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-900 p-8 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-lg"
                   >
                     {/* Icon */}
                     <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-500 to-amber-500 shadow-lg mb-6">
@@ -443,7 +426,7 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="relative py-24 bg-paper-100 dark:bg-ink-900/50">
+        <section className="relative py-24">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
               {[
@@ -466,7 +449,7 @@ export default function Home() {
                 const Icon = feature.icon
                 return (
                   <div key={feature.title} className="text-center lg:text-left">
-                    <div className="mx-auto lg:mx-0 flex h-14 w-14 items-center justify-center rounded-2xl bg-white dark:bg-ink-800 shadow-md mb-6">
+                    <div className="mx-auto lg:mx-0 flex h-14 w-14 items-center justify-center rounded-2xl border border-ink-100 dark:border-ink-800 bg-white dark:bg-ink-800 mb-6">
                       <Icon className="h-7 w-7 text-primary-600 dark:text-primary-400" />
                     </div>
                     <h3 className="font-display text-xl font-bold text-ink-900 dark:text-paper-50 mb-3">
@@ -489,7 +472,6 @@ export default function Home() {
               {/* Background decorations */}
               <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute top-0 left-1/2 w-[600px] h-[600px] bg-gradient-to-br from-primary-600/20 to-transparent rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-gradient-to-tl from-cobalt-600/20 to-transparent rounded-full blur-3xl translate-x-1/4 translate-y-1/4" />
               </div>
 
               <div className="relative mx-auto max-w-2xl text-center">

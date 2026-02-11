@@ -113,7 +113,7 @@ export default function Callout({
   return (
     <div
       className={cn(
-        'my-6 relative overflow-hidden rounded-xl border-l-4 p-5',
+        'my-6 rounded-xl border-l-4 p-5',
         config.bgColor,
         config.borderColor,
         'border border-ink-100 dark:border-ink-800 border-l-4',
@@ -121,15 +121,9 @@ export default function Callout({
       )}
       role="alert"
     >
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/50 dark:to-ink-950/50 pointer-events-none" />
-
-      <div className="relative flex items-start gap-4">
-        {/* Icon container */}
-        <div className={cn(
-          'flex-shrink-0 flex h-8 w-8 items-center justify-center rounded-lg',
-          config.bgColor
-        )}>
+      <div className="flex items-start gap-4">
+        {/* Icon */}
+        <div className="flex-shrink-0 flex h-8 w-8 items-center justify-center">
           <Icon className={cn('h-5 w-5', config.iconColor)} />
         </div>
 

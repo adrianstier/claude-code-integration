@@ -56,13 +56,8 @@ export default function Navigation() {
         <div className="flex h-18 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="group flex items-center gap-3 py-2">
-            <div className="relative flex h-10 w-10 items-center justify-center">
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-lg transition-all group-hover:opacity-40 group-hover:blur-xl" />
-              {/* Icon container */}
-              <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ink-900 to-ink-800 dark:from-paper-100 dark:to-paper-200 shadow-md transition-transform group-hover:scale-105">
-                <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
-              </div>
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ink-900 to-ink-800 dark:from-paper-100 dark:to-paper-200 shadow-sm transition-transform group-hover:scale-105">
+              <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
             </div>
             <div className="hidden sm:block">
               <span className="font-display text-lg font-bold text-ink-900 dark:text-paper-50 tracking-tight">
@@ -83,10 +78,10 @@ export default function Navigation() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-200 ${
+                  className={`group relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm transition-all duration-200 ${
                     active
-                      ? 'bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 shadow-sm'
-                      : 'text-ink-600 dark:text-ink-300 hover:bg-ink-100 dark:hover:bg-ink-800 hover:text-ink-900 dark:hover:text-paper-50'
+                      ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold'
+                      : 'text-ink-600 dark:text-ink-300 font-medium hover:bg-ink-100 dark:hover:bg-ink-800 hover:text-ink-900 dark:hover:text-paper-50'
                   }`}
                 >
                   <Icon className={`h-4 w-4 transition-transform duration-200 ${!active && 'group-hover:scale-110'}`} />
@@ -114,14 +109,10 @@ export default function Navigation() {
             {/* CTA Button */}
             <Link
               href="/start-here"
-              className="group relative inline-flex items-center gap-2 rounded-xl bg-ink-900 dark:bg-paper-50 px-5 py-2.5 text-sm font-semibold text-paper-50 dark:text-ink-900 shadow-md transition-all hover:shadow-lg active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-xl bg-ink-900 dark:bg-paper-50 px-5 py-2.5 text-sm font-semibold text-paper-50 dark:text-ink-900 shadow-sm transition-all hover:shadow-md hover:scale-[1.02] active:scale-[0.98]"
             >
               <span>Get Started</span>
               <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              {/* Gradient border glow on hover */}
-              <div className="absolute inset-0 rounded-xl opacity-0 transition-opacity group-hover:opacity-100">
-                <div className="absolute inset-[-1px] rounded-xl bg-gradient-to-r from-primary-500 to-amber-500 opacity-50 blur-sm" />
-              </div>
             </Link>
           </div>
 
@@ -163,7 +154,7 @@ export default function Navigation() {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center gap-4 rounded-xl px-4 py-3.5 transition-all ${
                     active
-                      ? 'bg-ink-900 dark:bg-paper-50 text-paper-50 dark:text-ink-900 shadow-sm'
+                      ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold'
                       : 'text-ink-700 dark:text-ink-200 hover:bg-ink-100 dark:hover:bg-ink-800'
                   }`}
                 >
@@ -171,14 +162,11 @@ export default function Navigation() {
                   <div className="flex-1">
                     <span className="font-medium">{item.name}</span>
                     {item.description && (
-                      <span className={`block text-xs mt-0.5 ${active ? 'text-paper-200 dark:text-ink-600' : 'text-ink-500 dark:text-ink-400'}`}>
+                      <span className={`block text-xs mt-0.5 ${active ? 'text-primary-600 dark:text-primary-400' : 'text-ink-500 dark:text-ink-400'}`}>
                         {item.description}
                       </span>
                     )}
                   </div>
-                  {active && (
-                    <div className="h-2 w-2 rounded-full bg-primary-500" />
-                  )}
                 </Link>
               )
             })}

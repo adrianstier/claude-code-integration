@@ -28,17 +28,12 @@ export function Steps({ children, className }: StepsProps) {
             <li key={index} className="relative pl-12">
               {/* Connector line */}
               {index < steps.length - 1 && (
-                <div className="absolute left-[19px] top-12 bottom-0 w-px bg-gradient-to-b from-primary-300 via-ink-200 to-ink-100 dark:from-primary-700 dark:via-ink-700 dark:to-ink-800" />
+                <div className="absolute left-[19px] top-12 bottom-0 w-px bg-ink-200 dark:bg-ink-700" />
               )}
 
               {/* Step number circle */}
-              <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center">
-                {/* Glow effect */}
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-md" />
-                {/* Circle */}
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ink-900 to-ink-800 dark:from-paper-100 dark:to-paper-200 text-sm font-bold text-paper-50 dark:text-ink-900 shadow-md">
-                  {index + 1}
-                </div>
+              <div className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-xl bg-ink-900 dark:bg-white text-sm font-bold text-white dark:text-ink-900">
+                {index + 1}
               </div>
 
               {step}

@@ -270,7 +270,7 @@ export default async function ContentPage({ params }: PageProps) {
           {/* Main Content */}
           <article className="min-w-0">
             {/* Breadcrumbs */}
-            <nav className="mb-8 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <nav className="mb-8 flex items-center gap-2 text-sm text-ink-600 dark:text-ink-300">
               <Link
                 href="/"
                 className="hover:text-claude-600 dark:hover:text-claude-400 transition-colors"
@@ -321,16 +321,16 @@ export default async function ContentPage({ params }: PageProps) {
                   </div>
                 )}
                 {frontmatter.platform && (
-                  <div className="flex items-center gap-1.5 rounded-full bg-claude-100 dark:bg-claude-900/40 px-3 py-1 text-claude-700 dark:text-claude-300">
+                  <div className="flex items-center gap-1.5 text-ink-500 dark:text-ink-400">
                     <PlatformIcon className="h-4 w-4" />
-                    <span className="font-medium capitalize">{frontmatter.platform}</span>
+                    <span className="capitalize">{frontmatter.platform}</span>
                   </div>
                 )}
               </div>
             </header>
 
             {/* Article Content */}
-            <div className="rounded-2xl bg-white dark:bg-gray-800/50 p-6 sm:p-8 lg:p-10 shadow-sm border border-gray-100 dark:border-gray-700/50">
+            <div className="rounded-2xl bg-white dark:bg-ink-900 p-6 sm:p-8 lg:p-10 shadow-sm border border-ink-100 dark:border-ink-800">
               <div className="prose prose-lg dark:prose-invert max-w-none">
                 <MDXRemote source={mdxContent} components={components} />
               </div>
@@ -412,12 +412,12 @@ export default async function ContentPage({ params }: PageProps) {
           {/* Sidebar - Table of Contents */}
           <aside className="hidden lg:block">
             <div className="sticky top-24">
-              <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-5">
+              <div className="rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 p-5">
                 <TableOfContents />
               </div>
 
               {/* Quick links */}
-              <div className="mt-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 p-5">
+              <div className="mt-6 rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 p-5">
                 <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
                   Quick Links
                 </h4>

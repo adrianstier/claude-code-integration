@@ -32,11 +32,8 @@ export function InfoTable({
         {rows.map((row, rowIndex) => (
           <div
             key={rowIndex}
-            className="group relative overflow-hidden rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md"
+            className="rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-colors duration-200 hover:border-primary-300 dark:hover:border-primary-700"
           >
-            {/* Subtle gradient accent */}
-            <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 to-cobalt-500 opacity-0 transition-opacity group-hover:opacity-100" />
-
             {columns.map((col, colIndex) => (
               <div key={col.key} className={cn(colIndex === 0 ? 'mb-2' : 'mb-1')}>
                 {colIndex === 0 ? (
@@ -177,9 +174,6 @@ interface InfoCardProps {
 export function InfoCard({ title, description, meta, href, className }: InfoCardProps) {
   const content = (
     <>
-      {/* Subtle gradient accent */}
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 to-cobalt-500 opacity-0 transition-opacity group-hover:opacity-100" />
-
       <h4 className="font-display font-semibold text-ink-900 dark:text-ink-100 mb-1">
         {title}
       </h4>
@@ -201,7 +195,7 @@ export function InfoCard({ title, description, meta, href, className }: InfoCard
       <a
         href={href}
         className={cn(
-          'group relative block overflow-hidden rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md',
+          'block rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md',
           className
         )}
       >
@@ -213,7 +207,7 @@ export function InfoCard({ title, description, meta, href, className }: InfoCard
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md',
+        'rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900/50 p-5 transition-all duration-200 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-md',
         className
       )}
     >

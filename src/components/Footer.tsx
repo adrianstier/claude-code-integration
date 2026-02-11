@@ -37,11 +37,8 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link href="/" className="group flex items-center gap-3 mb-5">
-              <div className="relative flex h-10 w-10 items-center justify-center">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-primary-500 to-amber-500 opacity-20 blur-lg" />
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-ink-900 dark:bg-paper-100 shadow-md">
-                  <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
-                </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-900 dark:bg-paper-100">
+                <Terminal className="h-5 w-5 text-paper-50 dark:text-ink-900" strokeWidth={2.5} />
               </div>
               <div>
                 <span className="block font-display text-lg font-bold text-ink-900 dark:text-paper-50 tracking-tight">
@@ -63,7 +60,7 @@ export default function Footer() {
                 href="https://github.com/anthropics/claude-code"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-all hover:bg-ink-200 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50 hover:scale-105"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-colors hover:bg-ink-100 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50"
                 aria-label="GitHub"
               >
                 <Github className="h-5 w-5" />
@@ -72,7 +69,7 @@ export default function Footer() {
                 href="https://docs.claude.com/en/docs/claude-code/overview"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-100 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-all hover:bg-ink-200 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50 hover:scale-105"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-ink-200 dark:border-ink-700 bg-ink-50 dark:bg-ink-800 text-ink-600 dark:text-ink-300 transition-colors hover:bg-ink-100 dark:hover:bg-ink-700 hover:text-ink-900 dark:hover:text-paper-50"
                 aria-label="Documentation"
               >
                 <BookOpen className="h-5 w-5" />

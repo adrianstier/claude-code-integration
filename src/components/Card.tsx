@@ -36,7 +36,7 @@ export default function Card({
     <>
       <div className="relative">
         {icon && (
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-100 dark:bg-primary-900/40 text-2xl shadow-sm">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 dark:bg-primary-900/30 text-2xl">
             {icon}
           </div>
         )}
@@ -69,32 +69,26 @@ export default function Card({
   )
 
   const baseClasses = cn(
-    'group relative overflow-hidden rounded-2xl',
+    'group rounded-2xl',
     'border border-ink-100 dark:border-ink-800',
     'bg-white dark:bg-ink-900',
-    'p-6 shadow-card',
-    'transition-all duration-300',
-    'hover:border-ink-200 dark:hover:border-ink-700',
-    'hover:shadow-card-hover hover:-translate-y-1'
+    'p-6',
+    'transition-all duration-200',
+    'hover:shadow-lg hover:border-primary-300 dark:hover:border-primary-700',
+    'hover:-translate-y-0.5'
   )
 
   if (href) {
     return (
       <Link href={href} className={cn(baseClasses, 'block', className)}>
-        {/* Gradient overlay on hover */}
-        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-500/5 to-amber-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-        {/* Corner glow */}
-        <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary-200 to-amber-200 dark:from-primary-900/30 dark:to-amber-900/30 opacity-0 blur-2xl transition-opacity group-hover:opacity-60" />
-        <div className="relative">{content}</div>
+        {content}
       </Link>
     )
   }
 
   return (
     <div className={cn(baseClasses, className)}>
-      {/* Corner glow */}
-      <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary-200 to-amber-200 dark:from-primary-900/30 dark:to-amber-900/30 opacity-30 blur-2xl" />
-      <div className="relative">{content}</div>
+      {content}
     </div>
   )
 }
