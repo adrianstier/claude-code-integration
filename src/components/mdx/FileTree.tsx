@@ -37,7 +37,7 @@ function getFileIcon(filename: string) {
     return <FileJson className="h-4 w-4 text-yellow-500 dark:text-yellow-400" />
   }
   if (textExtensions.includes(ext || '')) {
-    return <FileText className="h-4 w-4 text-gray-500 dark:text-gray-400" />
+    return <FileText className="h-4 w-4 text-gray-600 dark:text-gray-400" />
   }
   return <File className="h-4 w-4 text-gray-400 dark:text-gray-500" />
 }
@@ -47,7 +47,7 @@ function FileTreeComponent({ children, className }: FileTreeProps) {
   return (
     <div
       className={cn(
-        'my-6 rounded-xl border border-gray-200 dark:border-gray-700',
+        'my-6 rounded-xl border border-ink-200 dark:border-ink-700',
         'bg-gray-50 dark:bg-gray-900/50 p-4 font-mono text-sm',
         'overflow-x-auto',
         className
@@ -69,7 +69,7 @@ function FolderNodeComponent({ name, children, defaultOpen = false, className }:
         className={cn(
           'flex items-center gap-2 w-full text-left py-1 px-2 -ml-2 rounded-md',
           'hover:bg-gray-200/50 dark:hover:bg-gray-800/50 transition-colors',
-          'text-gray-700 dark:text-gray-300'
+          'text-ink-700 dark:text-gray-300'
         )}
         disabled={!hasChildren}
       >
@@ -81,15 +81,15 @@ function FolderNodeComponent({ name, children, defaultOpen = false, className }:
           )}
         />
         {isOpen ? (
-          <FolderOpen className="h-4 w-4 text-claude-500 dark:text-claude-400" />
+          <FolderOpen className="h-4 w-4 text-primary-500 dark:text-primary-400" />
         ) : (
-          <Folder className="h-4 w-4 text-claude-500 dark:text-claude-400" />
+          <Folder className="h-4 w-4 text-primary-500 dark:text-primary-400" />
         )}
         <span className="font-medium">{name}</span>
       </button>
 
       {hasChildren && isOpen && (
-        <ul className="ml-6 mt-1 space-y-1 border-l border-gray-200 dark:border-gray-700 pl-4">
+        <ul className="ml-6 mt-1 space-y-1 border-l border-ink-200 dark:border-ink-700 pl-4">
           {children}
         </ul>
       )}
@@ -102,14 +102,14 @@ function FileNodeComponent({ name, highlight = false, className }: FileNodeProps
     <li
       className={cn(
         'flex items-center gap-2 py-1 px-2 -ml-2 rounded-md',
-        highlight && 'bg-claude-100/50 dark:bg-claude-900/30',
+        highlight && 'bg-primary-100/50 dark:bg-primary-900/30',
         'text-gray-600 dark:text-gray-400',
         className
       )}
     >
       <span className="w-3" /> {/* Spacer to align with folders */}
       {getFileIcon(name)}
-      <span className={cn(highlight && 'text-claude-700 dark:text-claude-300 font-medium')}>
+      <span className={cn(highlight && 'text-primary-700 dark:text-primary-300 font-medium')}>
         {name}
       </span>
     </li>

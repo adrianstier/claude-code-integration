@@ -92,8 +92,8 @@ export default function TableOfContents({ className }: TableOfContentsProps) {
                 'block py-1 transition-colors border-l-2 -ml-px',
                 heading.level === 3 ? 'pl-6' : 'pl-4',
                 activeId === heading.id
-                  ? 'border-claude-500 text-claude-600 dark:text-claude-400 font-medium'
-                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400 font-medium'
+                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'
               )}
             >
               {heading.text}

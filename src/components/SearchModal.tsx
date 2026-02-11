@@ -195,6 +195,55 @@ const searchItems: SearchItem[] = [
     category: 'Learning Tracks',
     icon: <Brain className="h-4 w-4" />,
   },
+  {
+    title: 'Multi-Agent Architectures',
+    description: 'Design and build systems with multiple collaborating agents',
+    href: '/agents/multi-agent-architectures',
+    category: 'Learning Tracks',
+    icon: <Brain className="h-4 w-4" />,
+  },
+  {
+    title: 'MCP Integration',
+    description: 'Connect Claude to databases, APIs, and external tools with Model Context Protocol',
+    href: '/mcp',
+    category: 'Learning Tracks',
+    icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'MCP Fundamentals',
+    description: 'Core concepts of the Model Context Protocol',
+    href: '/mcp/mcp-fundamentals',
+    category: 'Learning Tracks',
+    icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'Essential MCP Servers',
+    description: 'Must-know MCP servers for common workflows',
+    href: '/mcp/essential-servers',
+    category: 'Learning Tracks',
+    icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'Building Custom MCPs',
+    description: 'Create your own MCP servers for custom integrations',
+    href: '/mcp/building-custom-mcps',
+    category: 'Learning Tracks',
+    icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'MCP Workflows & Troubleshooting',
+    description: 'Real-world MCP workflows and debugging common issues',
+    href: '/mcp/workflows-and-troubleshooting',
+    category: 'Learning Tracks',
+    icon: <Server className="h-4 w-4" />,
+  },
+  {
+    title: 'Skills',
+    description: 'Create and manage custom Claude Code skills and slash commands',
+    href: '/advanced-topics/skills',
+    category: 'Advanced',
+    icon: <FileText className="h-4 w-4" />,
+  },
 ]
 
 export default function SearchModal() {
@@ -365,27 +414,27 @@ export default function SearchModal() {
                       onMouseEnter={() => setSelectedIndex(currentIndex)}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors ${
                         isSelected
-                          ? 'bg-claude-50 dark:bg-claude-900/30 text-claude-700 dark:text-claude-300'
+                          ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
                           : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
                     >
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-lg ${
                           isSelected
-                            ? 'bg-claude-100 dark:bg-claude-800/50 text-claude-600 dark:text-claude-400'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                            ? 'bg-primary-100 dark:bg-primary-800/50 text-primary-600 dark:text-primary-400'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'
                         }`}
                       >
                         {item.icon}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{item.title}</div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                        <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
                           {item.description}
                         </div>
                       </div>
                       {isSelected && (
-                        <ArrowRight className="h-4 w-4 text-claude-500" />
+                        <ArrowRight className="h-4 w-4 text-primary-500" />
                       )}
                     </button>
                   )

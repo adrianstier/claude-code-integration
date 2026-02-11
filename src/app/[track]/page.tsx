@@ -35,6 +35,8 @@ import {
   trackMetadata as trackSeoMetadata,
 } from '@/lib/metadata'
 
+export const revalidate = 3600
+
 // Track-specific FAQs for rich snippets
 const trackFaqs: Record<string, { question: string; answer: string }[]> = {
   'start-here': [

@@ -38,9 +38,9 @@ export default function CodeBlock({
     string,
     { color: string; label: string; icon?: 'terminal' | 'file' }
   > = {
-    bash: { color: 'bg-gray-700', label: 'Bash', icon: 'terminal' },
-    shell: { color: 'bg-gray-700', label: 'Shell', icon: 'terminal' },
-    zsh: { color: 'bg-gray-700', label: 'Zsh', icon: 'terminal' },
+    bash: { color: 'bg-ink-700', label: 'Bash', icon: 'terminal' },
+    shell: { color: 'bg-ink-700', label: 'Shell', icon: 'terminal' },
+    zsh: { color: 'bg-ink-700', label: 'Zsh', icon: 'terminal' },
     javascript: { color: 'bg-yellow-600', label: 'JavaScript', icon: 'file' },
     js: { color: 'bg-yellow-600', label: 'JavaScript', icon: 'file' },
     typescript: { color: 'bg-blue-600', label: 'TypeScript', icon: 'file' },
@@ -50,12 +50,12 @@ export default function CodeBlock({
     python: { color: 'bg-blue-500', label: 'Python', icon: 'file' },
     py: { color: 'bg-blue-500', label: 'Python', icon: 'file' },
     r: { color: 'bg-blue-700', label: 'R', icon: 'file' },
-    json: { color: 'bg-gray-600', label: 'JSON', icon: 'file' },
+    json: { color: 'bg-ink-600', label: 'JSON', icon: 'file' },
     css: { color: 'bg-purple-600', label: 'CSS', icon: 'file' },
     scss: { color: 'bg-pink-600', label: 'SCSS', icon: 'file' },
     html: { color: 'bg-orange-600', label: 'HTML', icon: 'file' },
-    markdown: { color: 'bg-gray-600', label: 'Markdown', icon: 'file' },
-    md: { color: 'bg-gray-600', label: 'Markdown', icon: 'file' },
+    markdown: { color: 'bg-ink-600', label: 'Markdown', icon: 'file' },
+    md: { color: 'bg-ink-600', label: 'Markdown', icon: 'file' },
     yaml: { color: 'bg-red-600', label: 'YAML', icon: 'file' },
     yml: { color: 'bg-red-600', label: 'YAML', icon: 'file' },
     sql: { color: 'bg-orange-700', label: 'SQL', icon: 'file' },
@@ -65,12 +65,12 @@ export default function CodeBlock({
     java: { color: 'bg-red-700', label: 'Java', icon: 'file' },
     c: { color: 'bg-blue-800', label: 'C', icon: 'file' },
     cpp: { color: 'bg-blue-800', label: 'C++', icon: 'file' },
-    plaintext: { color: 'bg-gray-600', label: 'Text', icon: 'file' },
-    text: { color: 'bg-gray-600', label: 'Text', icon: 'file' },
+    plaintext: { color: 'bg-ink-600', label: 'Text', icon: 'file' },
+    text: { color: 'bg-ink-600', label: 'Text', icon: 'file' },
   }
 
   const config = languageConfig[language.toLowerCase()] || {
-    color: 'bg-gray-700',
+    color: 'bg-ink-700',
     label: language,
     icon: 'file' as const,
   }
@@ -82,7 +82,7 @@ export default function CodeBlock({
   const shouldShowLineNumbers = showLineNumbers || lines.length >= 5
 
   return (
-    <div className="group my-6 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm transition-all hover:shadow-md">
+    <div className="group my-6 overflow-hidden rounded-xl border border-ink-200 dark:border-ink-700 bg-white dark:bg-ink-900 shadow-sm transition-all hover:shadow-md">
       {/* Header */}
       <div
         className={cn(
@@ -143,7 +143,7 @@ export default function CodeBlock({
       </div>
 
       {/* Code Content */}
-      <div className="relative bg-gray-950 dark:bg-gray-950">
+      <div className="relative bg-ink-950 dark:bg-ink-950">
         <pre className="overflow-x-auto p-0 text-sm">
           <code className={`language-${language} block`}>
             {lines.map((line, index) => {
@@ -156,15 +156,15 @@ export default function CodeBlock({
                   className={cn(
                     'flex',
                     isHighlighted &&
-                      'bg-claude-500/10 border-l-2 border-claude-500'
+                      'bg-primary-500/10 border-l-2 border-primary-500'
                   )}
                 >
                   {shouldShowLineNumbers && (
                     <span
                       className={cn(
-                        'flex-shrink-0 select-none px-4 py-0.5 text-right text-gray-500',
-                        'border-r border-gray-800 w-12',
-                        isHighlighted && 'text-claude-400'
+                        'flex-shrink-0 select-none px-4 py-0.5 text-right text-ink-500',
+                        'border-r border-ink-800 w-12',
+                        isHighlighted && 'text-primary-400'
                       )}
                       aria-hidden="true"
                     >
@@ -173,7 +173,7 @@ export default function CodeBlock({
                   )}
                   <span
                     className={cn(
-                      'flex-1 px-4 py-0.5 text-gray-100',
+                      'flex-1 px-4 py-0.5 text-ink-100',
                       !shouldShowLineNumbers && 'px-6'
                     )}
                   >
@@ -188,8 +188,8 @@ export default function CodeBlock({
 
       {/* Caption */}
       {caption && (
-        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-4 py-2">
-          <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+        <div className="border-t border-ink-200 dark:border-ink-700 bg-gray-50 dark:bg-ink-800/50 px-4 py-2">
+          <p className="text-xs text-ink-500 dark:text-ink-400 text-center">
             {caption}
           </p>
         </div>

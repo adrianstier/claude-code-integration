@@ -61,7 +61,7 @@ export default function KeyboardShortcut({ keys, className }: KeyboardShortcutPr
             {getKeyDisplay(key)}
           </kbd>
           {index < parsedKeys.length - 1 && (
-            <span className="mx-0.5 text-gray-400 dark:text-gray-500 text-xs">+</span>
+            <span className="mx-0.5 text-gray-600 dark:text-gray-500 text-xs">+</span>
           )}
         </span>
       ))}

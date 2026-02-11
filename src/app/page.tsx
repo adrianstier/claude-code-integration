@@ -16,6 +16,7 @@ import {
   Keyboard,
   Play,
   Users,
+  Server,
 } from 'lucide-react'
 import { siteConfig, generateFAQSchema } from '@/lib/metadata'
 
@@ -133,6 +134,19 @@ const learningTracks = [
     tagColor: 'bg-cobalt-100 dark:bg-cobalt-900/40 text-cobalt-700 dark:text-cobalt-300',
   },
   {
+    title: 'Git & GitHub',
+    description: 'Learn version control with Git and collaboration with GitHub',
+    href: '/git-github',
+    icon: GitBranch,
+    gradient: 'from-cobalt-500 to-sage-500',
+    bgColor: 'bg-cobalt-50 dark:bg-cobalt-950/30',
+    borderColor: 'border-cobalt-200 dark:border-cobalt-800',
+    iconBg: 'bg-cobalt-100 dark:bg-cobalt-900/50',
+    duration: '3-4 hours',
+    tag: 'Essential',
+    tagColor: 'bg-sage-100 dark:bg-sage-900/40 text-sage-700 dark:text-sage-300',
+  },
+  {
     title: 'App Builder',
     description: 'Build and deploy small web apps and APIs with Claude as your co-developer',
     href: '/app-builder',
@@ -142,7 +156,7 @@ const learningTracks = [
     borderColor: 'border-plum-200 dark:border-plum-800',
     iconBg: 'bg-plum-100 dark:bg-plum-900/50',
     duration: 'Coming Soon',
-    tag: 'Preview',
+    tag: 'Coming Soon',
     tagColor: 'bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-ink-400',
   },
   {
@@ -155,7 +169,7 @@ const learningTracks = [
     borderColor: 'border-amber-200 dark:border-amber-800',
     iconBg: 'bg-amber-100 dark:bg-amber-900/50',
     duration: 'Coming Soon',
-    tag: 'Preview',
+    tag: 'Coming Soon',
     tagColor: 'bg-ink-100 dark:bg-ink-800 text-ink-500 dark:text-ink-400',
   },
   {
@@ -170,6 +184,19 @@ const learningTracks = [
     duration: '8-10 hours',
     tag: 'Advanced',
     tagColor: 'bg-sage-100 dark:bg-sage-900/40 text-sage-700 dark:text-sage-300',
+  },
+  {
+    title: 'MCP Integration',
+    description: 'Connect Claude to databases, APIs, and external tools with Model Context Protocol',
+    href: '/mcp',
+    icon: Server,
+    gradient: 'from-plum-500 to-cobalt-500',
+    bgColor: 'bg-plum-50 dark:bg-plum-950/30',
+    borderColor: 'border-plum-200 dark:border-plum-800',
+    iconBg: 'bg-plum-100 dark:bg-plum-900/50',
+    duration: '4-6 hours',
+    tag: 'New',
+    tagColor: 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300',
   },
 ]
 
@@ -306,7 +333,7 @@ export default function Home() {
             </div>
 
             {/* Track cards grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {learningTracks.map((track, index) => {
                 const Icon = track.icon
                 return (

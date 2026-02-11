@@ -45,6 +45,8 @@ import NewsletterSignup from '@/components/NewsletterSignup'
 import { ModuleProgress } from '@/components/ModuleProgress'
 import { ALL_TRACK_SLUGS, TRACK_NAMES } from '@/lib/constants'
 
+export const revalidate = 3600
+
 interface PageProps {
   params: {
     track: string

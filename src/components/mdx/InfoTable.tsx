@@ -68,6 +68,7 @@ export function InfoTable({
               {columns.map((col) => (
                 <th
                   key={col.key}
+                  scope="col"
                   className={cn(
                     'px-4 py-3 font-display font-semibold text-ink-900 dark:text-ink-100',
                     col.className
@@ -145,6 +146,7 @@ export function InfoRows({ headers, children, variant = 'default', className }: 
                   {headers.map((header, i) => (
                     <th
                       key={i}
+                      scope="col"
                       className="px-4 py-3 font-display font-semibold text-ink-900 dark:text-ink-100"
                     >
                       {header}
