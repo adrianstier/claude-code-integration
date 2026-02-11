@@ -1,0 +1,182 @@
+---
+title: 'MCP Integration'
+description: 'Connect Claude Code to databases, APIs, GitHub, and external services with the Model Context Protocol'
+order: 6
+duration: '3-4 hours'
+---
+
+# MCP Integration
+
+The Model Context Protocol (MCP) is the "USB-C port" for AI. It lets Claude Code connect directly to your databases, APIs, GitHub repos, and external services — transforming it from a coding assistant into an integrated development partner.
+
+<Diagram title="What MCP Unlocks" type="flowchart" caption="One protocol connects Claude to everything">
+{`flowchart TB
+    subgraph claude[Claude Code]
+        A[Core AI]
+    end
+
+    subgraph servers[MCP Servers]
+        B[GitHub]
+        C[PostgreSQL]
+        D[Sentry]
+        E[Web Search]
+        F[Playwright]
+        G[Memory]
+    end
+
+    A --> B
+    A --> C
+    A --> D
+    A --> E
+    A --> F
+    A --> G
+`}
+</Diagram>
+
+<Callout type="tip" title="Why This Matters">
+Without MCP, Claude can only see what you paste into the conversation. With MCP, Claude can query your database, search the web, read Sentry errors, manage GitHub PRs, and take browser screenshots — all automatically from natural language.
+</Callout>
+
+---
+
+## What You'll Learn
+
+<InfoGrid columns={2}>
+  <InfoCard
+    title="MCP Fundamentals"
+    description="How the protocol works, the three primitives, and configuration"
+  />
+  <InfoCard
+    title="Essential Servers"
+    description="Top 10 MCP servers with install commands and real examples"
+  />
+  <InfoCard
+    title="Building Custom MCPs"
+    description="Create your own servers in TypeScript or Python"
+  />
+  <InfoCard
+    title="Workflows & Troubleshooting"
+    description="Real-world patterns, security, and debugging"
+  />
+</InfoGrid>
+
+---
+
+## Prerequisites
+
+<Checklist>
+  <ChecklistItem>Completed [Start Here](/start-here) setup</ChecklistItem>
+  <ChecklistItem>Node.js 18+ installed</ChecklistItem>
+  <ChecklistItem>Comfortable running commands in Claude Code</ChecklistItem>
+</Checklist>
+
+---
+
+## Quick Start: Your First MCP Server
+
+If you want to jump in immediately, install the Context7 server — it gives Claude access to up-to-date library documentation:
+
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp@latest
+```
+
+Then ask Claude:
+
+```
+How do I set up server-side auth with Supabase in Next.js 15? use context7
+```
+
+Claude fetches the latest docs and generates accurate, current code. No more hallucinated APIs.
+
+---
+
+## Modules
+
+<Steps>
+<Step title="MCP Fundamentals">
+
+Understand the protocol architecture, the three primitives (Tools, Resources, Prompts), and how to configure MCP in Claude Code.
+
+**You'll learn:**
+- Host-Client-Server architecture
+- JSON-RPC protocol and transports
+- Configuration scopes and formats
+- Environment variable management
+
+[Read Fundamentals →](./mcp-fundamentals)
+
+</Step>
+<Step title="Essential MCP Servers">
+
+The top 10 MCP servers every developer should know — with exact install commands and real-world prompt examples.
+
+**You'll learn:**
+- GitHub, PostgreSQL, Playwright, Brave Search
+- Sentry, Filesystem, Sequential Thinking
+- Memory, Context7, Fetch, Slack
+- Recommended starter stack
+
+[Explore Servers →](./essential-servers)
+
+</Step>
+<Step title="Building Custom MCP Servers">
+
+Create your own MCP servers in TypeScript or Python when existing servers don't cover your needs.
+
+**You'll learn:**
+- TypeScript SDK walkthrough
+- Python FastMCP walkthrough
+- Testing with MCP Inspector
+- Advanced patterns (auth, caching, remote servers)
+
+[Build Custom MCPs →](./building-custom-mcps)
+
+</Step>
+<Step title="Workflows & Troubleshooting">
+
+Real-world MCP workflows, security best practices, and a comprehensive troubleshooting guide.
+
+**You'll learn:**
+- Database-driven development workflow
+- Full-stack debugging with Sentry + GitHub
+- Security checklist and threat landscape
+- Common errors and fixes
+
+[Master Workflows →](./workflows-and-troubleshooting)
+
+</Step>
+</Steps>
+
+---
+
+## MCP at a Glance
+
+<InfoTable
+  columns={[
+    { key: 'server', header: 'MCP Server' },
+    { key: 'what', header: 'What It Does' },
+    { key: 'install', header: 'Quick Install' },
+  ]}
+  rows={[
+    { server: 'GitHub', what: 'PRs, issues, code search', install: 'claude mcp add --transport http github https://api.githubcopilot.com/mcp/' },
+    { server: 'PostgreSQL', what: 'Natural language DB queries', install: 'claude mcp add postgres -- npx -y @modelcontextprotocol/server-postgres' },
+    { server: 'Playwright', what: 'Browser automation & screenshots', install: 'claude mcp add playwright -- npx @playwright/mcp@latest' },
+    { server: 'Sentry', what: 'Error tracking & debugging', install: 'claude mcp add --transport http sentry https://mcp.sentry.dev/mcp' },
+    { server: 'Context7', what: 'Live library documentation', install: 'claude mcp add context7 -- npx -y @upstash/context7-mcp@latest' },
+  ]}
+/>
+
+---
+
+## Where to Start
+
+<Callout type="info" title="Recommended Path">
+Start with **MCP Fundamentals** to understand how the protocol works. Then explore **Essential Servers** to find the right tools for your workflow. Move to **Building Custom MCPs** when existing servers don't cover your needs, and use **Workflows & Troubleshooting** as an ongoing reference.
+</Callout>
+
+[MCP Fundamentals →](./mcp-fundamentals)
+
+Or jump to specific topics:
+- [Essential Servers →](./essential-servers)
+- [Building Custom MCPs →](./building-custom-mcps)
+- [Workflows & Troubleshooting →](./workflows-and-troubleshooting)

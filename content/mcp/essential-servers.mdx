@@ -1,0 +1,500 @@
+---
+title: 'Essential MCP Servers'
+description: 'The top 10 MCP servers for developers — with install commands, configurations, and real-world prompt examples'
+order: 2
+duration: '45 minutes'
+---
+
+# Essential MCP Servers
+
+MCP servers are plugins that give Claude Code access to external tools, data sources, and services. This guide covers the 10 most essential servers with exact installation commands and real-world examples.
+
+<Callout type="info" title="How to Read This Guide">
+Every server includes two setup methods: the `claude mcp add` CLI command (fastest) and the equivalent JSON config (for `.mcp.json`). Pick whichever you prefer — they produce the same result.
+</Callout>
+
+---
+
+## Quick Reference
+
+<InfoTable
+  columns={[
+    { key: 'server', header: 'MCP Server' },
+    { key: 'what', header: 'What It Does' },
+    { key: 'best', header: 'Best For' },
+  ]}
+  rows={[
+    { server: 'GitHub', what: 'PR management, issue tracking, code search', best: 'Team development workflows' },
+    { server: 'PostgreSQL / SQLite', what: 'Natural language DB queries, schema inspection', best: 'Data analysis & debugging' },
+    { server: 'Playwright', what: 'Browser automation, screenshots, E2E testing', best: 'QA & visual verification' },
+    { server: 'Brave Search', what: 'Live web search, current documentation', best: 'Overcoming training cutoff' },
+    { server: 'Sentry', what: 'Error tracking, stack traces, root cause analysis', best: 'Production debugging' },
+    { server: 'Filesystem', what: 'Secure file read/write with directory controls', best: 'File operations outside project' },
+    { server: 'Sequential Thinking', what: 'Structured multi-step reasoning', best: 'Architecture decisions' },
+    { server: 'Memory / Context7', what: 'Persistent memory, live documentation', best: 'Long-running projects' },
+    { server: 'Fetch', what: 'URL fetching, HTML-to-markdown conversion', best: 'Reading external docs & APIs' },
+    { server: 'Slack', what: 'Read/send messages, search workspace history', best: 'Team communication' },
+  ]}
+/>
+
+---
+
+## 1. GitHub MCP
+
+**Connects Claude directly to your repositories for PR management, issue tracking, code search, and commit history.**
+
+<Callout type="tip" title="Best For">
+Teams using GitHub who want Claude to manage PRs, triage issues, review code, and automate repository workflows without leaving the terminal.
+</Callout>
+
+### Setup
+
+**CLI:**
+```bash
+claude mcp add --transport http -s user github \
+  https://api.githubcopilot.com/mcp/ \
+  -H "Authorization: Bearer YOUR_GITHUB_PAT"
+```
+
+**JSON Config:**
+```json
+{
+  "mcpServers": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    }
+  }
+}
+```
+
+<Callout type="warning" title="Personal Access Token">
+Create a GitHub PAT at **Settings > Developer Settings > Personal Access Tokens > Fine-grained tokens**. Grant `repo`, `issues`, and `pull_requests` permissions.
+</Callout>
+
+### Real-World Prompts
+
+```
+List all open PRs that need review and summarize what each one changes.
+```
+
+```
+Search our repo for files that import the deprecated legacy-auth module.
+Create an issue tracking the migration.
+```
+
+```
+Look at the last 10 commits on main. Are there any that touched both
+the API routes and database schema? Summarize the changes.
+```
+
+---
+
+## 2. PostgreSQL / Database MCPs
+
+**Query databases in plain English, inspect schemas, and analyze data.**
+
+<Callout type="tip" title="Best For">
+Data analysis, debugging production issues, understanding unfamiliar schemas, and generating reports from live data.
+</Callout>
+
+### PostgreSQL Setup
+
+**CLI:**
+```bash
+claude mcp add postgres -- \
+  npx -y @modelcontextprotocol/server-postgres \
+  "postgresql://readonly:password@localhost:5432/mydb"
+```
+
+**JSON Config:**
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://readonly:password@localhost:5432/mydb"
+      ]
+    }
+  }
+}
+```
+
+### SQLite Setup
+
+```bash
+claude mcp add sqlite -- \
+  npx -y @modelcontextprotocol/server-sqlite \
+  /absolute/path/to/database.sqlite
+```
+
+<Callout type="warning" title="Security: Always Use Read-Only Access">
+Never connect with write credentials to production. Create a read-only user:
+
+```sql
+CREATE ROLE claude_readonly WITH LOGIN PASSWORD 'secure_password';
+GRANT CONNECT ON DATABASE mydb TO claude_readonly;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO claude_readonly;
+```
+</Callout>
+
+### Real-World Prompts
+
+```
+Show me the schema for the users and orders tables. How are they related?
+```
+
+```
+How many users signed up each month this year? Flag unusual drops.
+```
+
+```
+Find the top 10 customers by total order value in the last 90 days.
+```
+
+---
+
+## 3. Playwright (Browser Automation)
+
+**Automate browsers for screenshot verification, E2E testing, and web scraping.**
+
+<Callout type="tip" title="Best For">
+Visual verification of UI changes, automated E2E testing, web scraping, and checking deployed features.
+</Callout>
+
+### Setup
+
+```bash
+claude mcp add playwright -- npx @playwright/mcp@latest
+```
+
+```json
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+<Callout type="info" title="Puppeteer is Deprecated">
+The official `@modelcontextprotocol/server-puppeteer` package has been deprecated. Use Microsoft's Playwright MCP instead.
+</Callout>
+
+### Real-World Prompts
+
+```
+Open http://localhost:3000 and take a screenshot. Does the homepage
+look correct? Check nav, hero section, and footer.
+```
+
+```
+Navigate to the login page, fill in test@example.com / testpass123,
+click Submit, and verify we land on the dashboard.
+```
+
+```
+Open our pricing page and scrape all plan names, prices, and
+features into a markdown table.
+```
+
+---
+
+## 4. Brave Search (Web Search)
+
+**Search the live web to overcome Claude's training cutoff.**
+
+<Callout type="tip" title="Best For">
+Looking up current documentation, finding error solutions, checking latest library versions, and researching changed APIs.
+</Callout>
+
+### Setup
+
+```bash
+claude mcp add --env BRAVE_API_KEY=YOUR_KEY brave-search -- \
+  npx -y @modelcontextprotocol/server-brave-search
+```
+
+<Callout type="info" title="Getting a Brave API Key">
+Sign up at [brave.com/search/api](https://brave.com/search/api/) for a free key. The free tier includes 2,000 queries per month.
+</Callout>
+
+### Real-World Prompts
+
+```
+Search for the latest Next.js 15 app router migration guide.
+What breaking changes should I know about?
+```
+
+```
+I'm getting "Module not found: Can't resolve '@supabase/ssr'".
+Search for the current fix.
+```
+
+---
+
+## 5. Sentry (Error Tracking)
+
+**Connect Claude to your Sentry account to read error reports and correlate bugs with code changes.**
+
+<Callout type="tip" title="Best For">
+Debugging production errors, triaging by frequency and impact, and connecting stack traces to code changes.
+</Callout>
+
+### Setup
+
+```bash
+# Remote MCP with OAuth — nothing to install
+claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+```
+
+```json
+{
+  "mcpServers": {
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    }
+  }
+}
+```
+
+<Callout type="info" title="OAuth Authentication">
+Sentry uses OAuth — you will be prompted to log in via your browser the first time Claude connects. No API key needed.
+</Callout>
+
+### Real-World Prompts
+
+```
+What are the top 5 unresolved errors from the last 24 hours? Rank by frequency.
+```
+
+```
+Show the full stack trace for issue PROJ-1234. What's the likely root cause?
+```
+
+```
+Did any new errors start after yesterday's deploy?
+```
+
+---
+
+## 6. Filesystem
+
+**Secure local file operations with directory-level access controls.**
+
+<Callout type="info" title="When Do You Need This?">
+Claude Code already has built-in file access within your project. The Filesystem MCP is for accessing files **outside** your project — config files in `~/`, data in `~/Downloads`, etc.
+</Callout>
+
+### Setup
+
+```bash
+claude mcp add filesystem -- \
+  npx -y @modelcontextprotocol/server-filesystem \
+  /Users/you/Documents \
+  /Users/you/Downloads
+```
+
+<Callout type="warning" title="Limit Directory Access">
+Only grant access to directories Claude actually needs. Never add `/` or your entire home directory.
+</Callout>
+
+### Real-World Prompts
+
+```
+List all CSV files in my Downloads folder from the last week.
+```
+
+```
+Find all package.json files across ~/Documents and list which use React 18 vs 19.
+```
+
+---
+
+## 7. Sequential Thinking
+
+**Structured reasoning for complex problems — Claude thinks step-by-step with the ability to revise and branch.**
+
+<Callout type="tip" title="Best For">
+Complex architectural decisions, multi-step debugging, system design, and migration planning.
+</Callout>
+
+### Setup
+
+```bash
+claude mcp add sequential-thinking -- \
+  npx -y @modelcontextprotocol/server-sequential-thinking
+```
+
+<Callout type="info" title="You Must Ask For It">
+Claude won't automatically use sequential thinking. Say "use sequential thinking" or "think through this step by step using the sequential thinking tool."
+</Callout>
+
+### Real-World Prompts
+
+```
+Use sequential thinking to analyze whether we should migrate
+from Pages Router to App Router. Consider: codebase size,
+team familiarity, feature requirements, and migration risk.
+```
+
+```
+Use sequential thinking to debug why authentication state
+isn't persisting across page refreshes.
+```
+
+---
+
+## 8. Memory & Context7
+
+Two complementary servers for long-term memory and current documentation.
+
+### Memory (Knowledge Graph)
+
+**Persistent memory that lets Claude remember information across sessions.**
+
+```bash
+claude mcp add memory -- npx -y @modelcontextprotocol/server-memory
+```
+
+**Prompts:**
+
+```
+Remember that our project uses Supabase RLS with soft deletes,
+and we always use supabase.auth.getUser() in server components.
+```
+
+```
+What do you remember about our project's architecture?
+```
+
+### Context7 (Live Documentation)
+
+**Fetches up-to-date, version-specific documentation from official sources.**
+
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp@latest
+```
+
+<Callout type="info" title="Usage Trigger">
+Append **"use context7"** to any prompt and Claude will fetch current docs before generating code.
+</Callout>
+
+**Prompts:**
+
+```
+How do I set up server-side auth with Supabase in Next.js 15? use context7
+```
+
+```
+Show me the current API for React Query's useMutation with TypeScript. use context7
+```
+
+---
+
+## 9. Fetch
+
+**Fetch any URL and convert it to markdown — read documentation, API responses, and web pages.**
+
+```bash
+claude mcp add fetch -- npx -y @modelcontextprotocol/server-fetch
+```
+
+### Real-World Prompts
+
+```
+Fetch https://supabase.com/docs/guides/auth/server-side/nextjs
+and summarize the key setup steps.
+```
+
+```
+Fetch our API at https://api.example.com/v1/schema and generate
+TypeScript types from the JSON response.
+```
+
+---
+
+## 10. Slack
+
+**Read and send Slack messages, search workspace history.**
+
+```bash
+claude mcp add --env SLACK_BOT_TOKEN=xoxb-YOUR-TOKEN \
+  --env SLACK_TEAM_ID=T0123456789 \
+  slack -- npx -y @modelcontextprotocol/server-slack
+```
+
+<Callout type="info" title="Creating a Slack Bot Token">
+1. Create an app at [api.slack.com/apps](https://api.slack.com/apps)
+2. Add scopes: `channels:history`, `channels:read`, `chat:write`, `users:read`
+3. Install to your workspace and copy the Bot User OAuth Token (`xoxb-`)
+</Callout>
+
+### Real-World Prompts
+
+```
+Search #engineering for discussions about the database migration
+from the last week. Summarize key decisions.
+```
+
+```
+Draft a message for #team-updates summarizing what I shipped
+this week based on my recent git commits. Show me the draft first.
+```
+
+---
+
+## Managing Your Servers
+
+```bash
+claude mcp list              # List all configured servers
+claude mcp get github        # Details for a specific server
+claude mcp remove github     # Remove a server
+claude mcp add -s user fetch -- npx -y @modelcontextprotocol/server-fetch  # User scope (all projects)
+```
+
+<Callout type="tip" title="Scoping Strategy">
+Use `-s user` for servers you want everywhere (Brave Search, Memory, Fetch). Use the default local scope for project-specific servers (databases, Sentry).
+</Callout>
+
+---
+
+## Recommended Starter Stack
+
+<InfoTable
+  columns={[
+    { key: 'order', header: '#' },
+    { key: 'server', header: 'Server' },
+    { key: 'why', header: 'Why Start Here' },
+  ]}
+  rows={[
+    { order: '1', server: 'Context7', why: 'Eliminates outdated code suggestions immediately' },
+    { order: '2', server: 'Playwright', why: 'Visual verification of UI changes' },
+    { order: '3', server: 'GitHub', why: 'Automates PR and issue workflow end-to-end' },
+  ]}
+/>
+
+Then add Brave Search and Memory as your second round — and project-specific servers (Postgres, Sentry, Slack) as your workflow demands them.
+
+---
+
+## Next Steps
+
+- [Building Custom MCPs →](./building-custom-mcps) — When existing servers don't cover your needs
+- [Workflows & Troubleshooting →](./workflows-and-troubleshooting) — Combine servers into real workflows
+- [MCP Fundamentals →](./mcp-fundamentals) — Deeper protocol understanding
+
+---
+
+<Callout type="success" title="Start Small, Then Expand">
+Pick one MCP server that solves your biggest pain point. Use it for a week until it feels natural. Then add another. Within a month, you'll have Claude querying your database, verifying your UI, and managing your GitHub workflow — all from a single terminal.
+</Callout>

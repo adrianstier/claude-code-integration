@@ -122,6 +122,20 @@ export const trackMetadata: Record<
       'intelligent agents',
     ],
   },
+  mcp: {
+    title: 'MCP Integration Guide',
+    description:
+      'Master the Model Context Protocol (MCP) to connect Claude Code to databases, APIs, GitHub, and external services. Install, configure, and build custom MCP servers.',
+    keywords: [
+      'MCP servers',
+      'Model Context Protocol',
+      'Claude Code MCP',
+      'MCP integration',
+      'custom MCP server',
+      'Claude Code plugins',
+      'MCP tutorial',
+    ],
+  },
   'advanced-topics': {
     title: 'Advanced Claude Code Techniques',
     description:

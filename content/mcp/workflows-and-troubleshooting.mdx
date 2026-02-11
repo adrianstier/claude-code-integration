@@ -1,0 +1,515 @@
+---
+title: 'MCP Workflows & Troubleshooting'
+description: 'Real-world MCP workflows, security best practices, and a comprehensive troubleshooting guide'
+order: 4
+duration: '45 minutes'
+---
+
+# MCP Workflows & Troubleshooting
+
+Individual MCP servers are useful. Combining them into workflows is where the real power lives. This guide covers four battle-tested workflows, security best practices, and a comprehensive troubleshooting reference.
+
+---
+
+## Workflow 1: Database-Driven Development
+
+**MCP servers used:** PostgreSQL + GitHub
+
+The "query, investigate, fix, ship" loop — all from Claude Code.
+
+<Diagram title="Database-Driven Development" type="flowchart">
+{`flowchart LR
+    A[Query Database] --> B[Identify Issue]
+    B --> C[Find Code]
+    C --> D[Implement Fix]
+    D --> E[Create PR]
+`}
+</Diagram>
+
+### The Workflow
+
+**Step 1: Investigate with data**
+
+```
+Connect to the analytics database. Show me users who signed up
+in the last 7 days but never completed onboarding. What step
+are they dropping off at?
+```
+
+**Step 2: Find the code**
+
+```
+Based on that data, it looks like step 3 (email verification)
+has a 60% drop-off. Find the code that handles email verification
+in our codebase and look for potential issues.
+```
+
+**Step 3: Fix and ship**
+
+```
+Fix the race condition in the email verification handler.
+Write a test that reproduces the bug. Then create a PR with
+a clear description of what we found and fixed.
+```
+
+<Callout type="tip" title="Team Sharing">
+Share your database MCP config with your team via `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "analytics": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${ANALYTICS_DB_URL}"
+      }
+    }
+  }
+}
+```
+
+Each team member sets their own `ANALYTICS_DB_URL` environment variable.
+</Callout>
+
+---
+
+## Workflow 2: Full-Stack Debugging
+
+**MCP servers used:** Sentry + GitHub + Filesystem
+
+The "error to fix" pipeline for production bugs.
+
+<Diagram title="Full-Stack Debug Loop" type="flowchart">
+{`flowchart TB
+    A[Read Sentry Error] --> B[Find Related Code]
+    B --> C[Understand Root Cause]
+    C --> D[Implement Fix]
+    D --> E[Verify Fix]
+    E --> F[Create PR]
+`}
+</Diagram>
+
+### The Workflow
+
+**Step 1: Identify the error**
+
+```
+What are the top 5 unresolved Sentry errors from the last 24 hours?
+Show frequency, affected users, and stack traces.
+```
+
+**Step 2: Correlate with code**
+
+```
+The TypeError in checkout.ts looks related to the payment refactor
+from last week. Show me the recent commits that touched checkout
+and payment files.
+```
+
+**Step 3: Fix and verify**
+
+```
+I see the issue — the optional chaining was removed in commit abc123.
+Fix it, add a regression test, and create a PR that references
+the Sentry issue.
+```
+
+---
+
+## Workflow 3: Research-to-Code Pipeline
+
+**MCP servers used:** Fetch + Memory
+
+For academic and data users building API integrations.
+
+### The Workflow
+
+**Step 1: Research an API**
+
+```
+Fetch the GBIF API documentation at https://www.gbif.org/developer/summary.
+I need to understand how to query occurrence records by species and
+location. Save the key endpoints and auth patterns to memory.
+```
+
+**Step 2: Build on prior knowledge (later session)**
+
+```
+What do we know about the GBIF API from our earlier research?
+Now implement a Python function that queries coral reef species
+occurrences within a bounding box around Mo'orea.
+```
+
+**Step 3: Iterate with context**
+
+```
+The API is returning 400 errors. Fetch the error codes documentation
+and update our memory with the common error patterns. Then fix the query.
+```
+
+<Callout type="info" title="Memory MCP Architecture">
+The Memory MCP stores a knowledge graph of entities connected by typed relationships. Claude can query specific entities and their relationships, making it excellent for building domain knowledge over time.
+</Callout>
+
+---
+
+## Workflow 4: CI/CD Integration
+
+**MCP servers used:** GitHub + Shell Commands
+
+Debug failing CI without leaving the terminal.
+
+<Diagram title="CI/CD Debug Loop" type="flowchart">
+{`flowchart LR
+    A[Check CI Status] --> B{Passing?}
+    B -->|Yes| C[Done]
+    B -->|No| D[Read Failure Logs]
+    D --> E[Reproduce Locally]
+    E --> F[Fix Code]
+    F --> G[Push]
+    G --> A
+`}
+</Diagram>
+
+### The Workflow
+
+```
+Check the CI status on my current branch. If there are failures,
+show me the failing test names and error messages.
+```
+
+```
+Run just the failing test locally so we can see the full output.
+```
+
+```
+Fix the test. Run the full suite to make sure nothing else broke.
+Push when it's green.
+```
+
+---
+
+## MCP Security Best Practices
+
+Security is the most important consideration when connecting AI to real systems.
+
+<Callout type="warning" title="Security is Not Optional">
+In mid-2025, a Supabase agent running with privileged service-role access processed support tickets containing user-supplied input as commands. Attackers embedded SQL instructions that exfiltrated sensitive tokens. MCP security incidents are real.
+</Callout>
+
+### The Threat Landscape
+
+<InfoTable
+  columns={[
+    { key: 'attack', header: 'Attack Type' },
+    { key: 'how', header: 'How It Works' },
+    { key: 'defense', header: 'Primary Defense' },
+  ]}
+  rows={[
+    { attack: 'Tool Poisoning', how: 'Malicious instructions hidden in MCP tool metadata that AI models follow but humans cannot see', defense: 'Review third-party MCP source code' },
+    { attack: 'Prompt Injection', how: 'User-supplied data contains instructions the AI executes', defense: 'Least-privilege access; never use admin credentials' },
+    { attack: 'Rug Pull', how: 'MCP tool silently changes its definition after installation', defense: 'Pin MCP versions; audit tool descriptions' },
+    { attack: 'Credential Exfiltration', how: 'Malicious MCP reads environment variables or credentials', defense: 'Sandbox processes; use scoped tokens' },
+  ]}
+/>
+
+### Security Principles
+
+**1. Principle of Least Privilege**
+
+```sql
+-- GOOD: Read-only database user
+CREATE ROLE mcp_readonly WITH LOGIN PASSWORD 'secure-password';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO mcp_readonly;
+
+-- BAD: Using your admin connection string — NEVER do this
+```
+
+**2. Environment Variables for Secrets**
+
+```json
+{
+  "mcpServers": {
+    "database": {
+      "command": "npx",
+      "args": ["-y", "@bytebase/dbhub", "--dsn"],
+      "env": {
+        "DATABASE_URL": "${DB_READONLY_URL}"
+      }
+    }
+  }
+}
+```
+
+Set actual values in your shell profile (which is in `.gitignore`):
+
+```bash
+# In ~/.zshrc
+export DB_READONLY_URL="postgresql://readonly:pass@localhost:5432/myapp"
+```
+
+**3. Review Third-Party MCP Code**
+
+```bash
+# Clone and read the source before trusting it
+git clone https://github.com/some-author/some-mcp-server
+# Review: What does it access? Does it phone home?
+# Are tool descriptions honest? Does it request more permissions than needed?
+```
+
+**4. Auditing and Monitoring**
+
+```bash
+claude mcp list               # Check active servers
+claude mcp get <server-name>  # Inspect tools and permissions
+claude --mcp-debug            # Verbose MCP logging
+```
+
+### Security Checklist
+
+<InfoTable
+  columns={[
+    { key: 'check', header: 'Security Check' },
+    { key: 'status', header: 'Required' },
+  ]}
+  rows={[
+    { check: 'Read-only database connections', status: 'Always' },
+    { check: 'Environment variables for secrets', status: 'Always' },
+    { check: 'Review third-party MCP source code', status: 'Always' },
+    { check: 'Scoped API tokens (minimum permissions)', status: 'Always' },
+    { check: 'Pin MCP server versions', status: 'Recommended' },
+    { check: 'Regular credential rotation', status: 'Recommended' },
+    { check: 'Audit tool descriptions periodically', status: 'Recommended' },
+    { check: 'Container isolation for sensitive MCPs', status: 'For production' },
+  ]}
+/>
+
+---
+
+## MCP Troubleshooting Guide
+
+### Problem: Server Won't Connect
+
+This is the most common MCP issue. Follow these steps systematically:
+
+<Steps>
+<Step title="Check config file location">
+
+Claude Code reads MCP config from:
+- **Project-level:** `.mcp.json` in project root
+- **User-level:** `~/.claude.json`
+
+Claude Code does **NOT** read servers from `~/.claude/settings.json`.
+
+```bash
+cat .mcp.json           # Project-level
+cat ~/.claude.json      # User-level
+```
+
+</Step>
+<Step title="Validate JSON syntax">
+
+```bash
+cat .mcp.json | python3 -m json.tool
+```
+
+Watch for trailing commas and missing quotes.
+
+</Step>
+<Step title="Use the /mcp command">
+
+Type `/mcp` in Claude Code to see which servers are connected and which failed.
+
+</Step>
+<Step title="Enable debug logging">
+
+```bash
+claude --mcp-debug
+```
+
+Shows full JSON-RPC message exchange.
+
+</Step>
+<Step title="Test the server directly">
+
+```bash
+npx -y @bytebase/dbhub --dsn "postgresql://readonly:pass@localhost:5432/mydb"
+# If this crashes, the problem is the server, not Claude Code
+```
+
+</Step>
+</Steps>
+
+### Problem: Error -32000 "Connection Closed"
+
+The most common runtime error — the transport lost the connection.
+
+<InfoTable
+  columns={[
+    { key: 'cause', header: 'Cause' },
+    { key: 'fix', header: 'Fix' },
+  ]}
+  rows={[
+    { cause: 'Server writes to stdout', fix: 'Use console.error() instead of console.log()' },
+    { cause: 'Node.js version mismatch', fix: 'Some MCPs need Node 18+. Check with node --version' },
+    { cause: 'Server crashes on startup', fix: 'Run the server command manually to see the error' },
+    { cause: 'Missing environment variables', fix: 'Ensure env vars are set in your shell profile' },
+  ]}
+/>
+
+<Callout type="warning" title="The stdout Trap">
+The #1 cause of error -32000: an MCP server using `console.log()` instead of `console.error()`. MCP's stdio transport uses stdout exclusively for JSON-RPC messages. Any non-protocol output corrupts the stream and kills the connection.
+</Callout>
+
+### Problem: Server Loses Connection Mid-Session
+
+```bash
+# Restart without restarting Claude Code
+claude mcp restart <server-name>
+
+# Or restart all
+claude mcp restart
+```
+
+### Quick Diagnostic Checklist
+
+<Steps>
+<Step title="Verify config location">
+Is config in `.mcp.json` or `~/.claude.json`? Not `~/.claude/settings.json`.
+</Step>
+<Step title="Validate JSON">
+`python3 -m json.tool < .mcp.json`
+</Step>
+<Step title="Check /mcp status">
+Run `/mcp` — are servers connected?
+</Step>
+<Step title="Test server manually">
+Run the MCP command directly. Does it start?
+</Step>
+<Step title="Check env vars">
+`env | grep YOUR_VAR`
+</Step>
+<Step title="Enable debug mode">
+`claude --mcp-debug`
+</Step>
+<Step title="Isolate the problem">
+Disable all but one server. Add back one at a time.
+</Step>
+</Steps>
+
+---
+
+## Performance & Cost Considerations
+
+### API Rate Limits
+
+<InfoTable
+  columns={[
+    { key: 'server', header: 'MCP Server' },
+    { key: 'concern', header: 'Rate Limit' },
+    { key: 'mitigation', header: 'Mitigation' },
+  ]}
+  rows={[
+    { server: 'GitHub', concern: '5,000 requests/hour', mitigation: 'Cache repo data; batch operations' },
+    { server: 'Slack', concern: 'Tier-based rate limits', mitigation: 'Avoid polling; use targeted queries' },
+    { server: 'Sentry', concern: 'Org-level limits', mitigation: 'Query specific issues, not broad searches' },
+    { server: 'Postgres', concern: 'Connection pool exhaustion', mitigation: 'Use read replicas; set statement timeout' },
+  ]}
+/>
+
+### Context Window Costs
+
+Every MCP tool call adds tokens to the conversation:
+
+- **Tool descriptions loaded at start:** ~500-2,000 tokens per server
+- **Each tool call result:** Variable (100-10,000+ tokens)
+
+<Callout type="tip" title="Fewer Servers = Better Performance">
+AI performance degrades as tool count increases. Connect only the servers you need for the current task rather than loading everything at once.
+</Callout>
+
+### When NOT to Use an MCP
+
+<InfoTable
+  columns={[
+    { key: 'scenario', header: 'Scenario' },
+    { key: 'simpler', header: 'Simpler Alternative' },
+  ]}
+  rows={[
+    { scenario: 'Read a single API response', simpler: 'Paste the curl output into the conversation' },
+    { scenario: 'Check one database value', simpler: 'Run the query in terminal, paste the result' },
+    { scenario: 'Simple file operations', simpler: 'Claude Code has built-in file access' },
+    { scenario: 'One-off git operations', simpler: 'Claude Code has built-in git and gh CLI' },
+  ]}
+/>
+
+<Callout type="info" title="The MCP Decision Rule">
+Use an MCP when you need **repeated, automated access** to an external resource. If you only need something once, pasting it into the conversation is faster.
+</Callout>
+
+---
+
+## The MCP Ecosystem in 2026
+
+### Adoption
+
+- **97M+ monthly SDK downloads** across Python and TypeScript
+- Backed by **Anthropic, OpenAI, Google, and Microsoft**
+- Integrated into **VS Code, Cursor, Windsurf, Replit**, and most AI IDEs
+- Governed by the **Agentic AI Foundation** (Linux Foundation)
+
+### Server Discovery
+
+- [GitHub MCP Registry](https://github.com/modelcontextprotocol/servers) — Official collection
+- [mcp.so](https://mcp.so) — Community directory with search
+- [PulseMCP](https://www.pulsemcp.com) — Curated directory with stats
+- [Smithery.ai](https://smithery.ai) — 2,200+ servers, marketplace-style
+
+### Emerging Patterns
+
+- **Multi-agent MCP workflows** — Multiple Claude instances sharing servers
+- **MCP gateways** — Proxy layers adding auth, rate limiting, and caching
+- **Multimodal MCP** — 2026 roadmap includes images, audio, video as resource types
+- **Policy-as-Code** — OPA-style rules controlling what tools can be called
+
+---
+
+## Essential Commands Reference
+
+<InfoTable
+  columns={[
+    { key: 'command', header: 'Command' },
+    { key: 'description', header: 'What It Does' },
+  ]}
+  rows={[
+    { command: 'claude mcp add', description: 'Add a new MCP server' },
+    { command: 'claude mcp list', description: 'List all configured servers' },
+    { command: 'claude mcp get <name>', description: 'Show details for a specific server' },
+    { command: 'claude mcp remove <name>', description: 'Remove a server' },
+    { command: 'claude mcp restart', description: 'Restart MCP servers' },
+    { command: '/mcp', description: 'Interactive status and auth in Claude Code' },
+    { command: 'claude --mcp-debug', description: 'Verbose MCP logging' },
+  ]}
+/>
+
+---
+
+## Next Steps
+
+1. **Pick one workflow** from this page that matches a real problem
+2. **Set up the MCP servers** needed for that workflow
+3. **Run through it** end-to-end, noting friction
+4. **Share `.mcp.json`** with your team
+5. **Review security** — read-only credentials and environment variables
+
+**Related Topics:**
+- [Essential MCP Servers →](./essential-servers) — Server installation reference
+- [Building Custom MCPs →](./building-custom-mcps) — Create your own
+- [MCP Fundamentals →](./mcp-fundamentals) — Protocol deep-dive
+
+---
+
+<Callout type="success" title="From Tools to Workflows">
+The real power of MCP is composing multiple servers into workflows that handle entire tasks. Start with one server that solves a genuine pain point. Use it for a week. Then add a second and connect them. That is how production MCP usage develops — incrementally, driven by real needs.
+</Callout>

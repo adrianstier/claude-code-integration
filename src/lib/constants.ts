@@ -19,6 +19,7 @@ export const TRACKS = {
   AUTOMATION: 'automation',
   GIT_GITHUB: 'git-github',
   AGENTS: 'agents',
+  MCP: 'mcp',
   ADVANCED_TOPICS: 'advanced-topics',
 } as const
 
@@ -30,6 +31,7 @@ export const ALL_TRACK_SLUGS = [
   'automation',
   'git-github',
   'agents',
+  'mcp',
   'advanced-topics',
 ] as const
 
@@ -41,6 +43,7 @@ export const TRACK_NAMES: Record<string, string> = {
   'automation': 'Automation',
   'git-github': 'Git & GitHub',
   'agents': 'AI Agents',
+  'mcp': 'MCP Integration',
   'advanced-topics': 'Advanced Topics',
 }
 

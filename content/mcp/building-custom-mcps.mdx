@@ -1,0 +1,605 @@
+---
+title: 'Building Custom MCP Servers'
+description: 'Create your own MCP servers in TypeScript or Python to connect Claude Code to any tool or data source'
+order: 3
+duration: '60 minutes'
+---
+
+# Building Custom MCP Servers
+
+When existing MCP servers don't cover your needs — a proprietary API, internal tool, or domain-specific data source — you can build your own. A basic MCP server takes about 100 lines of code.
+
+<Callout type="tip" title="Build vs. Browse">
+Before building, check the MCP directories: [mcp.so](https://mcp.so), [Smithery.ai](https://smithery.ai), and the [awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers) list. Someone may have already built what you need.
+</Callout>
+
+---
+
+## When to Build a Custom MCP
+
+You should build when:
+
+- Your team has a **proprietary API** or internal tool that no public MCP covers
+- You need **domain-specific logic** (e.g., coral reef data processing, lab equipment control)
+- You want to **compose multiple data sources** into a single, focused interface
+- Existing MCPs are **too broad** — you need a curated subset of capabilities
+
+You should browse instead when:
+
+- A well-maintained community server already exists
+- The integration is standard (GitHub, Postgres, Slack, etc.)
+- You need something quickly without custom logic
+
+---
+
+## MCP Core Concepts
+
+Every MCP server can expose three types of capabilities:
+
+<InfoTable
+  columns={[
+    { key: 'primitive', header: 'Primitive' },
+    { key: 'what', header: 'What It Does' },
+    { key: 'analogy', header: 'Web Analogy' },
+  ]}
+  rows={[
+    { primitive: 'Tools', what: 'Functions the AI can call to perform actions', analogy: 'POST endpoints (actions with side effects)' },
+    { primitive: 'Resources', what: 'Read-only data for context', analogy: 'GET endpoints (information retrieval)' },
+    { primitive: 'Prompts', what: 'User-selectable message templates', analogy: 'Form templates with pre-filled fields' },
+  ]}
+/>
+
+---
+
+## Part 1: TypeScript MCP Server
+
+### Step 1: Project Setup
+
+```bash
+mkdir project-metrics-mcp
+cd project-metrics-mcp
+npm init -y
+npm install @modelcontextprotocol/sdk zod
+npm install -D typescript @types/node
+```
+
+Create `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Node16",
+    "moduleResolution": "Node16",
+    "outDir": "./build",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"]
+}
+```
+
+Update `package.json`:
+
+```json
+{
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js"
+  }
+}
+```
+
+### Step 2: Implementation
+
+Create `src/index.ts`:
+
+```typescript
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+
+// Configuration from environment
+const API_URL = process.env.METRICS_API_URL || "https://api.example.com";
+const API_KEY = process.env.METRICS_API_KEY || "";
+
+// Helper for API calls
+async function apiFetch<T>(endpoint: string): Promise<T | null> {
+  try {
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        Accept: "application/json",
+      },
+    });
+    if (!response.ok) {
+      console.error(`API error: ${response.status}`);
+      return null;
+    }
+    return (await response.json()) as T;
+  } catch (error) {
+    console.error(`Fetch failed: ${error}`);
+    return null;
+  }
+}
+
+// Initialize the MCP server
+const server = new McpServer({
+  name: "project-metrics",
+  version: "1.0.0",
+});
+
+// Register a tool: list projects
+server.registerTool(
+  "list_projects",
+  {
+    description: "List all active projects with their current status",
+    inputSchema: {
+      status: z
+        .enum(["active", "completed", "archived"])
+        .optional()
+        .describe("Filter by project status"),
+    },
+  },
+  async ({ status }) => {
+    const endpoint = status ? `/projects?status=${status}` : "/projects";
+    const data = await apiFetch<{ projects: Array<{ name: string; id: string; status: string }> }>(endpoint);
+
+    if (!data) {
+      return { content: [{ type: "text" as const, text: "Failed to fetch projects." }] };
+    }
+
+    const list = data.projects
+      .map((p) => `- **${p.name}** (${p.id}) — ${p.status}`)
+      .join("\n");
+
+    return {
+      content: [{ type: "text" as const, text: `## Projects\n\n${list}` }],
+    };
+  }
+);
+
+// Register a tool: get project details
+server.registerTool(
+  "get_project_details",
+  {
+    description: "Get detailed metrics for a specific project",
+    inputSchema: {
+      project_id: z.string().describe("The project ID"),
+    },
+  },
+  async ({ project_id }) => {
+    const data = await apiFetch<Record<string, unknown>>(`/projects/${project_id}`);
+
+    if (!data) {
+      return {
+        content: [{ type: "text" as const, text: `Project ${project_id} not found.` }],
+        isError: true,
+      };
+    }
+
+    const details = Object.entries(data)
+      .map(([key, value]) => `- **${key}**: ${value}`)
+      .join("\n");
+
+    return {
+      content: [{ type: "text" as const, text: `## Project Details\n\n${details}` }],
+    };
+  }
+);
+
+// Register a resource: project summary
+server.registerResource(
+  "metrics://summary",
+  "metrics://summary",
+  {
+    description: "High-level summary of all project metrics",
+    mimeType: "text/plain",
+  },
+  async () => {
+    const data = await apiFetch<{ summary: string }>("/summary");
+    return {
+      contents: [
+        {
+          uri: "metrics://summary",
+          text: data?.summary || "Unable to fetch summary.",
+        },
+      ],
+    };
+  }
+);
+
+// Start the server
+async function main() {
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("Project Metrics MCP Server running on stdio");
+}
+
+main().catch((error) => {
+  console.error("Fatal error:", error);
+  process.exit(1);
+});
+```
+
+<Callout type="warning" title="Never Use console.log in stdio Servers">
+For stdio-based MCP servers, always use `console.error()` instead of `console.log()`. Writing to stdout corrupts the JSON-RPC messages and breaks the protocol.
+</Callout>
+
+### Step 3: Build and Register
+
+<Steps>
+<Step title="Build the server">
+
+```bash
+npm run build
+```
+
+</Step>
+<Step title="Register in Claude Code">
+
+```bash
+claude mcp add project-metrics -- node /absolute/path/to/project-metrics-mcp/build/index.js
+```
+
+Or add to your config:
+
+```json
+{
+  "mcpServers": {
+    "project-metrics": {
+      "command": "node",
+      "args": ["/absolute/path/to/project-metrics-mcp/build/index.js"],
+      "env": {
+        "METRICS_API_URL": "https://api.yourlab.edu",
+        "METRICS_API_KEY": "your-api-key-here"
+      }
+    }
+  }
+}
+```
+
+</Step>
+<Step title="Test it">
+
+```
+List all active projects.
+Get the details for project ABC-123.
+```
+
+</Step>
+</Steps>
+
+---
+
+## Part 2: Python MCP Server
+
+Python's FastMCP uses type hints and docstrings to automatically generate tool definitions — far less boilerplate than TypeScript.
+
+### Step 1: Project Setup
+
+```bash
+# Install uv if you haven't already
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create and set up the project
+uv init lab-data-mcp
+cd lab-data-mcp
+uv venv
+source .venv/bin/activate
+
+# Install dependencies
+uv add "mcp[cli]" httpx
+```
+
+### Step 2: Implementation
+
+Create `server.py`:
+
+```python
+"""Lab Data MCP Server — connects Claude to your lab's data system."""
+
+from typing import Any
+import httpx
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("lab-data")
+
+API_BASE = "https://api.yourlab.edu/v1"
+API_TOKEN = ""  # Set via environment variable
+
+
+async def api_get(endpoint: str) -> dict[str, Any] | None:
+    """Make an authenticated GET request to the lab API."""
+    headers = {"Authorization": f"Bearer {API_TOKEN}", "Accept": "application/json"}
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(f"{API_BASE}{endpoint}", headers=headers, timeout=30.0)
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            print(f"Request failed: {e}", flush=True)
+            return None
+
+
+@mcp.tool()
+async def list_datasets(project: str | None = None, limit: int = 20) -> str:
+    """List available datasets in the lab data system.
+
+    Args:
+        project: Filter by project name (optional)
+        limit: Maximum number of datasets to return (default 20)
+    """
+    endpoint = f"/datasets?limit={limit}"
+    if project:
+        endpoint += f"&project={project}"
+
+    data = await api_get(endpoint)
+    if not data or "datasets" not in data:
+        return "Unable to fetch datasets."
+
+    lines = []
+    for ds in data["datasets"]:
+        lines.append(
+            f"- **{ds['name']}** ({ds['id']})\n"
+            f"  Project: {ds.get('project', 'N/A')} | "
+            f"Rows: {ds.get('row_count', '?')}"
+        )
+    return "## Datasets\n\n" + "\n\n".join(lines)
+
+
+@mcp.tool()
+async def query_dataset(dataset_id: str, sql: str, limit: int = 100) -> str:
+    """Run a SQL query against a lab dataset.
+
+    Args:
+        dataset_id: The ID of the dataset to query
+        sql: SQL query to execute (SELECT only)
+        limit: Maximum rows to return (default 100)
+    """
+    if not sql.strip().upper().startswith("SELECT"):
+        return "Error: Only SELECT queries are allowed."
+
+    # POST the query to the API
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{API_BASE}/datasets/{dataset_id}/query",
+            json={"sql": sql, "limit": limit},
+            headers={"Authorization": f"Bearer {API_TOKEN}"},
+            timeout=30.0,
+        )
+        if not response.is_success:
+            return f"Query failed: {response.status_code}"
+        result = response.json()
+
+    columns = result.get("columns", [])
+    rows = result.get("rows", [])
+    if not rows:
+        return "Query returned no results."
+
+    header = " | ".join(columns)
+    separator = " | ".join(["---"] * len(columns))
+    body = "\n".join(" | ".join(str(cell) for cell in row) for row in rows)
+    return f"**Results** ({len(rows)} rows):\n\n{header}\n{separator}\n{body}"
+
+
+@mcp.resource("lab://projects/active")
+async def active_projects() -> str:
+    """List all currently active research projects."""
+    data = await api_get("/projects?status=active")
+    if not data:
+        return "Unable to fetch active projects."
+    return "\n".join(
+        f"{p['name']} ({p['id']}): {p.get('description', 'No description')}"
+        for p in data.get("projects", [])
+    )
+
+
+@mcp.prompt()
+def analyze_dataset(dataset_name: str) -> str:
+    """Generate a prompt for Claude to analyze a dataset.
+
+    Args:
+        dataset_name: Name of the dataset to analyze
+    """
+    return (
+        f"Please analyze the '{dataset_name}' dataset. "
+        f"List columns and types, provide summary statistics, "
+        f"identify anomalies, and suggest interesting analyses."
+    )
+
+
+def main():
+    mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    main()
+```
+
+<Callout type="tip" title="FastMCP Magic">
+Notice: no manual JSON Schema definitions. FastMCP reads your function signatures, type hints, and docstrings to automatically generate the `inputSchema` that MCP requires.
+</Callout>
+
+### Step 3: Register and Run
+
+```bash
+claude mcp add lab-data -- uv --directory /absolute/path/to/lab-data-mcp run server.py
+```
+
+---
+
+## Part 3: Testing and Debugging
+
+### The MCP Inspector
+
+The MCP Inspector is an interactive browser-based tool for testing servers without connecting to Claude.
+
+```bash
+# Inspect a TypeScript server
+npx @modelcontextprotocol/inspector node /path/to/build/index.js
+
+# Inspect a Python server
+npx @modelcontextprotocol/inspector uv --directory /path/to/server run server.py
+```
+
+The Inspector opens at `http://localhost:6274`. You can browse tools, call them with custom inputs, and inspect raw JSON-RPC messages.
+
+### Common Debugging Issues
+
+<InfoTable
+  columns={[
+    { key: 'symptom', header: 'Symptom' },
+    { key: 'cause', header: 'Likely Cause' },
+    { key: 'fix', header: 'Fix' },
+  ]}
+  rows={[
+    { symptom: 'Server not in Claude Code', cause: 'Relative path in config', fix: 'Use absolute paths. Run pwd to get full path.' },
+    { symptom: 'Tools show but calls fail', cause: 'Runtime error in handler', fix: 'Check ~/Library/Logs/Claude/mcp-server-NAME.log' },
+    { symptom: 'Parse error or garbled output', cause: 'console.log in stdio server', fix: 'Replace console.log with console.error' },
+    { symptom: 'Server connects then drops', cause: 'Unhandled exception on startup', fix: 'Wrap main() in try/catch, log to stderr' },
+    { symptom: 'Env vars not available', cause: 'Missing env in config', fix: 'Add env field to your mcpServers config' },
+  ]}
+/>
+
+### CLI-Level Debugging
+
+```bash
+# Send a raw JSON-RPC initialize request
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | node build/index.js 2>/dev/null | jq .
+```
+
+---
+
+## Part 4: Advanced Patterns
+
+### Rate Limiting and Caching
+
+For servers that call external APIs:
+
+```typescript
+const cache = new Map<string, { data: unknown; expires: number }>();
+
+function getCached<T>(key: string): T | null {
+  const entry = cache.get(key);
+  if (!entry || Date.now() > entry.expires) {
+    cache.delete(key);
+    return null;
+  }
+  return entry.data as T;
+}
+
+function setCache(key: string, data: unknown, ttlMs = 60_000): void {
+  cache.set(key, { data, expires: Date.now() + ttlMs });
+}
+```
+
+### Streamable HTTP for Remote Servers
+
+For servers that need to be accessed over the network:
+
+```typescript
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import express from "express";
+
+const app = express();
+app.use(express.json());
+
+const server = new McpServer({ name: "remote-metrics", version: "1.0.0" });
+
+// Register tools...
+
+const transport = new StreamableHTTPServerTransport({
+  sessionIdGenerator: undefined, // Stateless mode
+});
+
+app.post("/mcp", async (req, res) => {
+  await transport.handleRequest(req, res, req.body);
+});
+
+await server.connect(transport);
+app.listen(3001, () => {
+  console.error("Remote MCP server at http://localhost:3001/mcp");
+});
+```
+
+<Callout type="tip" title="stdio vs HTTP">
+Use **stdio** for local servers on your machine. Use **Streamable HTTP** for remote servers that multiple users connect to over the network.
+</Callout>
+
+---
+
+## The Community MCP Ecosystem
+
+Before building from scratch, check these directories:
+
+<InfoTable
+  columns={[
+    { key: 'directory', header: 'Directory' },
+    { key: 'size', header: 'Size' },
+    { key: 'strengths', header: 'Best For' },
+  ]}
+  rows={[
+    { directory: 'Smithery.ai', size: '2,200+ servers', strengths: 'Automated install guides, marketplace browsing' },
+    { directory: 'MCP.so', size: 'Curated hub', strengths: 'Tutorials, news, community recommendations' },
+    { directory: 'awesome-mcp-servers (GitHub)', size: '1,200+ servers', strengths: 'Quality-verified, categorized lists' },
+    { directory: 'mcpservers.org', size: 'Growing', strengths: 'Clean categorization and search' },
+    { directory: 'Official MCP Examples', size: 'Reference', strengths: 'Canonical implementations from the MCP team' },
+  ]}
+/>
+
+### Evaluating Community MCPs for Security
+
+<Steps>
+<Step title="Check the source">
+Is the code open source? Can you read every line? Avoid closed-source MCP servers.
+</Step>
+<Step title="Review permissions">
+What does the server access? A "filesystem" server that makes network requests is a red flag.
+</Step>
+<Step title="Check maintenance">
+When was the last commit? Are there open security issues?
+</Step>
+<Step title="Audit dependencies">
+Run `npm audit` or check `requirements.txt` for known vulnerabilities.
+</Step>
+</Steps>
+
+<Callout type="warning" title="MCP Servers Have Power">
+An MCP server can do anything its tools allow — read files, make network requests, execute commands. Only install servers from sources you trust. Never put secrets into a project-scoped `.mcp.json` that gets committed to version control.
+</Callout>
+
+---
+
+## Quick Reference
+
+**TypeScript key imports:**
+```typescript
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { z } from "zod";
+```
+
+**Python key imports:**
+```python
+from mcp.server.fastmcp import FastMCP
+mcp = FastMCP("your-server-name")
+```
+
+---
+
+## Next Steps
+
+- [Workflows & Troubleshooting →](./workflows-and-troubleshooting) — Put your servers to use in real workflows
+- [Essential Servers →](./essential-servers) — See what's already available
+- [MCP Fundamentals →](./mcp-fundamentals) — Protocol deep-dive
+
+---
+
+<Callout type="success" title="Build What You Need">
+Custom MCP servers are where MCP truly shines for domain-specific work. A Python FastMCP server for your lab's data API takes 30 minutes to build and gives Claude direct access to your research data across every session.
+</Callout>

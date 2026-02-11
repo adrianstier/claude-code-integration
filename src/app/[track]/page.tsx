@@ -114,6 +114,23 @@ const trackFaqs: Record<string, { question: string; answer: string }[]> = {
         'Basic programming knowledge helps, but our tutorials start from fundamentals. Claude Code assists with the complex parts, making agent development accessible.',
     },
   ],
+  mcp: [
+    {
+      question: 'What is MCP (Model Context Protocol)?',
+      answer:
+        'MCP is an open standard that connects Claude Code to external data sources and tools like databases, GitHub, web search, and more. Think of it as USB-C for AI — one universal protocol for all integrations.',
+    },
+    {
+      question: 'How do I install MCP servers in Claude Code?',
+      answer:
+        'Use the CLI command: claude mcp add <server-name> -- npx -y @package/name. You can also add servers via JSON config in .mcp.json (project) or ~/.claude.json (user). Type /mcp in Claude Code to check status.',
+    },
+    {
+      question: 'Can I build my own MCP server?',
+      answer:
+        'Yes! MCP servers can be built in TypeScript or Python using the official SDKs. A basic server takes about 100 lines of code and can expose tools, resources, and prompts to Claude.',
+    },
+  ],
   'advanced-topics': [
     {
       question: 'What are Claude Code best practices?',
@@ -192,6 +209,7 @@ export async function generateStaticParams() {
     { track: 'automation' },
     { track: 'git-github' },
     { track: 'agents' },
+    { track: 'mcp' },
     { track: 'advanced-topics' },
   ]
 }
