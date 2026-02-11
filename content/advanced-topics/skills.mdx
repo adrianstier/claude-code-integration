@@ -1,300 +1,407 @@
 ---
-title: 'Claude Skills - Custom Commands'
-description: 'Create reusable commands, project-specific automations, and powerful custom workflows'
+title: 'Claude Code Skills'
+description: 'Create reusable workflows with just-in-time loading, bundled scripts, and automatic invocation'
 order: 2
 duration: '60 minutes'
 ---
 
-# Claude Skills - Custom Commands
+# Claude Code Skills
 
-Skills turn repetitive multi-step tasks into single commands. Instead of explaining the same process every time, create a skill once and invoke it with `/your-skill-name`. This is the power user's secret weapon.
+Skills are Claude Code's reusable workflow engine. Unlike `CLAUDE.md` (which loads into every session), skills load **just-in-time** — Claude sees only the name and description until a skill is needed, then loads the full instructions on demand. This keeps your context window clean while giving Claude access to dozens of capabilities.
 
-<Diagram title="How Skills Work" type="flowchart">
+A skill can be as simple as a set of instructions or as powerful as a multi-file package with bundled scripts, templates, and reference docs.
+
+<Diagram title="How Skills Work" type="flowchart" caption="Skills load progressively — metadata first, full content only when needed">
 {`flowchart LR
-    A["/my-skill arg"] --> B[Find skill.md]
-    B --> C[Read & parse]
-    C --> D[Replace $ARGUMENTS]
-    D --> E[Execute]
+    A["Session starts"] --> B["Load skill names<br/>& descriptions<br/>(~50 tokens each)"]
+    B --> C{"Relevant to<br/>current task?"}
+    C -->|No| D["Stay unloaded"]
+    C -->|Yes| E["Load full SKILL.md<br/>+ supporting files"]
+    E --> F["Execute"]
 `}
 </Diagram>
 
-<Callout type="tip" title="Why Skills Matter">
-Every time you find yourself typing the same multi-step instructions, that's a skill waiting to be created. One well-crafted skill saves hours over weeks.
+<Callout type="tip">
+**Custom slash commands have been merged into skills.** Your existing `.claude/commands/` files keep working. Skills add optional features: a directory for supporting files, frontmatter to control invocation, and automatic loading when Claude determines a skill is relevant.
 </Callout>
 
 ---
 
 ## Quick Start
 
-### Create Your First Skill
-
-**1. Create the command file:**
+<Steps>
+<Step title="Create the skill directory">
 
 ```bash
-mkdir -p .claude/commands
+mkdir -p .claude/skills/fix-issue
 ```
 
-**2. Write the skill:**
+</Step>
+<Step title="Write SKILL.md">
 
-Create `.claude/commands/fix-issue.md`:
+Create `.claude/skills/fix-issue/SKILL.md`:
 
-```markdown
-# Fix GitHub Issue
+```yaml
+---
+name: fix-issue
+description: "Fixes a GitHub issue by reading it, locating the code, implementing a fix, and writing tests."
+---
 
-Fix issue #$ARGUMENTS from GitHub:
-1. Read the issue description and comments
+Fix GitHub issue #$ARGUMENTS:
+
+1. Read the issue description with `gh issue view $ARGUMENTS`
 2. Locate the relevant code
-3. Implement a fix with tests
-4. Create commit: "fix: Description (closes #$ARGUMENTS)"
+3. Implement a fix following project conventions
+4. Write tests covering the fix
+5. Create commit: "fix: Description (closes #$ARGUMENTS)"
 ```
 
-**3. Use it:**
+</Step>
+<Step title="Use it">
+
+Invoke directly:
 
 ```
 /fix-issue 1234
 ```
 
-Claude fixes issue #1234 end-to-end.
+Or let Claude invoke it automatically — if you say "there's a bug in issue 1234," Claude recognizes the skill's description matches and loads it.
+
+</Step>
+</Steps>
 
 ---
 
-## Types of Skills
+## Where Skills Live
 
-<Diagram title="Skill Hierarchy" type="flowchart">
-{`flowchart TB
-    A[Claude Code] --> B[Built-in Commands]
-    A --> C[Project Skills]
-    A --> D[User Skills]
-
-    B --> B1[/help, /clear, /init]
-    C --> C1[.claude/commands/]
-    D --> D1[~/.claude/commands/]
-
-    C1 --> E[Team-shared]
-    D1 --> F[Personal]
-`}
-</Diagram>
-
-### Built-in Commands
-
-Always available, highest priority:
+Where you store a skill determines who can use it:
 
 <InfoTable
   columns={[
-    { key: 'command', header: 'Command' },
-    { key: 'does', header: 'What It Does' },
-    { key: 'when', header: 'When to Use' },
+    { key: 'location', header: 'Location' },
+    { key: 'path', header: 'Path' },
+    { key: 'scope', header: 'Applies To' },
   ]}
   rows={[
-    { command: '/help', does: 'Show all commands', when: 'Discovering features' },
-    { command: '/clear', does: 'Reset conversation', when: 'Switching tasks' },
-    { command: '/init', does: 'Generate CLAUDE.md', when: 'New projects' },
-    { command: '/compact', does: 'Compress context', when: 'Long sessions' },
-    { command: '/review', does: 'AI code review', when: 'Before commits' },
-    { command: '/memory', does: 'Edit CLAUDE.md', when: 'Updating context' },
-    { command: '/permissions', does: 'Manage tools', when: 'Security config' },
+    { location: <strong>Enterprise</strong>, path: 'Managed settings', scope: 'All users in your organization' },
+    { location: <strong>Personal</strong>, path: <code>~/.claude/skills/skill-name/SKILL.md</code>, scope: 'All your projects' },
+    { location: <strong>Project</strong>, path: <code>.claude/skills/skill-name/SKILL.md</code>, scope: 'This project only' },
+    { location: <strong>Plugin</strong>, path: <code>plugin/skills/skill-name/SKILL.md</code>, scope: 'Where plugin is enabled' },
   ]}
 />
 
-### Project Skills
+**Priority** (highest to lowest): Enterprise > Personal > Project. If a skill and a legacy command (`.claude/commands/`) share the same name, the skill takes precedence.
 
-Live in your repository, shared with team:
+<Callout type="note">
+**Monorepo support**: Claude Code automatically discovers skills from nested `.claude/skills/` directories. If you're editing files in `packages/frontend/`, it also finds skills in `packages/frontend/.claude/skills/`.
+</Callout>
 
-```
-your-project/
-└── .claude/
-    └── commands/
-        ├── deploy.md        → /deploy
-        ├── fix-issue.md     → /fix-issue
-        └── git/
-            └── squash.md    → /git/squash
-```
+### Backward Compatibility
 
-### User Skills
+Your `.claude/commands/` files still work and support the same frontmatter. The mapping is straightforward:
 
-Personal commands, global across all projects:
+<InfoTable
+  columns={[
+    { key: 'old', header: 'Legacy Commands' },
+    { key: 'new', header: 'Skills' },
+  ]}
+  rows={[
+    { old: <code>.claude/commands/review.md</code>, new: <code>.claude/skills/review/SKILL.md</code> },
+    { old: <code>~/.claude/commands/standup.md</code>, new: <code>~/.claude/skills/standup/SKILL.md</code> },
+    { old: <code>.claude/commands/git/squash.md</code>, new: <code>.claude/skills/git-squash/SKILL.md</code> },
+  ]}
+/>
 
-```
-~/.claude/
-└── commands/
-    ├── standup.md          → /standup
-    ├── eod.md              → /eod
-    └── review-pr.md        → /review-pr
-```
+Both create `/review`, `/standup`, `/git-squash` and work the same way. Skills add the ability to bundle supporting files alongside `SKILL.md`.
 
 ---
 
 ## Skill Anatomy
 
-Every skill follows this structure:
+Every skill is a directory with `SKILL.md` as the entrypoint:
 
-```markdown
-# Skill Title
-
-Brief description of what this skill does.
-
-## Instructions
-
-1. First step Claude should take
-2. Second step
-3. Third step
-
-## Output Format
-
-Describe expected output format here.
-
-IMPORTANT: Critical instructions here.
-YOU MUST: Required behaviors.
-NEVER: Prohibited actions.
+```
+my-skill/
+├── SKILL.md           # Main instructions (required)
+├── template.md        # Template for Claude to fill in
+├── examples/
+│   └── sample.md      # Example output showing expected format
+└── scripts/
+    └── validate.sh    # Script Claude can execute
 ```
 
-### Using Arguments
+### SKILL.md Format
 
-Use `$ARGUMENTS` to accept input:
+Two parts: YAML frontmatter (between `---` markers) and markdown content with instructions.
 
-**`.claude/commands/create-component.md`**
-
-```markdown
-# Create React Component
-
-Create a new component named $ARGUMENTS.
-
-1. Create src/components/$ARGUMENTS/$ARGUMENTS.tsx
-2. Create src/components/$ARGUMENTS/$ARGUMENTS.test.tsx
-3. Create src/components/$ARGUMENTS/index.ts
-4. Export from src/components/index.ts
-```
-
-**Usage:**
-```
-/create-component UserProfile
-```
-
-Claude creates `UserProfile` component with tests.
-
+```yaml
+---
+name: deploy
+description: Deploy the application to production
+disable-model-invocation: true
+allowed-tools: Bash(npm *), Bash(git *)
 ---
 
-## Real-World Examples
+Deploy $ARGUMENTS to production:
 
-### Development Workflow Skills
-
-**`.claude/commands/review.md`** — Code Review
-
-```markdown
-# Code Review
-
-Review the current changes:
-
-1. Run `git diff` to see changes
-2. Analyze for:
-   - Logic errors
-   - Security vulnerabilities
-   - Performance issues
-   - Missing tests
-3. Provide feedback as:
-
-## Review Summary
-**Status:** Approved / Needs Changes
-
-### Issues Found
-- [severity] Issue description (file:line)
-
-### Suggestions
-- Improvement suggestion
-
-IMPORTANT: Be specific with line numbers.
-YOU MUST: Explain why something is an issue.
-```
-
-**`.claude/commands/deploy.md`** — Safe Deployment
-
-```markdown
-# Deploy to Production
-
-Safe deployment workflow:
-
-## Pre-flight Checks
-1. Run `git status` - working directory clean?
-2. Run `npm test` - all tests passing?
-3. Run `npm run build` - build successful?
-
-If any check fails, STOP and report.
-
-## Deploy
-1. Run `npm run deploy:prod`
-2. Wait for completion
-3. Run health checks
-
-## Verify
-1. Check production URL
-2. Verify key features work
-3. Report success/failure
+1. Run `npm test` — if any test fails, STOP
+2. Run `npm run build`
+3. Run `npm run deploy:prod`
+4. Verify the deployment succeeded
+5. Report the deployment URL
 
 IMPORTANT: Get confirmation before deploying.
 NEVER: Deploy if tests are failing.
 ```
 
-### Git Workflow Skills
+### Frontmatter Reference
 
-**`.claude/commands/git/squash.md`** — Squash Commits
+All fields are optional. Only `description` is recommended so Claude knows when to use the skill.
 
-```markdown
-# Squash Commits
+<InfoTable
+  columns={[
+    { key: 'field', header: 'Field' },
+    { key: 'description', header: 'Description' },
+    { key: 'default', header: 'Default' },
+  ]}
+  rows={[
+    { field: <code>name</code>, description: 'Display name and /slash-command. Lowercase letters, numbers, hyphens (max 64 chars). Falls back to directory name.', default: 'Directory name' },
+    { field: <code>description</code>, description: 'What the skill does and when to use it. Claude uses this to decide when to load the skill automatically.', default: 'First paragraph of content' },
+    { field: <code>argument-hint</code>, description: 'Hint shown during autocomplete. e.g. [issue-number] or [filename] [format].', default: 'None' },
+    { field: <code>disable-model-invocation</code>, description: 'Set true to prevent Claude from auto-loading this skill. User must invoke with /name.', default: 'false' },
+    { field: <code>user-invocable</code>, description: 'Set false to hide from the / menu. Use for background knowledge Claude should apply automatically.', default: 'true' },
+    { field: <code>allowed-tools</code>, description: 'Tools Claude can use without asking permission when this skill is active.', default: 'None' },
+    { field: <code>model</code>, description: 'Model to use when this skill is active.', default: 'Inherited' },
+    { field: <code>context</code>, description: 'Set to fork to run in an isolated subagent context.', default: 'Inline' },
+    { field: <code>agent</code>, description: 'Which subagent type to use when context: fork is set (Explore, Plan, general-purpose, or custom).', default: 'general-purpose' },
+    { field: <code>hooks</code>, description: 'Hooks scoped to this skill\'s lifecycle.', default: 'None' },
+  ]}
+/>
 
-Squash the last $ARGUMENTS commits:
+### Controlling Who Invokes a Skill
 
-1. Show `git log --oneline -10`
-2. Confirm the commits to squash
-3. Run `git rebase -i HEAD~$ARGUMENTS`
-4. Use 'squash' for all but first
-5. Edit commit message
-6. Show result with `git log --oneline -5`
+By default, both you and Claude can invoke any skill. Two frontmatter fields restrict this:
 
-IMPORTANT: Confirm before rebasing.
-NEVER: Squash commits already pushed.
+<InfoTable
+  columns={[
+    { key: 'setting', header: 'Frontmatter' },
+    { key: 'you', header: 'You Can Invoke' },
+    { key: 'claude', header: 'Claude Can Invoke' },
+    { key: 'context', header: 'When Loaded' },
+  ]}
+  rows={[
+    { setting: '(default)', you: 'Yes', claude: 'Yes', context: 'Description always in context, full skill loads when invoked' },
+    { setting: <code>disable-model-invocation: true</code>, you: 'Yes', claude: 'No', context: 'Description not in context, loads only when you invoke' },
+    { setting: <code>user-invocable: false</code>, you: 'No', claude: 'Yes', context: 'Description always in context, loads when Claude decides' },
+  ]}
+/>
+
+**Use `disable-model-invocation: true`** for workflows with side effects — deploy, commit, send messages. You don't want Claude deciding to deploy because your code looks ready.
+
+**Use `user-invocable: false`** for background knowledge — legacy system context, domain expertise, coding conventions. Claude should know this when relevant, but `/legacy-context` isn't a meaningful action for users.
+
+---
+
+## Arguments and Substitutions
+
+Skills support several dynamic placeholders:
+
+<InfoTable
+  columns={[
+    { key: 'variable', header: 'Variable' },
+    { key: 'description', header: 'Description' },
+    { key: 'example', header: 'Example' },
+  ]}
+  rows={[
+    { variable: <code>$ARGUMENTS</code>, description: 'All arguments passed when invoking', example: '/fix-issue 1234 → "1234"' },
+    { variable: <code>$ARGUMENTS[N]</code>, description: 'Specific argument by index (0-based)', example: '$ARGUMENTS[0] → first arg' },
+    { variable: <code>$N</code>, description: 'Shorthand for $ARGUMENTS[N]', example: '$0 → first arg, $1 → second' },
+    { variable: <code>${"${CLAUDE_SESSION_ID}"}</code>, description: 'Current session ID for logging/tracking', example: 'logs/abc123.log' },
+  ]}
+/>
+
+**Positional arguments example:**
+
+```yaml
+---
+name: migrate-component
+description: Migrate a component from one framework to another
+---
+
+Migrate the $0 component from $1 to $2.
+Preserve all existing behavior and tests.
 ```
 
-**`.claude/commands/git/branch-cleanup.md`** — Clean Old Branches
-
-```markdown
-# Branch Cleanup
-
-Clean up merged branches:
-
-1. List merged branches:
-   `git branch --merged main`
-
-2. For each branch (except main, develop):
-   - Ask for confirmation
-   - Delete with `git branch -d`
-
-3. Prune remote tracking:
-   `git remote prune origin`
-
-4. Report branches deleted
-
-IMPORTANT: Never delete main or develop.
+```
+/migrate-component SearchBar React Vue
 ```
 
-### Daily Workflow Skills
+If a skill doesn't include `$ARGUMENTS`, arguments are appended as `ARGUMENTS: <value>` automatically.
 
-**`~/.claude/commands/standup.md`** — Morning Summary
+---
 
-```markdown
-# Standup Summary
+## Types of Skills
+
+### Reference Skills (Background Knowledge)
+
+Add knowledge Claude applies to current work — conventions, patterns, style guides. These run inline alongside your conversation.
+
+```yaml
+---
+name: api-conventions
+description: API design patterns for this codebase
+user-invocable: false
+---
+
+When writing API endpoints:
+- Use RESTful naming conventions
+- Return consistent error formats using ApiResponse<T>
+- Validate all inputs with Zod schemas
+- Include authentication middleware on all routes
+```
+
+### Task Skills (Workflows)
+
+Step-by-step instructions for specific actions. Often invoked manually with `/skill-name`.
+
+```yaml
+---
+name: pr-ready
+description: Prepare changes for a pull request
+disable-model-invocation: true
+---
+
+Prepare the current branch for PR:
+
+1. Run `npm run lint` — fix any issues
+2. Run `npm test` — all must pass
+3. Run `npm run build` — must succeed
+4. Write a commit message following conventional commits
+5. Push to remote with `git push -u origin HEAD`
+6. Create PR with `gh pr create`
+
+IMPORTANT: Stop and report if any step fails.
+```
+
+---
+
+## Real-World Examples
+
+### Development Workflow
+
+**Code Review** — `.claude/skills/review/SKILL.md`:
+
+```yaml
+---
+name: review
+description: Review current changes for bugs, security issues, and code quality
+disable-model-invocation: true
+allowed-tools: Bash(git diff*), Read, Grep, Glob
+---
+
+Review the current changes:
+
+1. Run `git diff` to see all changes
+2. For each file changed, analyze for:
+   - Logic errors and edge cases
+   - Security vulnerabilities (injection, auth, secrets)
+   - Performance issues (N+1 queries, memory leaks)
+   - Missing tests for new behavior
+3. Provide feedback:
+
+## Review Summary
+**Status:** Approved / Needs Changes
+
+### Issues Found
+- **[severity]** Issue description (file:line)
+
+### Suggestions
+- Improvement suggestions
+
+IMPORTANT: Be specific with file paths and line numbers.
+YOU MUST: Explain *why* something is an issue, not just *what*.
+```
+
+**Bug Investigation** — `.claude/skills/investigate/SKILL.md`:
+
+```yaml
+---
+name: investigate
+description: Investigate a bug by understanding, reproducing, and analyzing root cause
+disable-model-invocation: true
+---
+
+Investigate: $ARGUMENTS
+
+## Understand
+1. Parse the bug description
+2. Identify expected vs actual behavior
+
+## Reproduce
+1. Find reproduction steps
+2. Add logging if needed to trace the issue
+
+## Analyze
+1. Search codebase for related code
+2. Check git history for recent changes to affected files
+3. Identify root cause
+
+## Report
+- **Behavior:** What happens
+- **Expected:** What should happen
+- **Root Cause:** Technical explanation
+- **Files Affected:** List with line numbers
+- **Proposed Fix:** Approach and risk assessment
+
+DO NOT fix yet — wait for approval.
+```
+
+### Git Workflow
+
+**Smart Commit** — `.claude/skills/commit/SKILL.md`:
+
+```yaml
+---
+name: commit
+description: Stage changes and create a well-formatted conventional commit
+disable-model-invocation: true
+---
+
+Create a commit for the current changes:
+
+1. Run `git status` and `git diff` to understand all changes
+2. Stage relevant files (not .env or credentials)
+3. Write a commit message:
+   - Type: feat/fix/refactor/docs/test/chore
+   - Scope: affected area in parentheses
+   - Subject: imperative, lowercase, no period
+   - Body: explain *why*, not *what*
+4. Create the commit
+5. Show `git log --oneline -3` to confirm
+
+Format: `type(scope): subject`
+Example: `fix(auth): handle expired refresh tokens`
+```
+
+### Daily Workflow
+
+**Standup Summary** — `~/.claude/skills/standup/SKILL.md`:
+
+```yaml
+---
+name: standup
+description: Generate a standup summary from yesterday's git activity
+disable-model-invocation: true
+---
 
 Generate standup summary:
 
-1. Check git log for yesterday's commits:
-   `git log --since="yesterday" --author="$(git config user.name)"`
-
-2. Check current branch status
-
+1. Get yesterday's commits:
+   `git log --since="yesterday" --author="$(git config user.name)" --oneline`
+2. Check current branch and status
 3. Look for any failing tests
 
-4. Generate summary:
-
-## Standup - [Today's Date]
+## Standup — [Today's Date]
 
 ### Yesterday
 - [List from commits]
@@ -303,378 +410,303 @@ Generate standup summary:
 - [Current branch/task]
 
 ### Blockers
-- [Any issues]
+- [Any issues found]
 ```
 
-**`~/.claude/commands/eod.md`** — End of Day
+### Code Generation
 
-```markdown
-# End of Day
+**API Endpoint** — `.claude/skills/api-endpoint/SKILL.md`:
 
-Wrap up the day:
+```yaml
+---
+name: api-endpoint
+description: Generate a new API endpoint following project conventions
+disable-model-invocation: true
+---
 
-1. Check for uncommitted changes
-2. If changes exist, create WIP commit:
-   `wip: [description of work in progress]`
-
-3. Generate summary:
-
-## EOD - [Date]
-
-### Completed
-- [Today's commits]
-
-### In Progress
-- [WIP items]
-
-### Tomorrow
-- [Next priorities]
-```
-
-### Investigation Skills
-
-**`.claude/commands/investigate.md`** — Bug Investigation
-
-```markdown
-# Investigate Bug
-
-Investigate: $ARGUMENTS
-
-## Understand
-1. Parse the bug description
-2. Identify expected vs actual behavior
-3. List affected components
-
-## Reproduce
-1. Find reproduction steps
-2. Locate relevant test files
-3. Add logging if needed
-
-## Analyze
-1. Search codebase for related code
-2. Check git history for recent changes
-3. Identify root cause
-
-## Report
-
-### Bug Analysis: [Title]
-
-**Behavior:** What happens
-**Expected:** What should happen
-**Root Cause:** Technical explanation
-**Files Affected:** List
-**Proposed Fix:** Approach
-**Risk:** Low/Medium/High
-
-DO NOT fix yet - wait for approval.
-```
-
-### Code Generation Skills
-
-**`.claude/commands/api-endpoint.md`** — Generate API Endpoint
-
-```markdown
-# Create API Endpoint
-
-Create endpoint for: $ARGUMENTS
+Create an API endpoint for: $ARGUMENTS
 
 ## Our Patterns
-- All inputs validated with Zod
-- All responses use ApiResponse<T>
+- Inputs validated with Zod
+- Responses use ApiResponse<T>
 - Authentication via middleware
-- Proper error handling
+- Proper error handling with status codes
 
 ## Steps
-1. Create src/app/api/$ARGUMENTS/route.ts
-2. Create request/response schemas
+1. Create src/app/api/$0/route.ts
+2. Define request/response Zod schemas
 3. Add authentication check
 4. Implement business logic
 5. Add error handling
-6. Create tests in __tests__/
-
-## Template
-```typescript
-import { NextRequest } from 'next/server'
-import { z } from 'zod'
-import { auth, ApiResponse } from '@/lib'
-
-const schema = z.object({
-  // Define schema
-})
-
-export async function GET(req: NextRequest) {
-  const session = await auth()
-  if (!session) return ApiResponse.unauthorized()
-
-  // Implementation
-  return ApiResponse.success(data)
-}
-```
+6. Create test file
 
 IMPORTANT: Follow existing patterns in src/app/api/
 ```
 
 ---
 
-## Nested Commands
+## Advanced Patterns
 
-Organize related commands in folders:
+### Dynamic Context Injection
 
-```
-.claude/commands/
-├── deploy/
-│   ├── staging.md      → /deploy/staging
-│   ├── production.md   → /deploy/production
-│   └── rollback.md     → /deploy/rollback
-├── db/
-│   ├── migrate.md      → /db/migrate
-│   ├── seed.md         → /db/seed
-│   └── reset.md        → /db/reset
-└── test/
-    ├── unit.md         → /test/unit
-    └── e2e.md          → /test/e2e
-```
+The `` !`command` `` syntax runs shell commands **before** the skill content is sent to Claude. The output replaces the placeholder, so Claude receives real data.
 
-**Benefits:**
-- Logical grouping
-- Avoid naming conflicts
-- Easier discovery
-- Team-friendly organization
-
+```yaml
+---
+name: pr-summary
+description: Summarize changes in a pull request
+context: fork
+agent: Explore
+allowed-tools: Bash(gh *)
 ---
 
-## Command Resolution
+## Pull request context
+- PR diff: !`gh pr diff`
+- PR comments: !`gh pr view --comments`
+- Changed files: !`gh pr diff --name-only`
 
-When you type `/my-command`, Claude searches:
+## Your task
+Summarize this pull request: what changed, why, and any concerns.
+```
 
-<Diagram title="Resolution Order" type="flowchart">
-{`flowchart TB
-    A["/my-command"] --> B{Built-in?}
-    B -->|Yes| C[Execute built-in]
-    B -->|No| D{Project skill?}
-    D -->|Yes| E[.claude/commands/my-command.md]
-    D -->|No| F{User skill?}
-    F -->|Yes| G[~/.claude/commands/my-command.md]
-    F -->|No| H[Command not found]
-`}
-</Diagram>
+When this skill runs, each `` !`command` `` executes immediately, output replaces the placeholder, and Claude receives the fully-rendered prompt with actual PR data.
 
-**Priority:**
-1. Built-in commands (highest)
-2. Project commands (`.claude/commands/`)
-3. User commands (`~/.claude/commands/`)
+### Running Skills in a Subagent
 
-<Callout type="warning" title="Name Conflicts">
-Don't name custom commands the same as built-ins. Built-ins always win.
+Add `context: fork` to run a skill in an isolated context. The skill content becomes the prompt driving the subagent — it won't have access to your conversation history.
+
+```yaml
+---
+name: deep-research
+description: Research a topic thoroughly across the codebase
+context: fork
+agent: Explore
+---
+
+Research $ARGUMENTS thoroughly:
+
+1. Find relevant files using Glob and Grep
+2. Read and analyze the code
+3. Map dependencies and relationships
+4. Summarize findings with specific file references
+```
+
+The `agent` field determines the execution environment. Options: `Explore`, `Plan`, `general-purpose`, or any custom subagent from `.claude/agents/`.
+
+<Callout type="warning">
+`context: fork` only makes sense for skills with explicit tasks. If your skill contains guidelines without an action (like "use these API conventions"), the subagent receives guidelines but no task and returns without meaningful output.
 </Callout>
+
+### Bundling Scripts
+
+Skills can include executable scripts for deterministic tasks. The script does the heavy lifting while Claude handles orchestration.
+
+```
+codebase-visualizer/
+├── SKILL.md
+└── scripts/
+    └── visualize.py
+```
+
+**SKILL.md:**
+
+````yaml
+---
+name: codebase-visualizer
+description: Generate an interactive tree visualization of the codebase
+allowed-tools: Bash(python *)
+---
+
+Generate an interactive HTML tree view of the project structure:
+
+```bash
+python ~/.claude/skills/codebase-visualizer/scripts/visualize.py .
+```
+
+This creates `codebase-map.html` and opens it in your browser.
+````
+
+This pattern works for any visual output: dependency graphs, test coverage reports, API documentation, or database schema diagrams.
+
+### Supporting Files
+
+Keep `SKILL.md` focused (under 500 lines) and move detailed reference material to separate files. Claude loads them only when needed.
+
+```
+api-generator/
+├── SKILL.md             # Overview and navigation
+├── reference.md         # Detailed API spec (loaded on demand)
+├── examples.md          # Example outputs
+└── templates/
+    └── route-template.ts  # Boilerplate template
+```
+
+Reference supporting files from `SKILL.md`:
+
+```markdown
+## Additional resources
+- For complete API details, see [reference.md](reference.md)
+- For usage examples, see [examples.md](examples.md)
+```
 
 ---
 
 ## Best Practices
 
-### 1. Use Descriptive Sections
+### Writing Effective Descriptions
 
-```markdown
-# Create Database Migration
+The `description` field is how Claude decides whether to load your skill. Write it like a search query match:
 
-## What This Does
-Creates a timestamped migration file...
+```yaml
+# Good — specific triggers
+description: "Fixes a GitHub issue by reading it, finding the code, and implementing a fix with tests. Use when someone mentions a bug or issue number."
 
-## Prerequisites
-- Database connection configured
-- Prisma schema updated
-
-## Steps
-1. Generate migration
-2. Review SQL
-3. Apply migration
+# Bad — too vague
+description: "Helps with issues"
 ```
 
-### 2. Include Safety Rails
+### Context Efficiency
 
-```markdown
-## Safety Checks
+- Skill descriptions use ~50 tokens each during metadata scanning
+- Full skill content loads only when invoked (typically under 5k tokens)
+- The description budget scales at 2% of the context window (fallback: 16,000 chars)
+- Override with `SLASH_COMMAND_TOOL_CHAR_BUDGET` env var if you have many skills
 
-Before proceeding:
-- Verify not on production database
-- Confirm backup exists
-- Check no active transactions
+<Callout type="tip">
+Run `/context` to check for warnings about excluded skills if you have a large skill library.
+</Callout>
 
-IMPORTANT: If any check fails, STOP.
-```
+### Structure and Safety
 
-### 3. Define Expected Output
+1. **Use sections** — Break skills into Understanding, Steps, Output Format, and Safety Checks
+2. **Include safety rails** — Add `IMPORTANT:` and `NEVER:` directives for destructive operations
+3. **Define output format** — Tell Claude exactly what the result should look like
+4. **Handle errors** — Tell Claude what to do when a step fails (stop? retry? report?)
 
-```markdown
-## Output Format
+### Invocation Control
 
-```
-Migration: [filename]
-Tables affected: [list]
-Status: Created / Failed
-Next steps: [action]
-```
-```
+- **Destructive actions** (deploy, delete, send): Use `disable-model-invocation: true`
+- **Background knowledge** (conventions, domain context): Use `user-invocable: false`
+- **General workflows** (review, research): Leave defaults — let both you and Claude invoke
 
-### 4. Handle Errors
+### Restrict Tools
 
-```markdown
-## Error Handling
+Limit what Claude can do during a skill for safety:
 
-If migration fails:
-1. Do NOT retry automatically
-2. Report exact error
-3. Suggest causes:
-   - Schema syntax error
-   - Conflicting migration
-   - Connection issue
-4. Provide recovery steps
+```yaml
+---
+name: safe-reader
+description: Read and analyze files without making changes
+allowed-tools: Read, Grep, Glob
+---
 ```
 
 ---
 
-## Testing Skills
+## Permission Control
 
-Create a test skill to verify your setup:
+Control which skills Claude can invoke through permission rules:
 
-**`.claude/commands/test-skill.md`**
+```
+# Allow only specific skills
+Skill(commit)
+Skill(review-pr *)
 
-```markdown
-# Test Skill
-
-This skill verifies custom commands work.
-
-Arguments received: $ARGUMENTS
-
-If you see this, skills are working!
-
-Respond with:
-1. Confirmation you read this
-2. The arguments received
-3. Current directory
+# Deny specific skills
+Skill(deploy *)
 ```
 
-**Test it:**
-```
-/test-skill hello world
-```
+Syntax: `Skill(name)` for exact match, `Skill(name *)` for prefix match with any arguments.
 
 ---
 
-## Sharing with Your Team
+## Sharing Skills
 
-### Commit Skills to Git
+### With Your Team
+
+Commit project skills to git:
 
 ```bash
-git add .claude/commands/
+git add .claude/skills/
 git commit -m "feat: add team workflow skills"
-git push
 ```
 
-### Document in README
+### As a Plugin
 
-```markdown
-## Custom Commands
+Package skills with other extensions in a plugin's `skills/` directory. Plugin skills use `plugin-name:skill-name` namespacing to avoid conflicts.
 
-This project includes Claude Code skills. See `.claude/commands/` for details.
-```
+### Community Skills
 
-<InfoTable
-  columns={[
-    { key: 'command', header: 'Command' },
-    { key: 'desc', header: 'Description' },
-  ]}
-  rows={[
-    { command: '/deploy', desc: 'Deploy to production' },
-    { command: '/fix-issue [n]', desc: 'Fix GitHub issue' },
-    { command: '/create-component [name]', desc: 'Create React component' },
-  ]}
-/>
+Skills follow the [Agent Skills](https://agentskills.io) open standard, which works across multiple AI tools. Browse community skills at [github.com/anthropics/skills](https://github.com/anthropics/skills).
 
 ---
 
 ## Troubleshooting
 
+### Skill Not Triggering
+
+1. Check the `description` includes keywords users would naturally say
+2. Verify the skill appears when you ask "What skills are available?"
+3. Try invoking directly with `/skill-name`
+4. Check that `disable-model-invocation` isn't set to `true`
+
+### Skill Triggers Too Often
+
+1. Make the `description` more specific
+2. Add `disable-model-invocation: true` for manual-only invocation
+
 ### Skill Not Found
 
-```
-Error: Unknown command /my-skill
-```
+- Verify `SKILL.md` exists in the skill directory
+- Check directory location (`.claude/skills/name/SKILL.md` or `~/.claude/skills/name/SKILL.md`)
+- For legacy commands: file exists in `.claude/commands/` with `.md` extension
+- Filename/directory matches the command name (kebab-case)
 
-**Check:**
-- File exists in `.claude/commands/` or `~/.claude/commands/`
-- File has `.md` extension
-- Filename matches command (kebab-case)
+### Too Many Skills Excluded
 
-### Arguments Not Working
+If Claude doesn't see all your skills, the description budget may be exceeded:
 
-Ensure you use `$ARGUMENTS`:
-
-```markdown
-# Wrong
-Process the input: [user input here]
-
-# Correct
-Process the input: $ARGUMENTS
-```
-
-### Skill Fails Mid-Execution
-
-Add more specific instructions:
-
-```markdown
-# Before (vague)
-Fix the issue.
-
-# After (specific)
-1. Read the issue description
-2. Locate the problematic code
-3. Propose a fix and wait for approval
-4. Implement only after approval
-```
+- Run `/context` to check for warnings
+- Set `SLASH_COMMAND_TOOL_CHAR_BUDGET` to a higher value
+- Shorten descriptions or consolidate related skills
 
 ---
 
 ## Quick Reference
 
-### Locations
+### Skill Directory Structure
 
-<InfoTable
-  columns={[
-    { key: 'location', header: 'Location' },
-    { key: 'command', header: 'Command' },
-    { key: 'scope', header: 'Scope' },
-  ]}
-  rows={[
-    { location: '.claude/commands/skill.md', command: '/skill', scope: 'Project' },
-    { location: '.claude/commands/dir/skill.md', command: '/dir/skill', scope: 'Project' },
-    { location: '~/.claude/commands/skill.md', command: '/skill', scope: 'Global' },
-  ]}
-/>
-
-### Template
-
-```markdown
-# Skill Name
-
-Brief description.
-
-## Instructions
-
-1. Step one
-2. Step two
-3. Step three
-
-## Output Format
-
-Expected output format.
-
-IMPORTANT: Critical rule.
-YOU MUST: Required behavior.
-NEVER: Prohibited action.
+```
+.claude/skills/my-skill/
+├── SKILL.md           # Required — main instructions
+├── reference.md       # Optional — detailed docs
+├── templates/         # Optional — boilerplate files
+├── examples/          # Optional — example outputs
+└── scripts/           # Optional — executable scripts
 ```
 
-### Keywords
+### Minimal SKILL.md Template
+
+```yaml
+---
+name: skill-name
+description: What this skill does and when to use it
+---
+
+Instructions for Claude when this skill is invoked.
+
+1. First step
+2. Second step
+3. Third step
+
+## Output Format
+Expected output format.
+
+IMPORTANT: Critical rules.
+NEVER: Prohibited actions.
+```
+
+### Keyword Directives
 
 <InfoTable
   columns={[
@@ -682,10 +714,10 @@ NEVER: Prohibited action.
     { key: 'effect', header: 'Effect' },
   ]}
   rows={[
-    { keyword: 'IMPORTANT:', effect: 'High priority' },
-    { keyword: 'YOU MUST:', effect: 'Required' },
-    { keyword: 'NEVER:', effect: 'Prohibited' },
-    { keyword: 'CRITICAL:', effect: 'Absolute' },
+    { keyword: <code>IMPORTANT:</code>, effect: 'High priority instruction' },
+    { keyword: <code>YOU MUST:</code>, effect: 'Required behavior' },
+    { keyword: <code>NEVER:</code>, effect: 'Prohibited action' },
+    { keyword: <code>CRITICAL:</code>, effect: 'Absolute requirement' },
   ]}
 />
 
@@ -693,18 +725,16 @@ NEVER: Prohibited action.
 
 ## Next Steps
 
-1. **Start simple** — Create 2-3 skills for daily tasks
-2. **Iterate** — Refine based on results
-3. **Share** — Commit for team benefit
-4. **Expand** — Add more as patterns emerge
+1. **Start with one skill** — automate something you do weekly
+2. **Test both invocation paths** — try `/skill-name` and natural language
+3. **Add supporting files** — templates and scripts for complex workflows
+4. **Share with your team** — commit to `.claude/skills/` and push
 
 **Related Topics:**
-- [Best Practices](./best-practices) — Optimize workflows
-- [MCP and Cursor](./mcp-and-cursor) — Extend capabilities
-- [Automation Track](/automation) — Automate tasks
+- [Best Practices](./best-practices) — Optimize your Claude Code workflows
+- [Multi-Agent Architectures](/agents/multi-agent-architectures) — Combine skills with subagents and teams
+- [MCP and Cursor](./mcp-and-cursor) — Extend capabilities with MCP servers
 
----
-
-<Callout type="success" title="Your Skill Library Awaits!">
-Start with one skill that automates something you do weekly. Refine it until it works perfectly. Then add another. Within a month, you'll have a personal toolkit that saves hours. That's the power of skills.
+<Callout type="success">
+Skills are the compound interest of Claude Code. Each one saves a few minutes per use, but across weeks and team members, that compounds into hours. Start with your most repeated workflow and build from there.
 </Callout>

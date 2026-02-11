@@ -1,0 +1,646 @@
+---
+title: 'Multi-Agent Architectures: Subagents & Swarms'
+description: 'Orchestrate multiple AI agents for parallel execution, specialized reviews, and complex multi-step workflows in Claude Code'
+order: 4
+duration: '45-60 min'
+prerequisites:
+  - 'Building Agents'
+  - 'Using Agents Effectively'
+---
+
+# Multi-Agent Architectures
+
+Single agents hit a ceiling. When tasks require parallel execution, specialized expertise, or cross-domain coordination, you need multiple agents working together.
+
+Claude Code supports two distinct approaches: **Custom Subagents** for isolated, specialized tasks and **Agent Teams** for fully parallel swarm orchestration. With the release of Claude Opus 4.6 — which plans more carefully, sustains agentic tasks for longer, and operates more reliably in larger codebases — multi-agent workflows are more powerful than ever.
+
+<Diagram title="Single Agent vs. Multi-Agent" type="flowchart" caption="Multi-agent systems divide work across specialized workers">
+{`flowchart LR
+    subgraph single["Single Agent"]
+        S1[Task] --> S2[Do everything]
+        S2 --> S3[Result]
+    end
+
+    subgraph multi["Multi-Agent"]
+        M1[Task] --> M2[Orchestrator]
+        M2 --> M3[Security Review]
+        M2 --> M4[Implementation]
+        M2 --> M5[Testing]
+        M3 --> M6[Combined Result]
+        M4 --> M6
+        M5 --> M6
+    end
+`}
+</Diagram>
+
+---
+
+## Custom Subagents (The Specialist)
+
+Subagents are specialized Claude instances that run within your current session but with their own isolated context window. They execute a focused task and return a summary to the parent — keeping your main conversation clean.
+
+### Why Subagents?
+
+<InfoTable
+  columns={[
+    { key: 'benefit', header: 'Benefit' },
+    { key: 'why', header: 'Why It Matters' },
+  ]}
+  rows={[
+    { benefit: <strong>Context Isolation</strong>, why: 'Each subagent works with only relevant information — no context overload' },
+    { benefit: <strong>Tool Restrictions</strong>, why: 'Limit what each subagent can access for safety and focus' },
+    { benefit: <strong>Specialization</strong>, why: 'Tailored system prompts produce better results for specific domains' },
+    { benefit: <strong>Parallel Execution</strong>, why: 'Launch multiple subagents simultaneously for independent tasks' },
+  ]}
+/>
+
+### Built-in Subagents
+
+Claude Code ships with subagents you can use immediately:
+
+<InfoTable
+  columns={[
+    { key: 'agent', header: 'Subagent' },
+    { key: 'purpose', header: 'Purpose' },
+    { key: 'tools', header: 'Available Tools' },
+  ]}
+  rows={[
+    { agent: <strong>Plan</strong>, purpose: 'Designs implementation strategies without editing code', tools: 'Read, Grep, Glob' },
+    { agent: <strong>Explore</strong>, purpose: 'Fast, read-only codebase search and analysis', tools: 'Read, Grep, Glob, LS' },
+    { agent: <strong>General-purpose</strong>, purpose: 'Research, multi-step tasks, complex searches', tools: 'All tools' },
+  ]}
+/>
+
+### Creating Custom Subagents
+
+Define subagents as markdown files. Claude Code looks in two locations:
+
+- **Global**: `~/.claude/agents/` — available in every project
+- **Project-local**: `.claude/agents/` — scoped to one codebase
+
+<Callout type="tip">
+Run `/agents` in Claude Code to launch an interactive wizard that helps you create agent files step by step.
+</Callout>
+
+#### Agent File Structure
+
+Each `.md` file uses YAML frontmatter to define the agent's identity:
+
+```markdown
+---
+name: security-audit
+description: Reviews code for vulnerabilities before committing.
+model: sonnet
+tools:
+  - Read
+  - Grep
+  - Glob
+---
+
+You are a Senior Application Security Engineer. When reviewing code:
+
+1. Check for SQL injection, XSS, and command injection risks
+2. Flag hardcoded credentials or API keys
+3. Verify proper input validation and sanitization
+4. Identify improper error handling that leaks information
+
+Report issues with severity levels: **High**, **Medium**, **Low**.
+Include the file path and line number for each finding.
+```
+
+#### Frontmatter Reference
+
+<InfoTable
+  columns={[
+    { key: 'field', header: 'Field' },
+    { key: 'required', header: 'Required' },
+    { key: 'description', header: 'Description' },
+  ]}
+  rows={[
+    { field: <code>name</code>, required: 'Yes', description: 'Identifier used to invoke the agent' },
+    { field: <code>description</code>, required: 'Yes', description: 'When and why to use this agent (shown in selection UI)' },
+    { field: <code>model</code>, required: 'No', description: 'Model override: sonnet, opus, or haiku (inherits parent by default)' },
+    { field: <code>tools</code>, required: 'No', description: 'List of allowed tools (restricts what the agent can do)' },
+  ]}
+/>
+
+#### Practical Examples
+
+**Documentation Writer** — generates docs without touching code:
+
+```markdown
+---
+name: doc-writer
+description: Generates documentation by reading code. Read-only.
+model: haiku
+tools:
+  - Read
+  - Grep
+  - Glob
+---
+
+You are a technical writer. Read the specified code and generate:
+
+1. A concise summary of what the module does
+2. Public API documentation with parameters and return types
+3. Usage examples
+
+Write in clear, jargon-free language. Target an intermediate developer audience.
+```
+
+**Test Strategist** — plans tests without running them:
+
+```markdown
+---
+name: test-strategist
+description: Analyzes code and designs comprehensive test plans.
+model: sonnet
+tools:
+  - Read
+  - Grep
+  - Glob
+---
+
+You are a QA engineer. Analyze the specified code and produce:
+
+1. A list of test cases covering happy paths, edge cases, and error scenarios
+2. Suggested test data and fixtures
+3. Integration test boundaries
+
+Do NOT write test code. Focus on what to test and why.
+```
+
+### Invoking Subagents
+
+Once defined, use subagents naturally in conversation:
+
+```
+> Use the security-audit agent to review the changes in src/auth/
+> Have the doc-writer agent document the API in src/lib/api.ts
+> Ask the test-strategist to plan tests for the checkout flow
+```
+
+Claude Code will spawn the subagent, run it with the specified tools and context, and return a summary to your main session.
+
+---
+
+## Agent Teams (The Swarm)
+
+Agent Teams, shipped as a research preview alongside Claude Opus 4.6, go far beyond subagents. Instead of a parent-child relationship, teams are **fully independent Claude Code instances** that work in parallel, message each other directly, and coordinate through a shared task list with dependency tracking.
+
+<Callout type="warning">
+Agent Teams are experimental and disabled by default. Enable them by adding `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS` to your settings or environment.
+</Callout>
+
+### Enabling Agent Teams
+
+Add the flag to your `settings.json` for persistent enablement:
+
+```json
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}
+```
+
+Or set it in your shell for a single session:
+
+```bash
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+```
+
+### Architecture
+
+An agent team has four components:
+
+<Diagram title="Agent Team Architecture" type="flowchart" caption="Lead coordinates teammates via shared task list and mailbox">
+{`flowchart TB
+    subgraph team["Agent Team"]
+        L[Team Lead]
+        T[Shared Task List]
+        M[Mailbox]
+        W1[Teammate A]
+        W2[Teammate B]
+        W3[Teammate C]
+
+        L -->|spawn & assign| W1
+        L -->|spawn & assign| W2
+        L -->|spawn & assign| W3
+        W1 <-->|claim tasks| T
+        W2 <-->|claim tasks| T
+        W3 <-->|claim tasks| T
+        W1 <-->|message| M
+        W2 <-->|message| M
+        W3 <-->|message| M
+    end
+`}
+</Diagram>
+
+<InfoTable
+  columns={[
+    { key: 'component', header: 'Component' },
+    { key: 'role', header: 'Role' },
+  ]}
+  rows={[
+    { component: <strong>Team Lead</strong>, role: 'The main Claude Code session. Creates the team, spawns teammates, coordinates work, and synthesizes results.' },
+    { component: <strong>Teammates</strong>, role: 'Separate Claude Code instances, each with their own context window. Work on assigned tasks independently.' },
+    { component: <strong>Task List</strong>, role: 'Shared queue of work items with dependency tracking. Teammates claim and complete tasks. File locking prevents race conditions.' },
+    { component: <strong>Mailbox</strong>, role: 'Messaging system for direct communication between any agents — not just back to the lead.' },
+  ]}
+/>
+
+### How Teams Differ from Subagents
+
+<InfoTable
+  columns={[
+    { key: 'feature', header: 'Feature' },
+    { key: 'subagents', header: 'Subagents' },
+    { key: 'teams', header: 'Agent Teams' },
+  ]}
+  rows={[
+    { feature: <strong>Context</strong>, subagents: 'Own context window; results return to caller', teams: 'Own context window; fully independent' },
+    { feature: <strong>Communication</strong>, subagents: 'Report results back to parent only', teams: 'Teammates message each other directly' },
+    { feature: <strong>Coordination</strong>, subagents: 'Parent manages all work', teams: 'Shared task list with self-coordination' },
+    { feature: <strong>Token cost</strong>, subagents: 'Lower — results summarized back', teams: 'Higher — each teammate is a full Claude instance' },
+    { feature: <strong>Best for</strong>, subagents: 'Focused tasks where only the result matters', teams: 'Complex work requiring discussion and collaboration' },
+  ]}
+/>
+
+<Callout type="note">
+Use subagents when you need quick, focused workers that report back. Use agent teams when teammates need to share findings, challenge each other, and coordinate on their own.
+</Callout>
+
+### Starting a Team
+
+Tell Claude to create a team and describe the structure you want in natural language. Claude spawns teammates and coordinates work based on your prompt.
+
+```
+I'm designing a CLI tool that helps developers track TODO comments
+across their codebase. Create an agent team to explore this from
+different angles: one teammate on UX, one on technical architecture,
+one playing devil's advocate.
+```
+
+You can also specify models for teammates:
+
+```
+Create a team with 4 teammates to refactor these modules in parallel.
+Use Sonnet for each teammate.
+```
+
+### The Team Workflow
+
+<Steps>
+<Step title="Initialize">
+
+The Lead receives your request, spawns teammates with specific roles, and creates a shared task list.
+
+</Step>
+<Step title="Decompose">
+
+The Lead breaks the request into a dependency graph of tasks. Blocked tasks won't become available until their dependencies complete.
+
+</Step>
+<Step title="Execute">
+
+Teammates self-claim tasks from the queue using file-locked claiming (prevents race conditions). When a teammate finishes a task, dependent tasks automatically unblock.
+
+</Step>
+<Step title="Communicate">
+
+Teammates send messages directly to each other — the Backend agent tells the Frontend agent the API contract is ready, without routing through the Lead.
+
+</Step>
+<Step title="Converge">
+
+The Lead collects results, synthesizes findings, and presents a unified summary.
+
+</Step>
+</Steps>
+
+### Display Modes
+
+<InfoTable
+  columns={[
+    { key: 'mode', header: 'Mode' },
+    { key: 'description', header: 'What You See' },
+    { key: 'interaction', header: 'How You Interact' },
+    { key: 'setup', header: 'Requirements' },
+  ]}
+  rows={[
+    { mode: <strong>In-Process</strong>, description: 'All teammates run inside your main terminal', interaction: 'Shift+Up/Down to select teammates, type to message', setup: 'Any terminal (default)' },
+    { mode: <strong>Split Panes</strong>, description: 'Each teammate gets its own visible pane', interaction: 'Click into a pane to interact directly', setup: 'tmux or iTerm2' },
+  ]}
+/>
+
+The default is `"auto"` — split panes if you're inside tmux, in-process otherwise. Override in `settings.json`:
+
+```json
+{
+  "teammateMode": "in-process"
+}
+```
+
+Or per-session:
+
+```bash
+claude --teammate-mode in-process
+```
+
+### Delegate Mode
+
+By default, the Lead sometimes starts implementing tasks itself instead of waiting for teammates. **Delegate mode** restricts the Lead to coordination-only: spawning, messaging, shutting down teammates, and managing tasks.
+
+Press **Shift+Tab** to toggle delegate mode after starting a team.
+
+This is useful when you want the Lead to focus entirely on orchestration — breaking down work, assigning tasks, and synthesizing results — without touching code directly.
+
+### Requiring Plan Approval
+
+For risky tasks, you can require teammates to plan before implementing. The teammate works in read-only plan mode until the Lead approves:
+
+```
+Spawn an architect teammate to refactor the authentication module.
+Require plan approval before they make any changes.
+```
+
+When a teammate finishes planning, it sends a plan approval request to the Lead. The Lead reviews and either approves (teammate begins implementation) or rejects with feedback (teammate revises and resubmits).
+
+Influence the Lead's judgment with criteria:
+
+```
+Only approve plans that include test coverage.
+Reject plans that modify the database schema.
+```
+
+### Talking to Teammates Directly
+
+Each teammate is a full, independent Claude Code session. You can message any teammate without going through the Lead:
+
+- **In-process mode**: Shift+Up/Down to select, type to message. Press Enter to view a session, Escape to interrupt. Press Ctrl+T to toggle the task list.
+- **Split-pane mode**: Click into a teammate's pane to interact directly.
+
+### Quality Gates with Hooks
+
+Use hooks to enforce rules when teammates finish work:
+
+- **`TeammateIdle`**: Runs when a teammate is about to go idle. Exit with code 2 to send feedback and keep the teammate working.
+- **`TaskCompleted`**: Runs when a task is being marked complete. Exit with code 2 to prevent completion and send feedback.
+
+### Cleaning Up
+
+When you're done, ask the Lead to clean up:
+
+```
+Clean up the team
+```
+
+This removes shared team resources. The Lead checks for active teammates and fails if any are still running — shut them down first:
+
+```
+Ask the researcher teammate to shut down
+```
+
+<Callout type="warning">
+Always use the Lead to clean up. Teammates should not run cleanup because their team context may not resolve correctly.
+</Callout>
+
+### Known Limitations
+
+Be aware of these current constraints:
+
+- **No session resumption**: `/resume` and `/rewind` don't restore in-process teammates. After resuming, tell the Lead to spawn new teammates.
+- **Task status can lag**: Teammates sometimes fail to mark tasks as completed, blocking dependents. Check manually if a task appears stuck.
+- **One team per session**: Clean up the current team before starting a new one.
+- **No nested teams**: Teammates cannot spawn their own teams. Only the Lead manages the team.
+- **Lead is fixed**: The session that creates the team is the Lead for its lifetime.
+- **Permissions set at spawn**: All teammates start with the Lead's permission mode. You can change individual modes after spawning.
+- **Split panes require tmux or iTerm2**: Not supported in VS Code's integrated terminal, Windows Terminal, or Ghostty.
+
+---
+
+## When to Use Which
+
+Agent teams add coordination overhead and use significantly more tokens than a single session. They work best when teammates can operate independently. For sequential tasks, same-file edits, or work with many dependencies, a single session or subagents are more effective.
+
+<Diagram title="Which Architecture?" type="flowchart" caption="Pick the simplest approach that works">
+{`flowchart TB
+    A{Is the task<br/>a single focus area?} -->|Yes| B{Does it need<br/>isolated context?}
+    A -->|No| C{Can subtasks run<br/>in parallel?}
+    B -->|Yes| D[Custom Subagent]
+    B -->|No| E[Single Agent]
+    C -->|Yes| F{Do subtasks need<br/>to communicate?}
+    C -->|No| G[Sequential Subagents]
+    F -->|Yes| H[Agent Team]
+    F -->|No| I[Parallel Subagents]
+`}
+</Diagram>
+
+### Quick Reference
+
+<InfoTable
+  columns={[
+    { key: 'scenario', header: 'Scenario' },
+    { key: 'approach', header: 'Best Approach' },
+    { key: 'why', header: 'Why' },
+  ]}
+  rows={[
+    { scenario: 'Security review of a PR', approach: 'Custom Subagent', why: 'Single focused task, read-only tools, isolated context' },
+    { scenario: 'Summarize 50 log files', approach: 'Parallel Subagents', why: 'Independent tasks, no communication needed' },
+    { scenario: 'Full-stack feature build', approach: 'Agent Team', why: 'Frontend/Backend need to coordinate on contracts' },
+    { scenario: 'Refactor + update tests', approach: 'Sequential Subagents', why: 'Tests depend on refactor completing first' },
+    { scenario: 'Bug with unclear root cause', approach: 'Agent Team', why: 'Competing hypotheses investigated in parallel, agents challenge each other' },
+    { scenario: 'Generate docs for a module', approach: 'Custom Subagent', why: 'Single task, read-only, specific output format' },
+  ]}
+/>
+
+---
+
+## Use Case Examples
+
+### Parallel Code Review
+
+A single reviewer gravitates toward one type of issue. Split review criteria into independent domains so security, performance, and test coverage all get thorough attention simultaneously:
+
+```
+Create an agent team to review PR #142. Spawn three reviewers:
+- One focused on security implications
+- One checking performance impact
+- One validating test coverage
+Have them each review and report findings.
+```
+
+Each reviewer applies a different lens. The Lead synthesizes findings across all three.
+
+### Adversarial Debugging
+
+When the root cause is unclear, a single agent finds one plausible explanation and stops looking. Making teammates explicitly adversarial fights this — each one investigates its own theory while trying to disprove the others':
+
+```
+Users report the app exits after one message instead of staying
+connected. Spawn 5 agent teammates to investigate different hypotheses.
+Have them talk to each other to try to disprove each other's theories,
+like a scientific debate. Update the findings doc with whatever
+consensus emerges.
+```
+
+The theory that survives debate is much more likely to be the actual root cause.
+
+### Cross-Layer Feature
+
+Teammates each own a separate layer without stepping on each other:
+
+```
+Build a user notifications feature. Create a team:
+- Backend teammate: API endpoints and database schema
+- Frontend teammate: notification bell component and dropdown UI
+- Testing teammate: E2E tests for the full flow
+
+Backend should message Frontend when the API contract is ready.
+Testing should wait until both are done.
+```
+
+---
+
+## Building Your First Subagent
+
+Let's create a practical subagent step by step.
+
+### Example: PR Review Agent
+
+<Steps>
+<Step title="Create the agent file">
+
+```bash
+mkdir -p .claude/agents
+```
+
+</Step>
+<Step title="Write the agent definition">
+
+Create `.claude/agents/pr-reviewer.md`:
+
+```markdown
+---
+name: pr-reviewer
+description: Reviews staged changes for bugs, security issues, and code quality.
+model: sonnet
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+---
+
+You are a senior code reviewer. Review the current staged changes (use `git diff --staged`).
+
+For each file changed, check:
+
+## Security
+- Input validation on user-facing endpoints
+- No hardcoded secrets or credentials
+- Proper authentication/authorization checks
+
+## Quality
+- Functions under 50 lines
+- Clear naming conventions
+- No duplicated logic
+- Error handling for edge cases
+
+## Output Format
+For each issue found:
+- **File**: path/to/file.ts:42
+- **Severity**: High / Medium / Low
+- **Issue**: Description
+- **Fix**: Suggested resolution
+
+End with a summary: total issues by severity and an overall assessment.
+```
+
+</Step>
+<Step title="Use the agent">
+
+Stage your changes and invoke:
+
+```
+> Use the pr-reviewer agent to review my staged changes
+```
+
+The agent runs in isolation, reads your diff, and returns a structured review.
+
+</Step>
+</Steps>
+
+---
+
+## Best Practices
+
+### Designing Subagents
+
+1. **Restrict tools to the minimum needed.** A review agent doesn't need `Write` or `Edit`. Fewer tools = fewer mistakes.
+
+2. **Use `haiku` for simple tasks.** Documentation generation and summarization don't need the most powerful model. Save cost and latency.
+
+3. **Be specific in the system prompt.** Vague instructions produce vague results. Include output format, evaluation criteria, and examples.
+
+4. **Test with real tasks.** Run your subagent on actual code before relying on it in workflows.
+
+### Designing Agent Teams
+
+1. **Start with research and review.** If you're new to agent teams, begin with tasks that don't require writing code — reviewing a PR, researching a library, or investigating a bug. These show the value of parallel exploration without coordination challenges.
+
+2. **Give teammates enough context.** Teammates load project context (CLAUDE.md, MCP servers, skills) but don't inherit the Lead's conversation history. Include task-specific details in the spawn prompt.
+
+3. **Size tasks appropriately.** Too small and coordination overhead exceeds the benefit. Too large and teammates work too long without check-ins. Aim for 5-6 self-contained tasks per teammate, each producing a clear deliverable.
+
+4. **Avoid file conflicts.** Two teammates editing the same file leads to overwrites. Break work so each teammate owns a different set of files.
+
+5. **Monitor and steer.** Check in on progress, redirect approaches that aren't working, and synthesize findings as they come in. Letting a team run unattended too long increases wasted effort.
+
+6. **Pre-approve common operations.** Teammate permission requests bubble up to the Lead, creating friction. Pre-approve common operations in your permission settings before spawning teammates.
+
+### Common Pitfalls
+
+<InfoTable
+  columns={[
+    { key: 'pitfall', header: 'Pitfall' },
+    { key: 'symptom', header: 'Symptom' },
+    { key: 'fix', header: 'Fix' },
+  ]}
+  rows={[
+    { pitfall: 'Over-engineering', symptom: 'Team of 5 agents for a task one agent could handle', fix: 'Start simple — use a single session or subagent first' },
+    { pitfall: 'Tool bloat', symptom: 'Subagent has access to everything', fix: 'Restrict to minimum required tools' },
+    { pitfall: 'Vague prompts', symptom: 'Agent produces generic, unhelpful output', fix: 'Add output format, criteria, and examples to system prompt' },
+    { pitfall: 'File conflicts', symptom: 'Teammates overwrite each other\'s changes', fix: 'Assign each teammate a different set of files' },
+    { pitfall: 'Lead doing work', symptom: 'Lead implements tasks instead of delegating', fix: 'Enable delegate mode (Shift+Tab) or tell Lead to wait' },
+    { pitfall: 'Cost explosion', symptom: 'Large bills from team workflows', fix: 'Use Sonnet/Haiku for teammates, set token budgets, limit team size' },
+  ]}
+/>
+
+---
+
+## What's Next?
+
+<InfoGrid columns={2}>
+  <InfoCard
+    title="Building Agents"
+    description="Learn the fundamentals of agent architecture and the agent loop"
+  />
+  <InfoCard
+    title="Using Agents Effectively"
+    description="Master prompting techniques and debugging strategies for reliable agents"
+  />
+  <InfoCard
+    title="Agent Products"
+    description="Ship production-ready multi-agent systems that users love"
+  />
+  <InfoCard
+    title="MCP Integration"
+    description="Connect your agents to external tools and services via the Model Context Protocol"
+  />
+</InfoGrid>
+
+<Callout type="success">
+**Start small.** Create one custom subagent for a task you do repeatedly — code review, documentation, or test planning. Once you see the value of isolation and specialization, graduate to agent teams when you need parallel work with coordination.
+</Callout>
