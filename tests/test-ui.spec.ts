@@ -9,13 +9,13 @@ const pages = [
   '/app-builder',
   '/automation',
   '/git-github',
-  '/advanced-topics/best-practices',
-  '/advanced-topics/mcp-and-cursor',
-  '/start-here/installation',
-  '/data-analysis/python-basics',
+  '/agents',
+  '/mcp',
+  '/advanced-topics',
+  '/start-here/mac-setup',
+  '/start-here/windows-setup',
+  '/data-analysis/python-intro',
   '/data-analysis/r-intro',
-  '/app-builder/task-manager',
-  '/git-github/basics',
 ]
 
 test.describe('UI/UX Analysis', () => {

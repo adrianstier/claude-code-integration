@@ -37,9 +37,9 @@ function getFileIcon(filename: string) {
     return <FileJson className="h-4 w-4 text-yellow-500 dark:text-yellow-400" />
   }
   if (textExtensions.includes(ext || '')) {
-    return <FileText className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+    return <FileText className="h-4 w-4 text-ink-600 dark:text-ink-400" />
   }
-  return <File className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+  return <File className="h-4 w-4 text-ink-400 dark:text-ink-500" />
 }
 
 // FileTree component with static properties for dot notation
@@ -48,7 +48,7 @@ function FileTreeComponent({ children, className }: FileTreeProps) {
     <div
       className={cn(
         'my-6 rounded-xl border border-ink-200 dark:border-ink-700',
-        'bg-gray-50 dark:bg-gray-900/50 p-4 font-mono text-sm',
+        'bg-ink-50 dark:bg-ink-900/50 p-4 font-mono text-sm',
         'overflow-x-auto',
         className
       )}
@@ -68,14 +68,14 @@ function FolderNodeComponent({ name, children, defaultOpen = false, className }:
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'flex items-center gap-2 w-full text-left py-1 px-2 -ml-2 rounded-md',
-          'hover:bg-gray-200/50 dark:hover:bg-gray-800/50 transition-colors',
-          'text-ink-700 dark:text-gray-300'
+          'hover:bg-ink-200/50 dark:hover:bg-ink-800/50 transition-colors',
+          'text-ink-700 dark:text-ink-300'
         )}
         disabled={!hasChildren}
       >
         <ChevronRight
           className={cn(
-            'h-3 w-3 text-gray-400 transition-transform',
+            'h-3 w-3 text-ink-400 transition-transform',
             isOpen && 'rotate-90',
             !hasChildren && 'invisible'
           )}
@@ -103,7 +103,7 @@ function FileNodeComponent({ name, highlight = false, className }: FileNodeProps
       className={cn(
         'flex items-center gap-2 py-1 px-2 -ml-2 rounded-md',
         highlight && 'bg-primary-100/50 dark:bg-primary-900/30',
-        'text-gray-600 dark:text-gray-400',
+        'text-ink-600 dark:text-ink-400',
         className
       )}
     >

@@ -89,7 +89,7 @@ export function Tab({ value, children, icon, className }: TabProps) {
         'flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all whitespace-nowrap border-b-2 -mb-px',
         isActive
           ? 'border-primary-500 text-primary-600 dark:text-primary-400'
-          : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-ink-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600',
+          : 'border-transparent text-ink-600 dark:text-ink-400 hover:text-ink-700 dark:hover:text-ink-300 hover:border-ink-300 dark:hover:border-ink-600',
         className
       )}
     >

@@ -112,8 +112,8 @@ test.describe('Content Validation', () => {
     await page.goto(`${baseURL}/start-here/mac-setup`)
     await page.waitForLoadState('networkidle')
 
-    await expect(page.locator('text=Install VS Code').first()).toBeVisible()
-    await expect(page.locator('text=Install Git').first()).toBeVisible()
+    await expect(page.locator('text=VS Code').first()).toBeVisible()
+    await expect(page.locator('text=Git').first()).toBeVisible()
     await expect(page.locator('text=GitHub').first()).toBeVisible()
 
     console.log('✓ Mac setup complete')

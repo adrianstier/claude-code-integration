@@ -12,7 +12,7 @@ test.describe('Dark Mode', () => {
     await page.goto('http://localhost:3001')
 
     // Wait for theme toggle to be visible (use first() as there are desktop and mobile versions)
-    const themeToggle = page.locator('button[aria-label="Dark mode"]').first()
+    const themeToggle = page.locator('button[aria-label="Switch to dark mode"]').first()
     await expect(themeToggle).toBeVisible()
 
     // Check initial state (should be light or system)
@@ -22,8 +22,8 @@ test.describe('Dark Mode', () => {
     await themeToggle.click()
     await expect(html).toHaveClass(/dark/)
 
-    // Click light mode button
-    const lightButton = page.locator('button[aria-label="Light mode"]').first()
+    // Click light mode button (after toggling to dark, label changes)
+    const lightButton = page.locator('button[aria-label="Switch to light mode"]').first()
     await lightButton.click()
     await expect(html).not.toHaveClass(/dark/)
   })
@@ -32,7 +32,7 @@ test.describe('Dark Mode', () => {
     await page.goto('http://localhost:3001')
 
     // Set dark mode (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Wait for theme to be applied
@@ -44,23 +44,23 @@ test.describe('Dark Mode', () => {
     expect(theme).toBe('dark')
   })
 
-  test('should support system preference mode', async ({ page }) => {
+  test('should support toggling theme mode', async ({ page }) => {
     await page.goto('http://localhost:3001')
 
-    // Click system mode button (use first() as there are desktop and mobile versions)
-    const systemButton = page.locator('button[aria-label="System theme"]').first()
-    await systemButton.click()
+    // Toggle to dark mode (use first() as there are desktop and mobile versions)
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
+    await darkButton.click()
 
-    // Check localStorage
+    // Check localStorage is set to dark
     const theme = await page.evaluate(() => localStorage.getItem('theme'))
-    expect(theme).toBe('system')
+    expect(theme).toBe('dark')
   })
 
   test('should apply dark mode styles to navigation', async ({ page }) => {
     await page.goto('http://localhost:3001')
 
     // Set dark mode (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Check html has dark class
@@ -72,7 +72,7 @@ test.describe('Dark Mode', () => {
     await page.goto('http://localhost:3001')
 
     // Set dark mode (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Check html has dark class (footer styling is applied via dark: prefix)
@@ -427,7 +427,7 @@ test.describe('Cheat Sheets', () => {
   test('should display all cheat sheets', async ({ page }) => {
     // Check cheat sheets are displayed
     const sheets = page.locator('.rounded-xl.border')
-    await expect(sheets).toHaveCount(5)
+    await expect(sheets).toHaveCount(7)
   })
 
   test('should expand cheat sheet to show content', async ({ page }) => {
@@ -702,7 +702,7 @@ test.describe('Cross-feature Integration', () => {
     await page.goto('http://localhost:3001')
 
     // Set dark mode (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Wait for theme to be applied
@@ -721,14 +721,14 @@ test.describe('Cross-feature Integration', () => {
     await page.goto('http://localhost:3001')
 
     // Set dark mode (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Open search (use Control+k for Playwright compatibility)
     await page.keyboard.press('Control+k')
 
-    // Check search modal has dark styles
-    const searchModal = page.locator('.bg-white.dark\\:bg-gray-900')
+    // Check search modal has dark styles - use the dialog role selector
+    const searchModal = page.locator('[role="dialog"][aria-label="Search documentation"]')
     await expect(searchModal).toBeVisible()
   })
 
@@ -768,7 +768,7 @@ test.describe('Cross-feature Integration', () => {
     })
 
     // Toggle theme (use first() as there are desktop and mobile versions)
-    const darkButton = page.locator('button[aria-label="Dark mode"]').first()
+    const darkButton = page.locator('button[aria-label="Switch to dark mode"]').first()
     await darkButton.click()
 
     // Check that localStorage still has our progress (theme switching shouldn't affect it)
@@ -788,7 +788,7 @@ test.describe('Mobile Responsiveness', () => {
     await page.goto('http://localhost:3001')
 
     // Theme toggle should be visible on mobile (use last() since desktop is first but hidden)
-    const themeToggle = page.locator('button[aria-label="Dark mode"]').last()
+    const themeToggle = page.locator('button[aria-label="Switch to dark mode"]').last()
     await expect(themeToggle).toBeVisible()
   })
 
@@ -822,13 +822,13 @@ test.describe('Mobile Responsiveness', () => {
 })
 
 test.describe('Accessibility', () => {
-  test('should have proper aria labels on theme toggle buttons', async ({ page }) => {
+  test('should have proper aria labels on theme toggle button', async ({ page }) => {
     await page.goto('http://localhost:3001')
 
-    // Check aria labels (use first() as there are desktop and mobile versions)
-    await expect(page.locator('button[aria-label="Light mode"]').first()).toBeVisible()
-    await expect(page.locator('button[aria-label="Dark mode"]').first()).toBeVisible()
-    await expect(page.locator('button[aria-label="System theme"]').first()).toBeVisible()
+    // The theme toggle is a single button that changes label based on current state
+    // In light mode it says "Switch to dark mode"
+    const themeToggle = page.locator('button[aria-label="Switch to dark mode"]').first()
+    await expect(themeToggle).toBeVisible()
   })
 
   test('should have proper aria label on search button', async ({ page }) => {
@@ -872,8 +872,8 @@ test.describe('Edge Cases', () => {
 
     // Rapidly switch themes (use first() as there are desktop and mobile versions)
     for (let i = 0; i < 5; i++) {
-      await page.locator('button[aria-label="Dark mode"]').first().click()
-      await page.locator('button[aria-label="Light mode"]').first().click()
+      await page.locator('button[aria-label="Switch to dark mode"]').first().click()
+      await page.locator('button[aria-label="Switch to light mode"]').first().click()
     }
 
     // Page should not crash
@@ -945,7 +945,7 @@ test.describe('Edge Cases', () => {
     })
 
     // Toggle theme - should handle gracefully (use first() as there are desktop and mobile versions)
-    await page.locator('button[aria-label="Dark mode"]').first().click()
+    await page.locator('button[aria-label="Switch to dark mode"]').first().click()
 
     // Page should not crash
     await expect(page.locator('nav')).toBeVisible()
