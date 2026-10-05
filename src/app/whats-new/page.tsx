@@ -68,6 +68,49 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: "Mods let plugins change how Claude Code's interface behaves",
+    category: 'extend',
+    what: 'A new plugin capability called Mods goes beyond adding commands or tools: it lets a plugin modify Claude Code\'s own interface and deeper behavior. Anthropic shipped one itself, "You should know," a built-in mod where a side agent watches your session and flags things you or Claude might miss.',
+    meaning:
+      'This is a much bigger surface than earlier plugin hooks -- a Mod can draw its own UI and intercept more of what you see, so the trust bar for installing one should be higher too. Try the built-in one with /plugin enable cc-plugin-you-should-know@builtin (first-party sessions with telemetry on); treat any third-party Mod the way you would any other plugin you have not audited.',
+    href: '/advanced-topics/plugins-and-hooks',
+    hrefLabel: 'Plugins and hooks',
+  },
+  {
+    title: 'A skill literally named "verify" now runs before every commit',
+    category: 'workflow',
+    what: 'If your project or user skills include one named exactly verify, Claude Code now runs it right before committing, skipping only docs-only and tests-only commits.',
+    meaning:
+      'Write a verify skill once -- tests, lint, whatever your project needs -- and Claude runs it as a pre-commit check without being asked each time. The name has to match exactly; a skill called something else is not picked up automatically.',
+    href: '/advanced-topics/skills',
+    hrefLabel: 'Working with skills',
+  },
+  {
+    title: 'Auto mode is now the default permission mode everywhere',
+    category: 'safety',
+    what: 'Interactive terminal and VS Code sessions now start in auto mode by default on every plan and every provider, unless your settings already set permissions.defaultMode.',
+    meaning:
+      'A fresh install now asks for less manual approval out of the box than it used to. If you want the old behavior of confirming every action, set permissions.defaultMode explicitly -- it still overrides this new default.',
+    href: '/advanced-topics/best-practices',
+    hrefLabel: 'Configuring permissions',
+  },
+  {
+    title: 'Claude Sonnet 5.5 is the new default Sonnet on the API',
+    category: 'models',
+    what: 'Claude Sonnet 5.5 shipped with a 1M-token context window and became the default Sonnet model for sessions on the Anthropic API, priced at $2/$10 per million input/output tokens with $0.20/Mtok cache reads.',
+    meaning:
+      'If you run Claude Code against the Anthropic API directly rather than through a claude.ai plan, your next session may start on a newer model with a much larger context window without you changing anything. Check /model if you want to confirm which version you are on or pin an older one.',
+  },
+  {
+    title: 'Ultracode is now a standalone toggle, not tied to effort',
+    category: 'models',
+    what: 'Ultracode moved out from under the /effort slider into its own on/off switch (Tab in /effort, or /effort ultracode on|off). It no longer forces reasoning effort to xhigh, and now stays on regardless of the effort level you pick.',
+    meaning:
+      'If you relied on turning on Ultracode to also push effort to maximum, that side effect is gone -- set effort and Ultracode independently from now on.',
+    href: '/advanced-topics/productivity-features',
+    hrefLabel: 'Effort control and thinking modes',
+  },
+  {
     title: 'Opus 5.5 is the new default model',
     category: 'models',
     what: 'Claude Opus 5.5 shipped with a 1M-token context window, and replaced Sonnet as the default model on Pro and Team Standard plans (Max, Team Premium and Enterprise already defaulted to Opus).',
@@ -138,49 +181,6 @@ const CHANGES: Change[] = [
     href: '/start-here/mac-setup',
     hrefLabel: 'Run /terminal-setup first',
   },
-  {
-    title: '/output-style switches how responses are written',
-    category: 'workflow',
-    what: 'A command for changing output style without editing configuration files.',
-    meaning:
-      'Worth knowing if you switch between exploratory work and writing that goes into a document, where you want different verbosity from the same session.',
-  },
-  {
-    title: 'maxEffortLevel caps reasoning across providers',
-    category: 'models',
-    what: 'A setting that bounds how much reasoning effort any request may use, for every provider.',
-    meaning:
-      'This is a cost and latency control. If you have people on a shared plan running long agentic sessions, this is the lever that stops a single task spending far more than intended.',
-    href: '/advanced-topics/productivity-features',
-    hrefLabel: 'Effort control and thinking modes',
-  },
-  {
-    title: 'claude plugin eval scores a plugin',
-    category: 'extend',
-    what: 'A command that runs an evaluation suite against a plugin and reports how it performed.',
-    meaning:
-      'Plugins have been testable only by using them. If you maintain one, this is the difference between "it seemed fine" and a result you can check before publishing.',
-    href: '/advanced-topics/plugins-and-hooks',
-    hrefLabel: 'Plugins and hooks',
-  },
-  {
-    title: 'Skills and plugins sync from your claude.ai account',
-    category: 'extend',
-    what: 'Skills and plugins associated with your account are pulled down rather than installed separately on each machine.',
-    meaning:
-      'Setting up a second machine, or a remote box, stops being a manual re-install of everything you built. Worth checking what syncs before you assume a machine is configured.',
-    href: '/advanced-topics/skills',
-    hrefLabel: 'Working with skills',
-  },
-  {
-    title: 'Fast mode reaches Remote Control sessions',
-    category: 'models',
-    what: 'Fast mode, which speeds up output without dropping to a smaller model, now works in Remote Control.',
-    meaning:
-      'Relevant if you drive Claude Code from your phone or another machine — the remote session no longer feels slower than the one on your desk.',
-    href: '/start-here/voice-and-remote',
-    hrefLabel: 'Voice and remote control',
-  },
 ]
 
 export default function WhatsNewPage() {
@@ -222,8 +222,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.283</strong> · last reviewed{' '}
-            <time dateTime="2026-09-28">28 September 2026</time> ·{' '}
+            Covering releases through <strong>2.1.289</strong> · last reviewed{' '}
+            <time dateTime="2026-10-05">5 October 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
