@@ -68,6 +68,57 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: 'Sonnet 5.5 cache reads got cheaper',
+    category: 'models',
+    what: "Claude Code's /cost, the status line, --max-budget-usd and the SDK's cost figures now price Sonnet 5.5 cache reads at $0.10 per million tokens, down from $0.20.",
+    meaning:
+      'If you track spend with /cost or a budget cap, expect reported Sonnet 5.5 costs to drop on sessions that lean on prompt caching. The lower rate applies automatically -- there is no setting to change.',
+  },
+  {
+    title: 'Hooks can now block on failure instead of failing open',
+    category: 'safety',
+    what: 'A new onFailure: "block" setting for command and HTTP hooks makes a hook that can\'t start, times out, or exits with an unexpected code block the action it was checking, instead of letting it through.',
+    meaning:
+      "If you write hooks to enforce rules -- blocking risky commands, requiring tests -- a broken or slow hook used to silently fail open. Add onFailure: 'block' to the hooks that matter so a hook outage closes the gate instead of opening it.",
+    href: '/advanced-topics/plugins-and-hooks',
+    hrefLabel: 'Writing hooks',
+  },
+  {
+    title: 'Claude Haiku 5.5 is the new default Haiku model',
+    category: 'models',
+    what: 'Claude Haiku 5.5 shipped with a 1M-token context window and became the default Haiku model on the Anthropic API, priced at $0.10/$0.50 per million input/output tokens ($0.50/$2.50 above 100K tokens of input).',
+    meaning:
+      'If you run Claude Code against the Anthropic API and lean on Haiku for fast, cheap work, your next session may start on a newer, larger-context model with no change on your end. Check /model if you want to confirm the version or pin an older one.',
+  },
+  {
+    title: 'Network-path file reads can no longer skip the permission prompt',
+    category: 'safety',
+    what: 'A security fix closed a gap where PreToolUse hook approvals and auto mode could bypass the permission prompt for file reads from network (UNC) paths.',
+    meaning:
+      'If you rely on hooks or auto mode to gate file access, this closes a real hole -- reads from network shares now go through the same prompt as any other file read. No action needed beyond updating.',
+  },
+  {
+    title: '/code-review reports more by default on Opus 5.5 and Sonnet 5.5',
+    category: 'workflow',
+    what: "At medium effort, /code-review now also reports cleanup and CLAUDE.md-convention findings on models without tuned review settings, which includes Opus 5.5 and Sonnet 5.5.",
+    meaning:
+      'Running /code-review on the newest models will surface a few more findings than before at the same effort level -- the review is covering ground it used to skip, not getting stricter about bugs.',
+  },
+  {
+    title: 'WebSearch no longer has a hard per-session cap',
+    category: 'workflow',
+    what: 'Interactive sessions used to stop WebSearch after 200 calls; it now refills at 100 calls an hour instead (CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR sets the rate, or 0 turns it off).',
+    meaning:
+      "Long research sessions that lean on web search won't hit a hard wall partway through anymore. If you want the old all-or-nothing limit back, or a different refill rate, it's one environment variable.",
+  },
+  {
+    title: 'claude attach and claude logs take a partial session name',
+    category: 'workflow',
+    what: 'claude attach <name> and claude logs <name> now match on part of a session\'s name, not just its full id.',
+    meaning:
+      'You can reattach to or tail the logs of a background session by typing a few recognizable characters instead of hunting down the full session id first.',
+  },
+  {
     title: "Mods let plugins change how Claude Code's interface behaves",
     category: 'extend',
     what: 'A new plugin capability called Mods goes beyond adding commands or tools: it lets a plugin modify Claude Code\'s own interface and deeper behavior. Anthropic shipped one itself, "You should know," a built-in mod where a side agent watches your session and flags things you or Claude might miss.',
@@ -126,61 +177,6 @@ const CHANGES: Change[] = [
     href: '/advanced-topics/best-practices',
     hrefLabel: 'Writing an effective CLAUDE.md',
   },
-  {
-    title: '/insights estimates what auto mode would have caught',
-    category: 'safety',
-    what: '/insights now includes a recommendation showing how many permission prompts in your recent sessions auto mode could have resolved on its own.',
-    meaning:
-      'Instead of guessing whether auto mode fits how you work, you get a number pulled from your own session history before deciding to turn it on.',
-  },
-  {
-    title: 'attribution: false hides commit and PR credit lines',
-    category: 'config',
-    what: 'A new attribution: false setting in settings.json turns off the Co-Authored-By and Claude Code footer lines added to commits and pull requests, in one place.',
-    meaning:
-      'Teams that do not want AI attribution in git history get an official switch instead of a CLAUDE.md workaround. Older Claude Code versions ignore a settings file that holds this as a plain boolean, so check compatibility before rolling it out on a team running mixed versions.',
-  },
-  {
-    title: 'AGENTS.md now works without a CLAUDE.md',
-    category: 'config',
-    what: 'Projects that use the cross-tool AGENTS.md convention are read directly, rather than needing a CLAUDE.md to exist first.',
-    meaning:
-      'If you work in a repo shared with people on other AI coding tools, you can keep one instructions file instead of maintaining two that drift apart. If your project already has a CLAUDE.md, nothing changes for you.',
-    href: '/advanced-topics/best-practices',
-    hrefLabel: 'How project instructions are read',
-  },
-  {
-    title: 'Auto mode moved to a server-side classifier',
-    category: 'safety',
-    what: 'For Claude API and Enterprise accounts, the decision about which actions need approval is now made server-side, and /status shows where that classifier is running.',
-    meaning:
-      'Permission prompts get more consistent between machines, because the decision no longer depends on your local build. If you have been tuning permission rules by hand, re-check them — the behaviour you were working around may be gone.',
-    href: '/advanced-topics/best-practices',
-    hrefLabel: 'Configuring permissions',
-  },
-  {
-    title: 'Per-command allowed domains for sandboxed runs',
-    category: 'safety',
-    what: 'A sandboxed command can be granted its own list of reachable domains instead of inheriting one blanket network policy.',
-    meaning:
-      'The practical win is letting a build step reach your package registry without opening the whole network for everything else. This is the setting to reach for instead of disabling the sandbox.',
-  },
-  {
-    title: 'Bash results now include a file diff',
-    category: 'workflow',
-    what: 'When a command changes files, the result shows what changed rather than only the command output.',
-    meaning:
-      'You can see the effect of a script without running git diff yourself, which matters most when a command does more than you expected and you want to catch it immediately.',
-  },
-  {
-    title: 'Ctrl+Enter sends the current turn',
-    category: 'workflow',
-    what: 'A dedicated send key interrupts and submits, separate from Enter.',
-    meaning:
-      'Useful once you have run /terminal-setup and rebound Shift+Enter to newline — you get an explicit send that does not depend on where the cursor sits.',
-    href: '/start-here/mac-setup',
-    hrefLabel: 'Run /terminal-setup first',
-  },
 ]
 
 export default function WhatsNewPage() {
@@ -222,8 +218,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.289</strong> · last reviewed{' '}
-            <time dateTime="2026-10-05">5 October 2026</time> ·{' '}
+            Covering releases through <strong>2.1.296</strong> · last reviewed{' '}
+            <time dateTime="2026-10-12">12 October 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
