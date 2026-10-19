@@ -68,6 +68,22 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: 'Idle sessions now compact themselves before the cache expires',
+    category: 'workflow',
+    what: 'A terminal conversation over roughly 200K tokens that sits idle for about 54 minutes is now compacted automatically, just before its one-hour prompt cache would lapse. A new "Idle compaction" row in /config turns it off, and CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS changes the 200K-token minimum.',
+    meaning:
+      "If you step away from a long session and come back later, don't be alarmed to find it already compacted -- that's this working as designed, and it saves you from reprocessing the whole history on your next message. If you'd rather keep full history until you run /compact yourself, turn it off in /config.",
+    href: '/advanced-topics/productivity-features',
+    hrefLabel: 'Managing your context window',
+  },
+  {
+    title: 'Forked subagents are now on by default outside the terminal too',
+    category: 'workflow',
+    what: 'Background subagents started with subagent_type: "fork" -- which inherit the parent session\'s full context instead of starting cold -- are now on by default in claude -p, the Agent SDK, the desktop app and VS Code, matching what the terminal already did.',
+    meaning:
+      "If you script claude -p or build with the Agent SDK and relied on forked subagents being opt-in, they'll start running by default; set CLAUDE_CODE_FORK_SUBAGENT=0 if you need the old behavior back. claude mcp serve sessions still never get them.",
+  },
+  {
     title: 'Sonnet 5.5 cache reads got cheaper',
     category: 'models',
     what: "Claude Code's /cost, the status line, --max-budget-usd and the SDK's cost figures now price Sonnet 5.5 cache reads at $0.10 per million tokens, down from $0.20.",
@@ -218,8 +234,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.296</strong> · last reviewed{' '}
-            <time dateTime="2026-10-12">12 October 2026</time> ·{' '}
+            Covering releases through <strong>2.1.303</strong> · last reviewed{' '}
+            <time dateTime="2026-10-19">19 October 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
