@@ -68,6 +68,43 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: '/auto-mode-setup teaches auto mode your project\'s conventions',
+    category: 'config',
+    what: 'A new /auto-mode-setup command reads your project and recent sessions, then uses what it learns to tune how auto mode behaves in this project. It now also runs on Bedrock, Vertex, Foundry, the Claude apps gateway, and sessions with telemetry turned off.',
+    meaning:
+      "If auto mode keeps asking you things it should already know -- your test command, which directories are safe to write to -- run /auto-mode-setup once instead of tuning permission rules by hand. It's a one-time setup step, not something that runs for you automatically.",
+  },
+  {
+    title: 'Resuming an old conversation now warns about your 5-hour limit',
+    category: 'workflow',
+    what: 'On Pro and Max plans, resuming a conversation that has gone inactive now warns you first if doing so would use a noticeable share of your 5-hour usage limit, before you are committed to it.',
+    meaning:
+      "You get a real choice at that point: resume anyway, or start a fresh conversation and ask Claude to look up the old one when you need something from it. Worth knowing if you habitually resume old sessions -- the cost of doing so used to be invisible until it hit.",
+  },
+  {
+    title: 'A new sandbox setting lets Linux commands create user namespaces',
+    category: 'safety',
+    what: 'A new sandbox.allowNestedUserNamespaces setting lets sandboxed commands on Linux create their own user namespaces, which is what tools like Chromium and rootless podman need in order to run.',
+    meaning:
+      "Turning it on is a real tradeoff, not a free unlock: the same mechanism also lets a sandboxed command get around the sandbox's file protections. Only enable it if you actually run Chromium-based tools or rootless podman through Claude Code, and go in knowing you're loosening the sandbox to do it.",
+  },
+  {
+    title: 'Dangerous rm commands no longer stall unattended sessions',
+    category: 'safety',
+    what: 'In bypass permissions mode in the Desktop app and VS Code, a dangerous rm or rmdir command used to still stop for a confirmation prompt. It is now denied immediately, with a hint for Claude to rewrite the command, instead of waiting on an answer nobody is there to give.',
+    meaning:
+      "If you run bypass-permissions sessions unattended, they no longer hang indefinitely on a risky delete waiting for a prompt that will never be answered -- Claude gets steered toward a safer rewrite and keeps working. The safety check itself didn't get weaker, only the blocking confirmation step did.",
+    href: '/advanced-topics/best-practices',
+    hrefLabel: 'Configuring permissions',
+  },
+  {
+    title: "sed -i now runs for real, and /rewind can't undo it",
+    category: 'workflow',
+    what: 'Claude Code used to show sed -i commands through a simulated file-edit preview, similar to the Edit tool. It now goes through the same approval as any other Bash command and runs exactly as written.',
+    meaning:
+      "The practical change is that /rewind no longer undoes a sed -i edit, the same as it already couldn't undo other file changes made through Bash. If you lean on /rewind as a safety net, don't assume it covers edits made with sed -i.",
+  },
+  {
     title: 'Idle sessions now compact themselves before the cache expires',
     category: 'workflow',
     what: 'A terminal conversation over roughly 200K tokens that sits idle for about 54 minutes is now compacted automatically, just before its one-hour prompt cache would lapse. A new "Idle compaction" row in /config turns it off, and CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS changes the 200K-token minimum.',
@@ -134,65 +171,6 @@ const CHANGES: Change[] = [
     meaning:
       'You can reattach to or tail the logs of a background session by typing a few recognizable characters instead of hunting down the full session id first.',
   },
-  {
-    title: "Mods let plugins change how Claude Code's interface behaves",
-    category: 'extend',
-    what: 'A new plugin capability called Mods goes beyond adding commands or tools: it lets a plugin modify Claude Code\'s own interface and deeper behavior. Anthropic shipped one itself, "You should know," a built-in mod where a side agent watches your session and flags things you or Claude might miss.',
-    meaning:
-      'This is a much bigger surface than earlier plugin hooks -- a Mod can draw its own UI and intercept more of what you see, so the trust bar for installing one should be higher too. Try the built-in one with /plugin enable cc-plugin-you-should-know@builtin (first-party sessions with telemetry on); treat any third-party Mod the way you would any other plugin you have not audited.',
-    href: '/advanced-topics/plugins-and-hooks',
-    hrefLabel: 'Plugins and hooks',
-  },
-  {
-    title: 'A skill literally named "verify" now runs before every commit',
-    category: 'workflow',
-    what: 'If your project or user skills include one named exactly verify, Claude Code now runs it right before committing, skipping only docs-only and tests-only commits.',
-    meaning:
-      'Write a verify skill once -- tests, lint, whatever your project needs -- and Claude runs it as a pre-commit check without being asked each time. The name has to match exactly; a skill called something else is not picked up automatically.',
-    href: '/advanced-topics/skills',
-    hrefLabel: 'Working with skills',
-  },
-  {
-    title: 'Auto mode is now the default permission mode everywhere',
-    category: 'safety',
-    what: 'Interactive terminal and VS Code sessions now start in auto mode by default on every plan and every provider, unless your settings already set permissions.defaultMode.',
-    meaning:
-      'A fresh install now asks for less manual approval out of the box than it used to. If you want the old behavior of confirming every action, set permissions.defaultMode explicitly -- it still overrides this new default.',
-    href: '/advanced-topics/best-practices',
-    hrefLabel: 'Configuring permissions',
-  },
-  {
-    title: 'Claude Sonnet 5.5 is the new default Sonnet on the API',
-    category: 'models',
-    what: 'Claude Sonnet 5.5 shipped with a 1M-token context window and became the default Sonnet model for sessions on the Anthropic API, priced at $2/$10 per million input/output tokens with $0.20/Mtok cache reads.',
-    meaning:
-      'If you run Claude Code against the Anthropic API directly rather than through a claude.ai plan, your next session may start on a newer model with a much larger context window without you changing anything. Check /model if you want to confirm which version you are on or pin an older one.',
-  },
-  {
-    title: 'Ultracode is now a standalone toggle, not tied to effort',
-    category: 'models',
-    what: 'Ultracode moved out from under the /effort slider into its own on/off switch (Tab in /effort, or /effort ultracode on|off). It no longer forces reasoning effort to xhigh, and now stays on regardless of the effort level you pick.',
-    meaning:
-      'If you relied on turning on Ultracode to also push effort to maximum, that side effect is gone -- set effort and Ultracode independently from now on.',
-    href: '/advanced-topics/productivity-features',
-    hrefLabel: 'Effort control and thinking modes',
-  },
-  {
-    title: 'Opus 5.5 is the new default model',
-    category: 'models',
-    what: 'Claude Opus 5.5 shipped with a 1M-token context window, and replaced Sonnet as the default model on Pro and Team Standard plans (Max, Team Premium and Enterprise already defaulted to Opus).',
-    meaning:
-      'If you are on Pro or Team Standard, sessions now start on Opus instead of Sonnet by default -- more capable, but priced higher per token, so watch usage if you were relying on Sonnet cost. Switch back any time with /model.',
-  },
-  {
-    title: '/doctor prompt-audit flags stale prompting patterns',
-    category: 'extend',
-    what: 'A new /doctor prompt-audit (also /checkup prompt-audit) command scans your CLAUDE.md files, skills, agents and commands for prompting patterns written for older Claude models.',
-    meaning:
-      'If your CLAUDE.md or custom skills have accumulated workaround instructions over many months, this gives you a concrete list of what may no longer be needed instead of leaving you to guess which lines still earn their keep.',
-    href: '/advanced-topics/best-practices',
-    hrefLabel: 'Writing an effective CLAUDE.md',
-  },
 ]
 
 export default function WhatsNewPage() {
@@ -234,8 +212,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.303</strong> · last reviewed{' '}
-            <time dateTime="2026-10-19">19 October 2026</time> ·{' '}
+            Covering releases through <strong>2.1.310</strong> · last reviewed{' '}
+            <time dateTime="2026-10-26">26 October 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
