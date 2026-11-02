@@ -68,6 +68,47 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: 'Fast mode for Opus 4.8 is being retired',
+    category: 'models',
+    what: 'Fast mode for Opus 4.8 is deprecated as of October 30, 2026 and will be removed on November 30, 2026. After that date, a fast-mode request on Opus 4.8 returns an error instead of quietly falling back to standard Opus 4.8.',
+    meaning:
+      "If you've leaned on Opus 4.8 fast mode for the speed, move to Opus 5.5 before the end of November -- it's the model that keeps that speedup. Switching now beats discovering the hard error after removal day.",
+  },
+  {
+    title: 'CLAUDE_CODE_SUBAGENT_EFFORT sets a default effort for subagents',
+    category: 'extend',
+    what: 'A new CLAUDE_CODE_SUBAGENT_EFFORT environment variable sets the effort level subagents run at when nothing else specifies one, instead of them inheriting the parent session\'s effort.',
+    meaning:
+      'If you build with subagents and want them to run cheap and fast regardless of what effort the main session is using, this is one environment variable instead of setting effort on every agent call.',
+    href: '/agents/multi-agent-architectures',
+    hrefLabel: 'Working with subagents',
+  },
+  {
+    title: 'permissions.blockWritesOutsideWorkingDirectories locks edits to your project',
+    category: 'safety',
+    what: 'A new permissions.blockWritesOutsideWorkingDirectories setting makes Write, Edit and NotebookEdit refuse any path outside your working directories, in every permission mode -- bypass permissions and auto mode included.',
+    meaning:
+      "It's off by default, so nothing changes until you opt in. Turn it on if you want a hard floor under file edits that holds even in the permission modes that otherwise skip prompts.",
+    href: '/advanced-topics/best-practices',
+    hrefLabel: 'Configuring permissions',
+  },
+  {
+    title: 'Idle compaction now also runs in VS Code and Claude Desktop',
+    category: 'workflow',
+    what: "Idle compaction -- already automatic in the terminal -- now also runs in VS Code and Claude Desktop's Code tab: a conversation over roughly 200K tokens left idle gets summarized, and that summary is used on your next message once the prompt cache has lapsed.",
+    meaning:
+      "If you work in VS Code or Desktop and step away from a long conversation, don't be alarmed to find it already compacted when you're back -- it's the same safeguard the terminal already had. Turn it off in /config if you'd rather compact manually.",
+    href: '/advanced-topics/productivity-features',
+    hrefLabel: 'Managing your context window',
+  },
+  {
+    title: 'ultrathink now reliably pushes a turn to xhigh effort',
+    category: 'workflow',
+    what: "Typed in the interactive terminal, ultrathink now runs that turn at xhigh effort specifically on Opus 5.5, Sonnet 5.5, Haiku 5.5 and Fable 5.1 through Anthropic's API. Typed while Claude is already working, it raises the effort for the rest of that turn instead of only at the start.",
+    meaning:
+      "If you've typed ultrathink mid-task before and weren't sure it did anything, it now visibly raises effort from that point forward -- a way to escalate a turn that's going in circles without restarting it. The rainbow highlight only shows where it can actually take effect.",
+  },
+  {
     title: '/auto-mode-setup teaches auto mode your project\'s conventions',
     category: 'config',
     what: 'A new /auto-mode-setup command reads your project and recent sessions, then uses what it learns to tune how auto mode behaves in this project. It now also runs on Bedrock, Vertex, Foundry, the Claude apps gateway, and sessions with telemetry turned off.',
@@ -136,41 +177,6 @@ const CHANGES: Change[] = [
     href: '/advanced-topics/plugins-and-hooks',
     hrefLabel: 'Writing hooks',
   },
-  {
-    title: 'Claude Haiku 5.5 is the new default Haiku model',
-    category: 'models',
-    what: 'Claude Haiku 5.5 shipped with a 1M-token context window and became the default Haiku model on the Anthropic API, priced at $0.10/$0.50 per million input/output tokens ($0.50/$2.50 above 100K tokens of input).',
-    meaning:
-      'If you run Claude Code against the Anthropic API and lean on Haiku for fast, cheap work, your next session may start on a newer, larger-context model with no change on your end. Check /model if you want to confirm the version or pin an older one.',
-  },
-  {
-    title: 'Network-path file reads can no longer skip the permission prompt',
-    category: 'safety',
-    what: 'A security fix closed a gap where PreToolUse hook approvals and auto mode could bypass the permission prompt for file reads from network (UNC) paths.',
-    meaning:
-      'If you rely on hooks or auto mode to gate file access, this closes a real hole -- reads from network shares now go through the same prompt as any other file read. No action needed beyond updating.',
-  },
-  {
-    title: '/code-review reports more by default on Opus 5.5 and Sonnet 5.5',
-    category: 'workflow',
-    what: "At medium effort, /code-review now also reports cleanup and CLAUDE.md-convention findings on models without tuned review settings, which includes Opus 5.5 and Sonnet 5.5.",
-    meaning:
-      'Running /code-review on the newest models will surface a few more findings than before at the same effort level -- the review is covering ground it used to skip, not getting stricter about bugs.',
-  },
-  {
-    title: 'WebSearch no longer has a hard per-session cap',
-    category: 'workflow',
-    what: 'Interactive sessions used to stop WebSearch after 200 calls; it now refills at 100 calls an hour instead (CLAUDE_CODE_WEB_SEARCH_REFILLS_PER_HOUR sets the rate, or 0 turns it off).',
-    meaning:
-      "Long research sessions that lean on web search won't hit a hard wall partway through anymore. If you want the old all-or-nothing limit back, or a different refill rate, it's one environment variable.",
-  },
-  {
-    title: 'claude attach and claude logs take a partial session name',
-    category: 'workflow',
-    what: 'claude attach <name> and claude logs <name> now match on part of a session\'s name, not just its full id.',
-    meaning:
-      'You can reattach to or tail the logs of a background session by typing a few recognizable characters instead of hunting down the full session id first.',
-  },
 ]
 
 export default function WhatsNewPage() {
@@ -212,8 +218,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.310</strong> · last reviewed{' '}
-            <time dateTime="2026-10-26">26 October 2026</time> ·{' '}
+            Covering releases through <strong>2.1.316</strong> · last reviewed{' '}
+            <time dateTime="2026-11-02">2 November 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
