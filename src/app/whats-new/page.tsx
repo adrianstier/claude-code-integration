@@ -68,6 +68,38 @@ const CATEGORY_STYLE: Record<Change['category'], string> = {
 
 const CHANGES: Change[] = [
   {
+    title: 'MCP tool calls that run as tasks now move to the background automatically',
+    category: 'workflow',
+    what: "When an MCP server marks a tool call as a task -- its way of flagging a long-running job -- Claude Code in the terminal now moves it to the background right away and tells Claude the result once it finishes, instead of the turn sitting frozen on that one call. CLAUDE_CODE_DISABLE_MCP_TASK_BACKGROUND brings back the old wait-in-place behavior if you need it.",
+    meaning:
+      "If you connect MCP servers that kick off slow jobs -- a long query, a build, a deploy -- Claude Code no longer stalls on that single call, and you can keep giving it instructions while the job runs. You don't need to change anything to get this; it only kicks in for servers that actually declare tasks, and the environment variable exists for scripts that depended on the old blocking behavior.",
+  },
+  {
+    title: 'permissions.denyInsteadOfPrompting skips the prompt and just says no',
+    category: 'safety',
+    what: 'A new permissions.denyInsteadOfPrompting setting changes what happens when a tool call would normally stop and wait for your permission decision: Claude Code denies the call outright and lets the turn continue, instead of showing a prompt. It applies in terminal sessions, subagents and teammates.',
+    meaning:
+      "This is for unattended or semi-unattended runs -- a scripted session, a background subagent -- where no one is actually there to answer a prompt, and you'd rather Claude route around a blocked action than hang waiting on an answer that will never come. It's off by default, and turning it on is a real tradeoff: some actions you'd normally approve by hand now get silently refused instead.",
+    href: '/advanced-topics/best-practices',
+    hrefLabel: 'Configuring permissions',
+  },
+  {
+    title: 'Claude Code no longer auto-installs the IDE extension from inside the IDE terminal',
+    category: 'workflow',
+    what: "Starting Claude Code from a terminal inside VS Code or another supported editor used to install or update that editor's Claude Code extension on your behalf. It no longer does -- manage the extension yourself from the editor's extensions view, or run /ide from a terminal outside the editor.",
+    meaning:
+      "If you prefer the terminal workflow and never wanted the extension added, nothing will quietly install it anymore. If you do want the editor integration -- inline diffs, the sidebar panel -- you now add or update it the normal way through the Extensions panel, rather than it happening automatically the first time you ran claude inside an integrated terminal.",
+    href: '/start-here/platforms',
+    hrefLabel: 'Choosing where to run Claude Code',
+  },
+  {
+    title: 'Claude Code now checks before a tool call can send your account email to the network',
+    category: 'safety',
+    what: "A new check asks for your approval before a web or shell tool call is allowed to send your account's email address out over the network -- for example, a script that would tuck it into a header, URL, or request body.",
+    meaning:
+      "This closes a quiet way a page or API could end up with your email without you noticing: a tool that wants to use it now has to ask first, the same way Claude Code already asks before running a risky command. You'll only see this as a one-off prompt the first time something actually tries it -- there's no setting to turn on.",
+  },
+  {
     title: 'Fast mode for Opus 4.8 is being retired',
     category: 'models',
     what: 'Fast mode for Opus 4.8 is deprecated as of October 30, 2026 and will be removed on November 30, 2026. After that date, a fast-mode request on Opus 4.8 returns an error instead of quietly falling back to standard Opus 4.8.',
@@ -145,38 +177,6 @@ const CHANGES: Change[] = [
     meaning:
       "The practical change is that /rewind no longer undoes a sed -i edit, the same as it already couldn't undo other file changes made through Bash. If you lean on /rewind as a safety net, don't assume it covers edits made with sed -i.",
   },
-  {
-    title: 'Idle sessions now compact themselves before the cache expires',
-    category: 'workflow',
-    what: 'A terminal conversation over roughly 200K tokens that sits idle for about 54 minutes is now compacted automatically, just before its one-hour prompt cache would lapse. A new "Idle compaction" row in /config turns it off, and CLAUDE_CODE_IDLE_COMPACT_MIN_TOKENS changes the 200K-token minimum.',
-    meaning:
-      "If you step away from a long session and come back later, don't be alarmed to find it already compacted -- that's this working as designed, and it saves you from reprocessing the whole history on your next message. If you'd rather keep full history until you run /compact yourself, turn it off in /config.",
-    href: '/advanced-topics/productivity-features',
-    hrefLabel: 'Managing your context window',
-  },
-  {
-    title: 'Forked subagents are now on by default outside the terminal too',
-    category: 'workflow',
-    what: 'Background subagents started with subagent_type: "fork" -- which inherit the parent session\'s full context instead of starting cold -- are now on by default in claude -p, the Agent SDK, the desktop app and VS Code, matching what the terminal already did.',
-    meaning:
-      "If you script claude -p or build with the Agent SDK and relied on forked subagents being opt-in, they'll start running by default; set CLAUDE_CODE_FORK_SUBAGENT=0 if you need the old behavior back. claude mcp serve sessions still never get them.",
-  },
-  {
-    title: 'Sonnet 5.5 cache reads got cheaper',
-    category: 'models',
-    what: "Claude Code's /cost, the status line, --max-budget-usd and the SDK's cost figures now price Sonnet 5.5 cache reads at $0.10 per million tokens, down from $0.20.",
-    meaning:
-      'If you track spend with /cost or a budget cap, expect reported Sonnet 5.5 costs to drop on sessions that lean on prompt caching. The lower rate applies automatically -- there is no setting to change.',
-  },
-  {
-    title: 'Hooks can now block on failure instead of failing open',
-    category: 'safety',
-    what: 'A new onFailure: "block" setting for command and HTTP hooks makes a hook that can\'t start, times out, or exits with an unexpected code block the action it was checking, instead of letting it through.',
-    meaning:
-      "If you write hooks to enforce rules -- blocking risky commands, requiring tests -- a broken or slow hook used to silently fail open. Add onFailure: 'block' to the hooks that matter so a hook outage closes the gate instead of opening it.",
-    href: '/advanced-topics/plugins-and-hooks',
-    hrefLabel: 'Writing hooks',
-  },
 ]
 
 export default function WhatsNewPage() {
@@ -218,8 +218,8 @@ export default function WhatsNewPage() {
           </p>
 
           <p className="mt-4 text-sm text-ink-600 dark:text-ink-300">
-            Covering releases through <strong>2.1.316</strong> · last reviewed{' '}
-            <time dateTime="2026-11-02">2 November 2026</time> ·{' '}
+            Covering releases through <strong>2.1.319</strong> · last reviewed{' '}
+            <time dateTime="2026-11-09">9 November 2026</time> ·{' '}
             <a
               href="https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md"
               target="_blank"
